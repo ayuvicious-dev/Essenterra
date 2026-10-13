@@ -85,12 +85,16 @@ header.top h1{font-size:1.35rem;flex:1}
 .themebtn:hover{background:var(--mist)}
 .themebtn svg{width:22px;height:22px}
 header.top .back{font-size:1.5rem;padding:.1rem .6rem;border-radius:8px;color:var(--moss)}
-main{flex:1;padding:1rem 1rem 6rem}
-nav.tabs{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--line);display:flex;justify-content:center;padding-bottom:env(safe-area-inset-bottom,0px);z-index:6}
-nav.tabs .in{display:flex;width:100%;max-width:720px}
-nav.tabs button{flex:1;padding:.7rem .2rem;font-size:.8rem;color:var(--ink2);display:flex;flex-direction:column;align-items:center;gap:.15rem}
+main{flex:1;padding:1rem 1rem 7.8rem}
+nav.tabs{position:fixed;bottom:0;left:0;right:0;padding:0 .75rem calc(.6rem + env(safe-area-inset-bottom,0px));display:flex;justify-content:center;z-index:6;pointer-events:none}
+nav.tabs .in{pointer-events:auto;display:flex;align-items:center;width:100%;max-width:720px;height:66px;padding:0 .35rem;background:var(--card);border:1px solid var(--line);border-radius:24px;box-shadow:0 8px 28px rgba(31,43,34,.16),0 2px 6px rgba(31,43,34,.08)}
+nav.tabs button{flex:1;min-width:0;height:calc(100% - .7rem);margin:0 .1rem;border-radius:18px;font-size:.72rem;color:var(--ink2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.15rem;transition:background .2s,color .2s}
 nav.tabs button svg{width:22px;height:22px}
-nav.tabs button.on{color:var(--moss);font-weight:700}
+nav.tabs button.on{color:var(--moss);font-weight:700;background:var(--herobg)}
+nav.tabs button.fab{background:none;overflow:visible}
+nav.tabs button.fab svg{width:58px;height:58px;padding:16px;border-radius:50%;background:var(--moss);color:var(--btntext);transform:translateY(-20px);box-shadow:0 8px 18px rgba(31,43,34,.3);border:4px solid var(--card);box-sizing:border-box;transition:transform .15s}
+nav.tabs button.fab:active svg{transform:translateY(-18px) scale(.94)}
+nav.tabs button.fab span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
 /* Login */
 #login{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:2rem 1.4rem;max-width:420px;margin:0 auto}
@@ -132,10 +136,50 @@ nav.tabs button.on{color:var(--moss);font-weight:700}
 .cat{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:1rem;margin-bottom:.8rem}
 .cat h3{font-size:1.1rem;display:flex;gap:.5rem;align-items:center}
 .cat-actions{display:flex;flex-wrap:wrap;gap:.5rem}
+.cat-actions{gap:.1rem;align-items:center;margin-top:-.2rem}
+.btn.icon,.btn.icon.alt{width:34px;height:34px;padding:0;background:none;border:0;border-radius:50%;color:var(--ink2);position:relative}
+.btn.icon svg{width:19px;height:19px}
+.btn.icon:first-child{color:var(--moss);margin-right:.45rem;position:relative}
+.btn.icon:first-child::before{content:"";position:absolute;right:-.3rem;top:9px;bottom:9px;width:1px;background:var(--line)}
+.btn.icon:active{background:var(--mist)}
+.cat-actions .btn.icon[aria-expanded="true"]{color:var(--moss);background:var(--mist);border:0}
+.cat-actions .btn.icon[aria-expanded="true"]::after{content:none}
 .ctitle{display:flex;align-items:center;gap:.5rem;width:100%;text-align:left;font:inherit;border-radius:10px}
 .ctitle .chev{width:20px;height:20px;margin-left:auto;color:var(--ink2);transition:transform .2s;flex:none}
 .cat.open .chev{transform:rotate(180deg)}
 .gsteps{border-top:1px solid var(--line);margin-top:1rem;padding-top:1rem}
+.gtools{border-top:1px solid var(--line);margin-top:1rem;padding-top:1rem}
+.gtools h4{font-family:var(--serif);font-size:1rem;margin-bottom:.5rem}
+.gtools ul{list-style:none;font-size:.88rem}
+.gtools li{display:flex;gap:.6rem;align-items:flex-start;margin:.35rem 0}
+.gtools li::before{content:"";flex:none;width:8px;height:8px;margin-top:.5em;border-radius:3px;background:var(--leaf)}
+.gtools .bn{flex:1;min-width:0;display:flex;flex-direction:column}
+.gtools .bn small{color:var(--ink2);font-size:.78rem}
+.gtools li b{font-size:.85rem;font-weight:600;white-space:nowrap;margin-left:auto}
+.gbahan li{margin:.5rem 0}
+.btable-wrap{overflow-x:auto;margin:0 -.2rem}
+.btable{width:100%;border-collapse:collapse;font-size:.8rem}
+.btable th{font-weight:600;color:var(--ink2);text-align:left;padding:.35rem .4rem;border-bottom:1.5px solid var(--line);white-space:nowrap}
+.btable td{padding:.5rem .4rem;border-bottom:1px solid var(--line);vertical-align:top}
+.btable .num{text-align:right;white-space:nowrap}
+.btable th.num{text-align:right}
+.btable tfoot td{font-weight:700;color:var(--moss);border-bottom:0;padding-top:.65rem}
+.btotal{display:flex;justify-content:space-between;gap:.5rem;margin-top:.7rem;padding-top:.6rem;border-top:1px dashed var(--line);font-size:.92rem}
+.btotal b{color:var(--moss)}
+.three{display:grid;grid-template-columns:1.2fr .7fr 1.2fr;gap:.5rem}
+.rowtotal{margin-top:.55rem;font-size:.85rem;color:var(--ink2)}
+.rowtotal b{color:var(--moss)}
+.pacts{display:flex;gap:.1rem;flex:none}
+.pedit.ok{color:var(--moss)}
+.pedit.x{color:var(--danger)}
+.gtools .hint,.gsteps .hint{font-size:.78rem;margin:0 0 .6rem}
+.inrow{display:flex;gap:.3rem;align-items:center;margin-bottom:.4rem}
+.inrow input{flex:1;min-width:0;padding:.45rem .6rem;font-size:.88rem;border-radius:9px}
+.btable.edit{min-width:560px;table-layout:fixed}
+.btable.edit td{vertical-align:middle;padding:.3rem .25rem}
+.btable.edit input{width:100%;min-width:0;padding:.4rem .45rem;font-size:.8rem;border-radius:8px}
+.btable.edit .rt{font-size:.8rem}
+.btable.edit .pedit{width:28px;height:28px}
 .gstep{display:flex;gap:.75rem;margin-bottom:1rem}
 .gstep:last-child{margin-bottom:0}
 .gnum{flex:none;width:28px;height:28px;border-radius:50%;background:var(--mist);border:1px solid var(--line);color:var(--moss);font-size:.82rem;font-weight:700;display:grid;place-items:center}
@@ -182,11 +226,23 @@ nav.tabs button.on{color:var(--moss);font-weight:700}
 /* Modal */
 .modal{position:fixed;inset:0;background:rgba(10,20,12,.55);display:flex;align-items:center;justify-content:center;padding:1rem;z-index:20}
 .sheet{background:var(--paper);width:100%;max-width:520px;max-height:calc(100vh - 2rem - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));overflow:auto;border-radius:22px;padding:1.3rem 1.2rem 1.4rem;box-shadow:0 20px 60px rgba(0,0,0,.28)}
+.phead{display:flex;align-items:center;justify-content:space-between;gap:.5rem;margin-bottom:.5rem}
+.phead h4{font-family:var(--serif);font-size:1rem;margin:0}
+.pedit{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;color:var(--ink2);flex:none}
+.pedit:active{background:var(--mist)}
+.pedit svg{width:17px;height:17px}
+.gtools .empty,.gsteps .empty{font-size:.88rem;color:var(--ink2)}
+.edstep{border:1px solid var(--line);border-radius:14px;padding:.4rem .8rem .9rem;margin-top:.8rem;background:var(--card)}
+.edhead{display:flex;align-items:center;justify-content:space-between;margin-top:.4rem}
+.edhead b{font-family:var(--serif);color:var(--moss)}
+.edtools button{width:30px;height:30px;border-radius:50%;color:var(--ink2);font-size:1rem;line-height:1}
+.edtools button:active{background:var(--mist)}
+.edtools button.x{color:var(--danger)}
 .sheet h3{font-size:1.25rem;margin-bottom:.2rem}
-.sheet .actions{display:flex;gap:.6rem;margin-top:1.2rem}
+.sheet .actions{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1.2rem}
 .sheet .actions .btn{flex:1}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
-#toast{position:fixed;left:50%;bottom:5.2rem;transform:translateX(-50%);background:var(--moss);color:var(--btntext);padding:.6rem 1rem;border-radius:12px;font-size:.9rem;z-index:30;max-width:90%}
+#toast{position:fixed;left:50%;bottom:6.8rem;transform:translateX(-50%);background:var(--moss);color:var(--btntext);padding:.6rem 1rem;border-radius:12px;font-size:.9rem;z-index:30;max-width:90%}
 .net{font-size:.75rem;padding:.15rem .55rem;border-radius:99px;background:var(--sun);color:#2b2208}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
@@ -224,11 +280,11 @@ nav.tabs button.on{color:var(--moss);font-weight:700}
   </header>
   <main id="view"></main>
   <nav class="tabs"><div class="in">
-    <button data-tab="home" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7.5" height="9" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="5" rx="1.5"/><rect x="13.5" y="11" width="7.5" height="10" rx="1.5"/><rect x="3" y="15" width="7.5" height="6" rx="1.5"/></svg>Dashboard</button>
-    <button data-tab="catalog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V11M12 11C12 6 8 4 4 4c0 5 3 7 8 7zM12 14c0-4 3-6 8-6 0 5-3 7-8 6z"/></svg>Panduan</button>
-    <button data-action="custom" aria-label="Buat proyek sendiri"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 9v6M9 12h6"/></svg>Tambah</button>
-    <button data-tab="harvest"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 10h17l-1.6 9.5H5.1z"/><path d="M8 10l3-6M16 10l-3-6"/></svg>Panen</button>
-    <button data-tab="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Setting</button>
+    <button data-tab="home" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7.5" height="9" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="5" rx="1.5"/><rect x="13.5" y="11" width="7.5" height="10" rx="1.5"/><rect x="3" y="15" width="7.5" height="6" rx="1.5"/></svg><span>Dashboard</span></button>
+    <button data-tab="catalog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V11M12 11C12 6 8 4 4 4c0 5 3 7 8 7zM12 14c0-4 3-6 8-6 0 5-3 7-8 6z"/></svg><span>Panduan</span></button>
+    <button data-action="custom" class="fab" aria-label="Tambah proyek"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg><span>Tambah</span></button>
+    <button data-tab="harvest"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 10h17l-1.6 9.5H5.1z"/><path d="M8 10l3-6M16 10l-3-6"/></svg><span>Panen</span></button>
+    <button data-tab="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Setting</span></button>
   </div></nav>
 </div>
 <div id="modalRoot"></div>
@@ -271,6 +327,8 @@ const CATALOG = [
  { id:"kangkung", cat:"tanaman", icon:"🥬", name:"Kangkung darat", level:"Pemula", days:35,
    desc:"Sayur tercepat panen. Cocok untuk pot, polybag, atau bedengan kecil.",
    unit:"ikat",
+   tools:["Polybag, pot, atau bedengan (berlubang drainase)","Sekop tangan atau cangkul kecil","Ember untuk mencampur media dan merendam benih","Gembor atau semprotan air halus","Gunting atau pisau tajam untuk panen","Saringan/tiris untuk mencuci hasil panen"],
+   bahan:[{n:"Benih kangkung darat",g:"50 g",q:1,h:8000},{n:"Tanah gembur",g:"5 kg",q:2,h:5000},{n:"Kompos atau pupuk kandang matang",g:"5 kg",q:1,h:10000},{n:"Sekam padi",g:"1 kg",q:2,h:3000},{n:"Pupuk cair organik (POC)",g:"250 ml",q:1,h:25000},{n:"Air bersih",g:"secukupnya",q:1,h:0}],
    stages:[
     {n:"Siapkan media tanam", day:0, d:"Campur tanah, kompos, dan sekam dengan perbandingan 2:1:1. Isi polybag atau bedengan.", t:["Siapkan wadah/bedengan berlubang drainase","Campur media tanam","Rendam benih 8–12 jam"]},
     {n:"Semai dan tanam", day:1, d:"Tebar atau tanam benih langsung, tutup tipis dengan tanah.", t:["Tebar benih rata, jarak ±3 cm","Siram halus pagi dan sore"]},
@@ -282,6 +340,8 @@ const CATALOG = [
  { id:"cabai", cat:"tanaman", icon:"🌶️", name:"Cabai rawit", level:"Menengah", days:130,
    desc:"Tanaman bernilai tinggi, bisa dipanen berulang selama berbulan-bulan.",
    unit:"gram",
+   tools:["Tray semai atau pot kecil","Polybag atau pot besar","Sekop tangan","Gembor atau semprotan air","Ajir bambu dan tali rafia","Gunting pangkas","Timbangan dapur digital","Hand sprayer untuk pupuk cair dan pengendali hama","Alat jemur atau oven, dan blender untuk pengolahan"],
+   bahan:[{n:"Benih cabai rawit",g:"10 g",q:1,h:15000},{n:"Tanah gembur",g:"5 kg",q:4,h:5000},{n:"Kompos atau pupuk kandang matang",g:"5 kg",q:2,h:10000},{n:"Sekam padi",g:"1 kg",q:3,h:3000},{n:"Pupuk kaya kalium (misalnya abu sekam atau pupuk kalium)",g:"1 kg",q:1,h:25000},{n:"Pupuk cair organik (POC)",g:"250 ml",q:1,h:25000},{n:"Pestisida nabati (opsional)",g:"250 ml",q:1,h:20000},{n:"Air bersih",g:"secukupnya",q:1,h:0}],
    stages:[
     {n:"Semai benih", day:0, d:"Semai di tray atau pot kecil dengan media halus dan kompos.", t:["Rendam benih 6 jam dalam air hangat","Tabur 1–2 benih per lubang","Letakkan di tempat teduh terang"]},
     {n:"Perawatan bibit", day:10, d:"Bibit tumbuh 2–4 daun sejati. Jaga kelembapan dan beri cahaya pagi.", t:["Siram pagi hari","Pindahkan ke cahaya matahari bertahap"]},
@@ -294,6 +354,8 @@ const CATALOG = [
  { id:"tomat", cat:"tanaman", icon:"🍅", name:"Tomat", level:"Menengah", days:100,
    desc:"Buah segar untuk dapur. Butuh sinar matahari penuh dan penyangga.",
    unit:"gram",
+   tools:["Tray semai","Pot ≥ 20 L atau bedengan","Ajir bambu setinggi 1,5 m dan tali rafia","Sekop tangan","Gembor atau selang air","Gunting pangkas","Timbangan dapur digital","Panci dan blender untuk membuat saus"],
+   bahan:[{n:"Benih tomat",g:"10 g",q:1,h:15000},{n:"Tanah gembur",g:"5 kg",q:4,h:5000},{n:"Kompos atau pupuk kandang matang",g:"5 kg",q:2,h:10000},{n:"Sekam padi",g:"1 kg",q:3,h:3000},{n:"Mulsa (jerami atau kompos)",g:"1 kg",q:1,h:5000},{n:"Pupuk kalium dan fosfor",g:"1 kg",q:1,h:30000},{n:"Pupuk cair organik (POC)",g:"250 ml",q:1,h:25000},{n:"Air bersih",g:"secukupnya",q:1,h:0}],
    stages:[
     {n:"Semai benih", day:0, d:"Semai di media halus, tutup tipis.", t:["Rendam benih semalam","Semai di tray","Jaga tetap lembap"]},
     {n:"Pindah tanam", day:21, d:"Bibit 4–5 daun. Tanam dalam, sampai daun bawah.", t:["Siapkan pot ≥ 20 L atau bedengan","Pasang ajir setinggi 1,5 m","Siram setelah tanam"]},
@@ -306,6 +368,8 @@ const CATALOG = [
  { id:"lele", cat:"ternak", icon:"🐟", name:"Lele kolam terpal", level:"Menengah", days:90,
    desc:"Protein hewani cepat panen dengan lahan kecil. Kualitas air kunci utamanya.",
    unit:"kg",
+   tools:["Kolam terpal beserta rangkanya (besi, bambu, atau papan)","Jaring penutup kolam","Selang atau pompa air","Aerator (disarankan)","Kertas lakmus atau pH meter","Ember/baskom untuk aklimatisasi benih","Serok ikan","Timbangan"],
+   bahan:[{n:"Benih lele (ukuran 5–7 cm)",g:"per ekor",q:200,h:500},{n:"Air bersih",g:"secukupnya",q:1,h:0},{n:"EM4 atau probiotik untuk fermentasi air",g:"1 L",q:1,h:25000},{n:"Pakan pelet (starter lalu pembesaran)",g:"10 kg",q:3,h:120000},{n:"Garam ikan (opsional)",g:"1 kg",q:1,h:8000}],
    stages:[
     {n:"Siapkan kolam", day:0, d:"Kolam terpal diameter 2 m, tinggi air 60–80 cm. Isi air dan diamkan 5–7 hari.", t:["Pasang kolam dan tutup jaring","Isi air, fermentasi dengan EM4/probiotik","Cek pH (6,5–8)"]},
     {n:"Tebar benih", day:7, d:"Tebar 100–150 ekor/m² benih ukuran 5–7 cm pagi/sore hari.", t:["Aklimatisasi benih 15 menit","Tebar pelan-pelan","Catat jumlah benih"]},
@@ -318,6 +382,8 @@ const CATALOG = [
  { id:"ayam", cat:"ternak", icon:"🐔", name:"Ayam kampung petelur", level:"Menengah", days:150,
    desc:"Telur harian dan pupuk kandang untuk kebun. Mulai dari DOC sampai bertelur.",
    unit:"butir",
+   tools:["Kandang beratap dengan sirkulasi udara baik","Tempat makan dan minum","Lampu pemanas untuk DOC","Termometer ruangan","Sarang bertelur","Sekop dan sapu untuk membersihkan kandang","Tray atau wadah telur","Timbangan"],
+   bahan:[{n:"DOC atau anakan ayam kampung",g:"per ekor",q:10,h:10000},{n:"Sekam padi sebagai alas kandang (litter)",g:"1 karung",q:2,h:15000},{n:"Pakan (starter, grower, lalu layer)",g:"25 kg",q:4,h:225000},{n:"Air minum bersih",g:"secukupnya",q:1,h:0},{n:"Gula untuk air minum hari pertama",g:"500 g",q:1,h:9000},{n:"Vaksin ND dan vitamin",g:"1 paket",q:1,h:35000},{n:"Desinfektan kandang",g:"500 ml",q:1,h:30000}],
    stages:[
     {n:"Siapkan kandang", day:0, d:"Kandang kering, ventilasi baik, 3–4 ekor/m².", t:["Siapkan litter sekam","Pasang tempat makan dan minum","Siapkan pemanas lampu untuk DOC"]},
     {n:"DOC (0–4 minggu)", day:1, d:"Jaga suhu 32–34°C minggu pertama, turun bertahap.", t:["Beri air gula di hari pertama","Vaksin ND sesuai jadwal","Cek suhu tiap hari"]},
@@ -329,6 +395,8 @@ const CATALOG = [
  { id:"maggot", cat:"energi", icon:"🪱", name:"Budidaya maggot BSF", level:"Pemula", days:45,
    desc:"Ubah sisa dapur jadi pakan ikan/ayam gratis. Menutup siklus pangan di rumah.",
    unit:"kg",
+   tools:["Wadah bertingkat (biopond atau baskom)","Kain atau jaring penutup","Pisau dan talenan atau pencacah sisa organik","Garpu atau sekop kecil untuk mengaduk media","Ayakan untuk memisahkan maggot","Termometer dan pengukur kelembapan (opsional)","Timbangan"],
+   bahan:[{n:"Bibit atau telur maggot BSF",g:"100 g",q:1,h:40000},{n:"Sisa organik (sayur, buah, nasi) sebagai pakan",g:"secukupnya",q:1,h:0},{n:"Dedak atau ampas sebagai media awal",g:"1 kg",q:3,h:8000},{n:"Air bersih",g:"secukupnya",q:1,h:0}],
    stages:[
     {n:"Siapkan wadah dan media", day:0, d:"Wadah berlubang dengan media sisa sayur/buah yang dicacah.", t:["Siapkan wadah bertingkat","Kumpulkan sisa organik","Letakkan di tempat teduh"]},
     {n:"Tebar telur/bibit", day:1, d:"Tebar telur BSF atau bayi maggot di atas media.", t:["Tebar bibit merata","Tutup dengan kain"]},
@@ -340,6 +408,8 @@ const CATALOG = [
  { id:"biogas", cat:"energi", icon:"🔥", name:"Biogas skala rumah", level:"Lanjut", days:60,
    desc:"Gas masak dari kotoran ternak dan sisa organik, plus pupuk cair dari ampasnya.",
    unit:"jam masak",
+   tools:["Digester kedap udara (drum, tong, atau tangki)","Pipa PVC dan sambungannya","Penampung gas (balon atau tangki gas)","Manometer atau pengukur tekanan","Kran/katup gas dan selang gas","Kompor biogas","Air sabun dan botol semprot untuk uji kebocoran","Ember dan pengaduk","Sarung tangan dan masker"],
+   bahan:[{n:"Kotoran ternak segar (sapi, kambing, atau ayam)",g:"50 kg",q:1,h:0},{n:"Air untuk campuran bahan baku",g:"secukupnya",q:1,h:0},{n:"Starter (lumpur atau kotoran sapi yang sudah terfermentasi)",g:"20 kg",q:1,h:0},{n:"Lem pipa dan seal tape",g:"1 set",q:1,h:25000},{n:"Sabun untuk uji kebocoran",g:"100 ml",q:1,h:10000}],
    stages:[
     {n:"Rencana dan bahan", day:0, d:"Hitung kebutuhan dan sumber bahan baku (kotoran ternak, sisa dapur).", t:["Tentukan ukuran digester","Siapkan lahan datar","Kumpulkan bahan baku rutin"]},
     {n:"Pasang digester", day:7, d:"Pasang tabung/drum digester, pipa, dan penampung gas.", t:["Pasang wadah digester kedap udara","Pasang pipa masuk dan keluar","Uji kebocoran dengan air sabun"]},
@@ -351,6 +421,19 @@ const CATALOG = [
 ];
 const CATS = { all:"Semua", tanaman:"Tanaman", ternak:"Ternak", energi:"Energi" };
 const byId = id => CATALOG.find(c => c.id === id);
+const clone = o => JSON.parse(JSON.stringify(o));
+const rp = n => "Rp " + Math.round(Number(n) || 0).toLocaleString("id-ID");
+const normBahan = b => typeof b === "string" ? { n: b, g: "", q: 1, h: 0 } : { n: String(b?.n || ""), g: String(b?.g || ""), q: Math.max(0, Number(b?.q) || 0), h: Math.max(0, Number(b?.h) || 0) };
+const bahanTotal = l => l.reduce((a, b) => a + b.q * b.h, 0);
+const CATALOG_BASE = clone(CATALOG);   /* salinan bawaan, untuk "Kembalikan bawaan" */
+let guideEdits = {}, catOpen = {}, editing = null;      /* hasil edit pengguna per panduan; panel yang sedang terbuka */
+function applyEdits(){
+  CATALOG.forEach(c => {
+    const base = CATALOG_BASE.find(b => b.id === c.id), e = guideEdits[c.id] || {};
+    ["tools", "bahan", "stages"].forEach(k => { c[k] = clone(Array.isArray(e[k]) ? e[k] : (base[k] || [])); });
+    c.bahan = c.bahan.map(normBahan);
+  });
+}
 
 /* Ikon garis geometris (mengikuti warna tema). Untuk menambah ikon baru, tambahkan di sini sesuai id panduan. */
 const ICONS = {
@@ -422,13 +505,17 @@ $("#btnReset").onclick = async () => {
 
 onAuthStateChanged(auth, u => {
   user = u;
-  unsubs.forEach(f => f()); unsubs = []; projects = []; logs = {};
+  unsubs.forEach(f => f()); unsubs = []; projects = []; logs = {}; guideEdits = {}; applyEdits();
   if (!u) { $("#app").classList.add("hidden"); $("#login").classList.remove("hidden"); return; }
   $("#login").classList.add("hidden"); $("#app").classList.remove("hidden");
   setDoc(doc(db, "users", u.uid), { email: u.email || null, name: u.displayName || null, lastSeen: serverTimestamp() }, { merge: true }).catch(() => {});
   const q = query(collection(db, "users", u.uid, "projects"), orderBy("createdAt", "desc"));
-  unsubs.push(onSnapshot(q, snap => { projects = snap.docs.map(d => ({ id: d.id, ...d.data() })); render(); },
+  unsubs.push(onSnapshot(q, snap => { projects = snap.docs.map(d => ({ id: d.id, ...d.data() })); if (!editing) render(); },
     e => { toast(errMsg(e)); }));
+  unsubs.push(onSnapshot(collection(db, "users", u.uid, "guides"), snap => {
+    guideEdits = {}; snap.docs.forEach(d => { guideEdits[d.id] = d.data(); }); applyEdits();
+    if (tab === "catalog" && !openId && !editing) render();
+  }, () => {}));
   render();
 });
 
@@ -449,6 +536,7 @@ $("#btnBack").onclick = () => { openId = null; render(); };
 
 function render(){
   if (!user) return;
+  editing = null;
   document.querySelectorAll("nav.tabs button").forEach(b => b.classList.toggle("on", b.dataset.tab === tab && !openId));
   const back = $("#btnBack"), logo = $("#topLogo"), title = $("#topTitle");
   if (openId) {
@@ -579,27 +667,155 @@ function renderHarvest(){
 
 /* ---------------- PANDUAN ---------------- */
 function renderCatalog(){
+  editing = null;
   const list = CATALOG.filter(c => catFilter === "all" || c.cat === catFilter);
   view.innerHTML = `
     <div class="filters">${Object.entries(CATS).map(([k, v]) => `<button data-f="${k}" class="${catFilter === k ? "on" : ""}">${v}</button>`).join("")}</div>
-    ${list.map(c => `<div class="cat"><h3><button class="ctitle" data-toggle aria-expanded="false"><span class="ico sm">${icon(c.id)}</span><span>${esc(c.name)}</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button></h3>
+    ${list.map(c => `<div class="cat" data-id="${c.id}"><h3><button class="ctitle" aria-expanded="false"><span class="ico sm">${icon(c.id)}</span><span>${esc(c.name)}</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button></h3>
       <p>${esc(c.desc)}</p>
       <div class="meta"><span>${c.level}</span><span>±${c.days} hari</span><span>${c.stages.length} tahap</span><span>Hasil: ${c.unit}</span></div>
-      <div class="cat-actions"><button class="btn small" data-start="${c.id}">Mulai proyek ini</button>
-        <button class="btn small alt" data-toggle data-steps-btn aria-expanded="false">Step by Step</button></div>
-      <div class="gsteps hidden">${c.stages.map((s, i) => `<div class="gstep"><div class="gnum${s.type === "harvest" ? " h" : ""}">${i + 1}</div>
+      <div class="cat-actions"><button class="btn small icon" data-start="${c.id}" aria-label="Mulai proyek ini" title="Mulai proyek ini"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg></button>
+        ${`<button class="btn small alt icon" data-panel-btn="gbahan" data-label="bahan" aria-expanded="false" aria-label="Bahan" title="Bahan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6l-1 3h-4z"/><path d="M10 6C6 8 5 12 5 15.5 5 19 7.5 21 12 21s7-2 7-5.5C19 12 18 8 14 6"/><path d="M12 11v6M9.5 13.5h5"/></svg></button>`}
+        ${`<button class="btn small alt icon" data-panel-btn="gtools" data-label="alat" aria-expanded="false" aria-label="Alat" title="Alat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></button>`}
+        <button class="btn small alt icon" data-steps-btn aria-expanded="false" aria-label="Step by Step" title="Step by Step"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/></svg></button></div>
+      <div class="gtools gbahan hidden"><div class="phead"><h4>Bahan yang dibutuhkan</h4><button class="pedit" data-edit="bahan" aria-label="Edit bahan" title="Edit bahan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></button></div>${c.bahan.length ? `<div class="btable-wrap"><table class="btable"><thead><tr><th>Bahan</th><th>Gramasi</th><th class="num">Qty</th><th class="num">Harga</th><th class="num">Total</th></tr></thead>
+        <tbody>${c.bahan.map(b => `<tr><td>${esc(b.n)}</td><td>${esc(b.g) || "–"}</td><td class="num">${b.q}</td><td class="num">${rp(b.h)}</td><td class="num">${rp(b.q * b.h)}</td></tr>`).join("")}</tbody>
+        <tfoot><tr><td colspan="4">Total harga bahan</td><td class="num">${rp(bahanTotal(c.bahan))}</td></tr></tfoot></table></div>` : `<p class="empty">Belum ada bahan. Ketuk pensil untuk menambah.</p>`}</div>
+      <div class="gtools gtoolsbox hidden"><div class="phead"><h4>Alat yang dibutuhkan</h4><button class="pedit" data-edit="tools" aria-label="Edit alat" title="Edit alat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></button></div>${c.tools.length ? `<ul>${c.tools.map(t => `<li>${esc(t)}</li>`).join("")}</ul>` : `<p class="empty">Belum ada alat. Ketuk pensil untuk menambah.</p>`}</div>
+      <div class="gsteps hidden"><div class="phead"><h4>Tahapan</h4><button class="pedit" data-edit="steps" aria-label="Edit tahapan" title="Edit tahapan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></button></div>${c.stages.length ? "" : `<p class="empty">Belum ada tahap. Ketuk pensil untuk menambah.</p>`}${c.stages.map((s, i) => `<div class="gstep"><div class="gnum${s.type === "harvest" ? " h" : ""}">${i + 1}</div>
         <div class="gbody"><h4>${esc(s.n)}${s.type === "harvest" ? '<span class="chip done">Panen</span>' : s.type === "process" ? '<span class="chip">Olah</span>' : ""}</h4>
           <div class="when">Hari ke-${s.day + 1}</div>${s.d ? `<p>${esc(s.d)}</p>` : ""}
           <ul>${s.t.map(t => `<li>${esc(t)}</li>`).join("")}</ul></div></div>`).join("")}</div></div>`).join("")}`;
   view.querySelectorAll("[data-f]").forEach(b => b.onclick = () => { catFilter = b.dataset.f; render(); });
   view.querySelectorAll("[data-start]").forEach(b => b.onclick = () => startSheet(b.dataset.start));
-  view.querySelectorAll("[data-toggle]").forEach(b => b.onclick = () => {
-    const card = b.closest(".cat"), box = card.querySelector(".gsteps");
-    const open = !box.classList.toggle("hidden");
-    card.classList.toggle("open", open);
-    card.querySelectorAll("[data-toggle]").forEach(x => x.setAttribute("aria-expanded", open));
-    card.querySelector("[data-steps-btn]").textContent = open ? "Tutup step" : "Step by Step";
-  });
+  /* Ikon Step by Step / Alat / Bahan: satu panel per kartu. Panah di judul: buka semuanya, ketuk lagi untuk menutup semuanya. */
+  const PANELS = { steps:".gsteps", gtools:".gtoolsbox", gbahan:".gbahan" }, PNAMES = Object.keys(PANELS);
+  function setPanels(card, next){
+    PNAMES.forEach(n => card.querySelector(PANELS[n]).classList.toggle("hidden", !next.includes(n)));
+    const all = next.length === PNAMES.length;
+    card.classList.toggle("open", all);
+    card.querySelector(".ctitle").setAttribute("aria-expanded", all);
+    card.querySelector("[data-steps-btn]").setAttribute("aria-expanded", next.includes("steps"));
+    card.querySelectorAll("[data-panel-btn]").forEach(x => x.setAttribute("aria-expanded", next.includes(x.dataset.panelBtn)));
+    catOpen[card.dataset.id] = next.length ? next : null;
+  }
+  function showPanel(card, name){
+    const open = PNAMES.filter(n => !card.querySelector(PANELS[n]).classList.contains("hidden"));
+    if (name === "all") return setPanels(card, open.length === PNAMES.length ? [] : PNAMES);
+    setPanels(card, open.length === 1 && open[0] === name ? [] : [name]);
+  }
+  view.querySelectorAll(".ctitle").forEach(b => b.onclick = () => showPanel(b.closest(".cat"), "all"));
+  view.querySelectorAll("[data-steps-btn]").forEach(b => b.onclick = () => showPanel(b.closest(".cat"), "steps"));
+  view.querySelectorAll("[data-panel-btn]").forEach(b => b.onclick = () => showPanel(b.closest(".cat"), b.dataset.panelBtn));
+  view.querySelectorAll("[data-edit]").forEach(b => b.onclick = () => editGuide(b.closest(".cat").dataset.id, b.dataset.edit));
+  view.querySelectorAll(".cat").forEach(card => { const o = catOpen[card.dataset.id]; if (o) setPanels(card, o); });
+}
+
+/* ---------------- EDIT PANDUAN (alat, bahan, tahapan): langsung di tempat, tanpa pop up ---------------- */
+const lines = v => String(v || "").split("\n").map(x => x.trim()).filter(Boolean);
+function saveGuide(id, patch){
+  guideEdits[id] = { ...(guideEdits[id] || {}), ...patch }; applyEdits();
+  toast("Perubahan disimpan."); render();
+  setDoc(doc(db, "users", user.uid, "guides", id), { ...patch, updatedAt: serverTimestamp() }, { merge: true }).catch(e => toast(errMsg(e)));
+}
+function freezeRunning(id){   /* proyek berjalan yang belum punya salinan tahap dibekukan, agar centang tugasnya tidak bergeser */
+  const old = clone(byId(id).stages);
+  projects.filter(p => p.tplId === id && !p.stages).forEach(p =>
+    updateDoc(doc(db, "users", user.uid, "projects", p.id), { stages: old }).catch(() => {}));
+}
+const IC = d => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+const IC_X = IC('<path d="M6 6l12 12M18 6L6 18"/>'), IC_OK = IC('<path d="M5 12.5l4.5 4.5L19 7.5"/>'), IC_UNDO = IC('<path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/>');
+const PANEL_SEL = { steps:".gsteps", tools:".gtoolsbox", bahan:".gbahan" };
+const PANEL_TITLE = { steps:"Tahapan", tools:"Alat yang dibutuhkan", bahan:"Bahan yang dibutuhkan" };
+/* Mengubah panel yang sedang dibuka menjadi mode edit. Tombol: Kembalikan bawaan (jika pernah diedit), Batal, Simpan. */
+function inlineShell(id, kind, hint, body){
+  const edited = Array.isArray(guideEdits[id]?.[kind === "steps" ? "stages" : kind]);
+  const panel = view.querySelector(`.cat[data-id="${id}"] ${PANEL_SEL[kind]}`);
+  editing = { id, kind };
+  panel.innerHTML = `<div class="phead"><h4>${PANEL_TITLE[kind]}</h4><span class="pacts">${edited ? `<button class="pedit" id="edReset" aria-label="Kembalikan bawaan" title="Kembalikan bawaan">${IC_UNDO}</button>` : ""}<button class="pedit" id="edX" aria-label="Batal" title="Batal">${IC_X}</button><button class="pedit ok" id="edOk" aria-label="Simpan" title="Simpan">${IC_OK}</button></span></div>
+    <p class="muted hint">${hint}</p>${body}`;
+  panel.querySelector("#edX").onclick = () => render();
+  return panel;
+}
+function editGuide(id, kind){
+  const c = byId(id); if (!c) return;
+  if (kind === "steps") return editSteps(c);
+  if (kind === "bahan") return editBahan(c);
+  editTools(c);
+}
+function editTools(c){
+  let work = [...c.tools];
+  const s = inlineShell(c.id, "tools", "Satu alat per kolom. Ketuk ✓ untuk menyimpan.", `<div id="edList"></div><button class="btn alt small" id="edAdd" style="margin-top:.4rem">+ Tambah alat</button>`);
+  const box = s.querySelector("#edList");
+  const collect = () => { work = [...box.querySelectorAll(".i-n")].map(i => i.value.trim()); };
+  const draw = () => {
+    box.innerHTML = work.map(t => `<div class="inrow"><input class="i-n" value="${esc(t)}" placeholder="Nama alat"><button class="pedit x" data-rm aria-label="Hapus alat" title="Hapus alat">${IC_X}</button></div>`).join("");
+    box.querySelectorAll("[data-rm]").forEach((b, i) => b.onclick = () => { collect(); work.splice(i, 1); draw(); });
+  };
+  draw();
+  s.querySelector("#edAdd").onclick = () => { collect(); work.push(""); draw(); box.lastElementChild?.querySelector("input").focus(); };
+  s.querySelector("#edOk").onclick = () => { collect(); saveGuide(c.id, { tools: work.filter(Boolean) }); };
+  s.querySelector("#edReset")?.addEventListener("click", () => { if (confirm("Kembalikan alat ke daftar bawaan?")) saveGuide(c.id, { tools: null }); });
+}
+function editBahan(c){
+  let work = clone(c.bahan);
+  const s = inlineShell(c.id, "bahan", "Gramasi = ukuran per satuan, harga = harga per satuan. Total dihitung otomatis. Harga awal hanya perkiraan.",
+    `<div class="btable-wrap"><table class="btable edit"><colgroup><col style="width:30%"><col style="width:17%"><col style="width:10%"><col style="width:19%"><col style="width:17%"><col style="width:7%"></colgroup>
+      <thead><tr><th>Bahan</th><th>Gramasi</th><th class="num">Qty</th><th class="num">Harga</th><th class="num">Total</th><th></th></tr></thead>
+      <tbody id="edBahan"></tbody>
+      <tfoot><tr><td colspan="4">Total harga bahan</td><td class="num" id="edGrand"></td><td></td></tr></tfoot></table></div>
+    <button class="btn alt small" id="edAdd" style="margin-top:.6rem">+ Tambah bahan</button>`);
+  const box = s.querySelector("#edBahan");
+  const collect = () => { work = [...box.querySelectorAll("tr")].map(tr => normBahan({
+    n: tr.querySelector(".b-n").value.trim(), g: tr.querySelector(".b-g").value.trim(), q: tr.querySelector(".b-q").value, h: tr.querySelector(".b-h").value })); };
+  const totals = () => { collect(); box.querySelectorAll("tr").forEach((tr, i) => { tr.querySelector(".rt").textContent = rp(work[i].q * work[i].h); });
+    s.querySelector("#edGrand").textContent = rp(bahanTotal(work)); };
+  const draw = () => {
+    box.innerHTML = work.map(b => `<tr><td><input class="b-n" value="${esc(b.n)}" placeholder="Nama bahan"></td>
+      <td><input class="b-g" value="${esc(b.g)}" placeholder="50 g"></td>
+      <td><input class="b-q" type="number" min="0" step="any" inputmode="decimal" value="${b.q}"></td>
+      <td><input class="b-h" type="number" min="0" step="any" inputmode="numeric" value="${b.h}"></td>
+      <td class="num rt">${rp(b.q * b.h)}</td>
+      <td><button class="pedit x" data-rm aria-label="Hapus bahan" title="Hapus bahan">${IC_X}</button></td></tr>`).join("");
+    box.querySelectorAll("[data-rm]").forEach((b, i) => b.onclick = () => { collect(); work.splice(i, 1); draw(); });
+    s.querySelector("#edGrand").textContent = rp(bahanTotal(work));
+  };
+  box.addEventListener("input", totals);
+  draw();
+  s.querySelector("#edAdd").onclick = () => { collect(); work.push({ n: "", g: "", q: 1, h: 0 }); draw(); box.lastElementChild?.querySelector(".b-n").focus(); };
+  s.querySelector("#edOk").onclick = () => { collect(); saveGuide(c.id, { bahan: work.filter(b => b.n) }); };
+  s.querySelector("#edReset")?.addEventListener("click", () => { if (confirm("Kembalikan bahan ke daftar bawaan?")) saveGuide(c.id, { bahan: null }); });
+}
+function editSteps(c){
+  let work = clone(c.stages);
+  const s = inlineShell(c.id, "steps", "Tahap diurutkan otomatis menurut hari. Proyek yang sudah berjalan tidak berubah.", `<div id="edSteps"></div><button class="btn alt small" id="edAdd" style="margin-top:.8rem">+ Tambah tahap</button>`);
+  const box = s.querySelector("#edSteps");
+  const collect = () => { work = [...box.querySelectorAll(".edstep")].map(el => {
+    const o = { n: el.querySelector(".e-n").value.trim(), day: Math.max(0, (parseInt(el.querySelector(".e-day").value, 10) || 1) - 1),
+      d: el.querySelector(".e-d").value.trim(), t: lines(el.querySelector(".e-t").value) };
+    const ty = el.querySelector(".e-type").value; if (ty) o.type = ty; return o; }); };
+  const draw = () => {
+    box.innerHTML = work.map((st, i) => `<div class="edstep"><div class="edhead"><b>Tahap ${i + 1}</b>
+      <span class="edtools"><button data-mv="-1" aria-label="Naikkan" title="Naikkan">↑</button><button data-mv="1" aria-label="Turunkan" title="Turunkan">↓</button><button class="x" data-rm aria-label="Hapus tahap" title="Hapus tahap">✕</button></span></div>
+      <label>Nama tahap</label><input class="e-n" value="${esc(st.n)}">
+      <div class="two"><div><label>Hari ke-</label><input class="e-day" type="number" min="1" value="${st.day + 1}"></div>
+      <div><label>Jenis</label><select class="e-type"><option value="">Biasa</option><option value="harvest"${st.type === "harvest" ? " selected" : ""}>Panen</option><option value="process"${st.type === "process" ? " selected" : ""}>Olah</option></select></div></div>
+      <label>Penjelasan</label><textarea class="e-d" rows="2">${esc(st.d)}</textarea>
+      <label>Tugas (satu per baris)</label><textarea class="e-t" rows="4">${esc(st.t.join("\n"))}</textarea></div>`).join("");
+    box.querySelectorAll(".edstep").forEach((el, i) => {
+      el.querySelectorAll("[data-mv]").forEach(b => b.onclick = () => { collect(); const j = i + Number(b.dataset.mv); if (j < 0 || j >= work.length) return; [work[i], work[j]] = [work[j], work[i]]; draw(); });
+      el.querySelector("[data-rm]").onclick = () => { collect(); if (work.length > 1 && !confirm("Hapus tahap ini?")) return; work.splice(i, 1); draw(); };
+    });
+  };
+  draw();
+  s.querySelector("#edAdd").onclick = () => { collect(); const last = work[work.length - 1]; work.push({ n: "", day: last ? last.day + 1 : 0, d: "", t: [] }); draw(); box.lastElementChild?.scrollIntoView({ block: "center" }); };
+  s.querySelector("#edOk").onclick = () => {
+    collect();
+    const clean = work.filter(st => st.n).map((st, i) => ({ st, i })).sort((a, b) => a.st.day - b.st.day || a.i - b.i).map(x => x.st);
+    if (!clean.length) { toast("Isi minimal satu tahap dengan nama."); return; }
+    freezeRunning(c.id); saveGuide(c.id, { stages: clean });
+  };
+  s.querySelector("#edReset")?.addEventListener("click", () => { if (confirm("Kembalikan tahapan ke bawaan?")) { freezeRunning(c.id); saveGuide(c.id, { stages: null }); } });
 }
 
 /* ---------------- MODAL ---------------- */
@@ -626,6 +842,7 @@ function startSheet(id){
     const data = { tplId: tpl ? tpl.id : "custom", name, icon: tpl ? tpl.icon : "🌱", cat: tpl ? tpl.cat : "tanaman",
       startDate: s.querySelector("#pDate").value || today(), unit: s.querySelector("#pUnit").value.trim() || "kg",
       note: s.querySelector("#pNote").value.trim(), done: {}, harvest: [], completed: false, createdAt: serverTimestamp() };
+    if (tpl) data.stages = clone(tpl.stages);   /* salinan tahap, supaya edit panduan tidak mengubah proyek yang sedang berjalan */
     if (!tpl) data.stages = [{ n:"Persiapan", day:0, d:"", t:["Siapkan lahan/kandang"] }, { n:"Perawatan", day:7, d:"", t:["Perawatan rutin"] }, { n:"Panen", day:60, d:"", t:["Catat hasil panen"], type:"harvest" }, { n:"Pengolahan", day:61, d:"", t:["Olah hasil panen"], type:"process" }];
     try { const r = await addDoc(collection(db, "users", user.uid, "projects"), data); closeSheet(); toast("Proyek dimulai."); tab = "home"; openId = r.id; watchLogs(r.id); render(); }
     catch(e){ toast(errMsg(e)); }
