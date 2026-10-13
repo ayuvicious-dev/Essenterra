@@ -132,6 +132,20 @@ nav.tabs button.fab span{position:absolute;width:1px;height:1px;overflow:hidden;
 .filters{display:flex;gap:.5rem;overflow-x:auto;padding-bottom:.4rem;margin-bottom:.6rem}
 .filters button{padding:.4rem .9rem;border-radius:99px;border:1.5px solid var(--sage);color:var(--moss);white-space:nowrap;font-size:.88rem}
 .filters button.addcat{border-style:dashed}
+.filters button,.filterbar button{touch-action:manipulation;-webkit-user-select:none;user-select:none}
+.filterbar .catedwrap{flex:none;display:inline-flex;align-items:center;border:1.5px solid var(--moss);border-radius:99px;background:var(--paper);padding-right:.2rem}
+.filterbar input.catedit{flex:none;padding:.4rem .2rem .4rem .9rem;border:0;border-radius:99px;font-size:.88rem;background:transparent;outline:none}
+.filterbar button.catdel{padding:0;border:0;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;color:var(--danger);flex:none}
+.filterbar button.catdel:active{background:var(--mist)}
+.filterbar button.catdel svg{width:16px;height:16px}
+.filters button[data-f]{transition:transform .15s}
+.filters button.dragging{transition:none;position:relative;z-index:3;box-shadow:0 4px 12px rgba(31,43,34,.25);background:var(--herobg)}
+.filterbar{display:flex;align-items:flex-start;gap:.5rem;margin-bottom:.5rem}
+.filterbar .fixgrp{display:flex;gap:.5rem;flex:none}
+.catbar .filterbar .filters{flex:1;min-width:0;margin-bottom:0}
+.filterbar .fixgrp button[data-f="all"]{padding:.4rem;display:grid;place-items:center;border-radius:99px;border:1.5px solid var(--sage);color:var(--moss);white-space:nowrap;font-size:.88rem}
+.filterbar .fixgrp button[data-f="all"] svg{width:22px;height:22px}
+.filterbar .fixgrp button[data-f="all"].on{background:var(--moss);color:var(--btntext);border-color:var(--moss)}
 .filters button.on{background:var(--moss);color:var(--btntext);border-color:var(--moss)}
 .catbar{position:sticky;top:calc(var(--hdr,70px) - 1px);z-index:4;background:var(--bg);margin:-.35rem -1rem .5rem;padding:.35rem 1rem .05rem}
 .catbar .filters{margin-bottom:.5rem}
@@ -207,6 +221,10 @@ nav.tabs button.fab span{position:absolute;width:1px;height:1px;overflow:hidden;
 .gstep .gbody p{margin:.3rem 0 .4rem;font-size:.88rem}
 .gbody ul{margin-left:1.1rem;font-size:.88rem}
 .gbody li{margin:.15rem 0}
+.media{display:flex;align-items:center;flex-wrap:wrap;gap:.4rem;margin:.8rem 0 0}
+.media .mlabel{font-size:.78rem;color:var(--ink2);margin-right:.2rem}
+.media button{padding:.3rem .8rem;border-radius:99px;border:1.5px solid var(--sage);color:var(--moss);font-size:.82rem;touch-action:manipulation}
+.media button.on{background:var(--moss);color:var(--btntext);border-color:var(--moss);font-weight:600}
 .cat p{font-size:.9rem;color:var(--ink2);margin:.35rem 0 .7rem}
 .meta{display:flex;flex-wrap:wrap;gap:.4rem;margin:.8rem 0}
 .meta button.catchip{font-size:.78rem;background:var(--moss);color:var(--btntext);padding:.15rem .6rem;border-radius:8px;font-weight:600}
@@ -436,12 +454,98 @@ const CATALOG = [
     {n:"Pengolahan ampas", day:36, d:"Ampas (slurry) jadi pupuk cair dan padat.", t:["Pisahkan cair dan padat","Pakai pupuk untuk kebun","Isi bahan baku tiap hari"], type:"process"}
    ]}
 ];
-const CATS = { all:"Semua", tanaman:"Tanaman", ternak:"Ternak", energi:"Energi", air:"Air", kompos:"Kompos & Limbah", obat:"Tanaman obat" };
+const CATS = { all:"Semua", tanaman:"Tanaman", ternak:"Ternak", energi:"Energi", air:"Air", kompos:"Kompos & Limbah", obat:"Tanaman obat", pangan:"Pangan pokok", ikan:"Perikanan", pupuk:"Pupuk & hama", benih:"Benih & bibit", olahan:"Pengolahan", hidro:"Hidroponik" };
+/* ---------------- VARIAN MEDIA TANAM ----------------
+   Panduan tanaman bisa punya varian media selain tanah. Isi tanah ada di CATALOG; varian lain di sini.
+   Tiap varian: days, tools, bahan, stages. Menambah media baru: tambah kunci di MEDIA dan di sini. */
+const MEDIA = { tanah:"Tanah", hidroponik:"Hidroponik", aeroponik:"Aeroponik" };
+const SEMAI_TIPS = ["Rendam benih 8–12 jam","Basahi rockwool, buat lubang kecil, masukkan 2–3 benih per kotak","Simpan di tempat teduh dan jaga tetap lembap"];
+const VARIANTS = {
+ kangkung:{
+  hidroponik:{ days:28,
+   tools:["Bak/wadah rakit (box plastik atau styrofoam) dengan tutup berlubang","Net pot kecil 5 cm","Nampan semai dan botol semprot","TDS/EC meter","pH meter atau kertas lakmus","Gelas ukur atau spuit untuk takaran nutrisi","Aerator mini (opsional, menjaga oksigen larutan)","Gunting atau pisau tajam untuk panen","Saringan/tiris untuk mencuci hasil panen"],
+   bahan:[{n:"Benih kangkung darat",g:"50 g",q:1,h:8000},{n:"Rockwool atau busa semai",g:"1 slab",q:1,h:25000},{n:"Nutrisi hidroponik AB mix",g:"1 set (A dan B)",q:1,h:35000},{n:"Net pot 5 cm",g:"isi 25",q:1,h:12000},{n:"pH down/pH up (opsional)",g:"100 ml",q:1,h:20000},{n:"Air bersih (diendapkan semalam)",g:"secukupnya",q:1,h:0}],
+   stages:[
+    {n:"Siapkan instalasi dan larutan nutrisi", day:0, d:"Isi bak rakit dengan air, lalu campur nutrisi AB mix sesuai takaran kemasan. Target awal: EC sekitar 1,0–1,5 mS/cm dan pH 5,5–6,5.", t:["Cuci bak dan net pot sampai bersih","Isi air, tambahkan nutrisi A dan B secara terpisah (jangan dicampur pekat)","Cek EC dan pH, sesuaikan bila perlu"]},
+    {n:"Semai di rockwool", day:1, d:"Tanam benih di rockwool lembap, tanpa tanah.", t:SEMAI_TIPS},
+    {n:"Perkecambahan", day:4, d:"Benih berkecambah dalam 2–4 hari. Setelah muncul kecambah, beri cahaya terang.", t:["Semprot air bila rockwool mengering","Pindahkan ke tempat terang dengan matahari pagi"]},
+    {n:"Pindah ke instalasi", day:8, d:"Bibit 2–3 daun dan akar mulai keluar dari rockwool.", t:["Masukkan rockwool ke net pot","Pasang net pot di bak sampai ujung akar menyentuh larutan","Cek EC dan pH"]},
+    {n:"Pertumbuhan daun", day:12, d:"Kangkung menyerap air dan nitrogen dengan cepat. Jaga larutan tetap bersih.", t:["Cek EC dan pH tiap 2–3 hari","Tambah air atau nutrisi bila volume turun","Ganti larutan tiap 10–14 hari","Tutup bak dari cahaya agar lumut tidak tumbuh"]},
+    {n:"Siap panen", day:21, d:"Tinggi 20–25 cm. Potong 5 cm di atas pangkal agar tumbuh lagi.", t:["Potong batang, sisakan 2–3 ruas","Tambah nutrisi setelah panen"], type:"harvest"},
+    {n:"Pengolahan", day:22, d:"Segarkan dan simpan, atau olah segera.", t:["Cuci bersih dan tiriskan","Simpan di kulkas dibungkus kertas lembap (3–4 hari)","Olah jadi tumis, pecel, atau keripik"], type:"process"}
+   ]},
+  aeroponik:{ days:25,
+   tools:["Tangki larutan tertutup rapat (tidak tembus cahaya)","Pompa air mini dan timer siklus semprot","Pipa/selang dan nozzle kabut","Tray tanam berlubang dan net pot","Nampan semai dan botol semprot","TDS/EC meter","pH meter atau kertas lakmus","Gelas ukur atau spuit","Gunting untuk panen"],
+   bahan:[{n:"Benih kangkung darat",g:"50 g",q:1,h:8000},{n:"Rockwool atau busa semai",g:"1 slab",q:1,h:25000},{n:"Nutrisi hidroponik AB mix",g:"1 set (A dan B)",q:1,h:35000},{n:"Net pot 5 cm",g:"isi 25",q:1,h:12000},{n:"Nozzle kabut cadangan",g:"isi 5",q:1,h:20000},{n:"pH down/pH up (opsional)",g:"100 ml",q:1,h:20000},{n:"Air bersih (diendapkan semalam)",g:"secukupnya",q:1,h:0}],
+   stages:[
+    {n:"Rakit instalasi aeroponik", day:0, d:"Pasang tangki, pompa, timer, dan nozzle di bawah tray tanam. Uji semprotan sebelum ada tanaman. Ruang akar harus gelap dan tertutup.", t:["Pasang pompa dan nozzle, pastikan kabut merata","Atur timer (contoh: semprot 5–10 detik tiap 3–5 menit, sesuaikan pompa dan nozzle)","Isi larutan nutrisi: EC sekitar 1,0–1,5 dan pH 5,5–6,5"]},
+    {n:"Semai di rockwool", day:1, d:"Tanam benih di rockwool lembap, tanpa tanah.", t:SEMAI_TIPS},
+    {n:"Perkecambahan", day:4, d:"Benih berkecambah dalam 2–4 hari. Setelah muncul kecambah, beri cahaya terang.", t:["Semprot air bila rockwool mengering","Pindahkan ke tempat terang dengan matahari pagi"]},
+    {n:"Pindah ke tray aeroponik", day:7, d:"Bibit 2 daun. Akar akan menggantung di ruang kabut.", t:["Masukkan rockwool ke net pot","Pasang net pot di lubang tray","Pastikan akar terkena kabut, bukan tergenang"]},
+    {n:"Pertumbuhan daun", day:10, d:"Akar cepat kering bila semprotan berhenti, jadi cek sistem tiap hari.", t:["Cek pompa, timer, dan nozzle tiap hari (jangan sampai mampet)","Cek EC dan pH tiap 2 hari","Ganti larutan tiap 7–10 hari"]},
+    {n:"Siap panen", day:18, d:"Tinggi 20–25 cm. Potong 5 cm di atas pangkal agar tumbuh lagi.", t:["Potong batang, sisakan 2–3 ruas","Tambah nutrisi setelah panen"], type:"harvest"},
+    {n:"Pengolahan", day:19, d:"Segarkan dan simpan, atau olah segera.", t:["Cuci bersih dan tiriskan","Simpan di kulkas dibungkus kertas lembap (3–4 hari)","Olah jadi tumis, pecel, atau keripik"], type:"process"}
+   ]}
+ },
+ cabai:{
+  hidroponik:{ days:120,
+   tools:["Tray semai","Pot/polybag/ember ±10 L berlubang drainase (media cocopeat)","Reservoir nutrisi, pompa kecil, selang tetes (drip), dan timer","Ajir bambu dan tali rafia","TDS/EC meter","pH meter atau kertas lakmus","Gunting pangkas","Timbangan dapur digital","Hand sprayer untuk pengendali hama","Alat jemur atau oven, dan blender untuk pengolahan"],
+   bahan:[{n:"Benih cabai rawit",g:"10 g",q:1,h:15000},{n:"Rockwool atau media semai halus",g:"1 slab",q:1,h:25000},{n:"Cocopeat atau campuran cocopeat dan sekam bakar",g:"5 kg",q:3,h:18000},{n:"Nutrisi hidroponik AB mix (sayuran buah)",g:"1 set (A dan B)",q:2,h:45000},{n:"pH down/pH up (opsional)",g:"100 ml",q:1,h:20000},{n:"Pestisida nabati (opsional)",g:"250 ml",q:1,h:20000},{n:"Air bersih",g:"secukupnya",q:1,h:0}],
+   stages:[
+    {n:"Semai benih", day:0, d:"Semai di rockwool atau media halus, jaga tetap lembap.", t:["Rendam benih 6 jam dalam air hangat","Tabur 1–2 benih per lubang","Letakkan di tempat teduh terang"]},
+    {n:"Perawatan bibit", day:10, d:"Setelah daun sejati muncul, beri nutrisi encer (EC sekitar 0,8) dan cahaya pagi.", t:["Siram nutrisi encer, bukan air saja","Pindahkan ke cahaya matahari bertahap"]},
+    {n:"Pindah ke wadah hidroponik", day:28, d:"Bibit 4–6 daun. Tanam di pot berisi cocopeat dan pasang selang tetes.", t:["Isi pot dengan cocopeat yang sudah dibasahi","Pindahkan bibit sore hari","Pasang selang tetes dan ajir"]},
+    {n:"Pertumbuhan vegetatif", day:40, d:"Fokus pada daun dan batang. EC sekitar 1,5–2,0 dan pH 5,8–6,3.", t:["Atur penyiraman tetes beberapa kali sehari, jangan sampai kering","Cek EC dan pH tiap 2–3 hari","Pangkas tunas air di bawah cabang pertama","Cek kutu daun dan thrips"]},
+    {n:"Berbunga dan berbuah", day:62, d:"Naikkan EC ke sekitar 2,0–2,8 dan pakai formula yang lebih kaya kalium.", t:["Sesuaikan nutrisi untuk fase buah","Jaga penyiraman stabil, hindari kekeringan","Buang bunga/buah rusak"]},
+    {n:"Mulai panen", day:90, d:"Panen cabai yang sudah merah penuh, dipetik tiap 3–5 hari.", t:["Petik dengan tangkainya","Catat berat hasil panen"], type:"harvest"},
+    {n:"Pengolahan", day:91, d:"Awetkan agar tidak beli lagi.", t:["Jemur atau oven jadi cabai kering","Buat sambal/pasta cabai","Simpan beku dalam wadah kedap"], type:"process"}
+   ]},
+  aeroponik:{ days:115,
+   tools:["Tower atau rangka aeroponik (pipa PVC/tong) berpenutup gelap","Tangki larutan, pompa, dan timer siklus semprot","Nozzle kabut dan selang","Tray semai","Ajir bambu dan tali rafia","TDS/EC meter","pH meter atau kertas lakmus","Gunting pangkas","Timbangan dapur digital","Alat jemur atau oven, dan blender untuk pengolahan"],
+   bahan:[{n:"Benih cabai rawit",g:"10 g",q:1,h:15000},{n:"Rockwool atau media semai halus",g:"1 slab",q:1,h:25000},{n:"Net pot 5 cm",g:"isi 25",q:1,h:12000},{n:"Nutrisi hidroponik AB mix (sayuran buah)",g:"1 set (A dan B)",q:2,h:45000},{n:"Pipa PVC dan sambungan untuk rangka",g:"1 set",q:1,h:90000},{n:"Nozzle kabut cadangan",g:"isi 5",q:1,h:20000},{n:"pH down/pH up (opsional)",g:"100 ml",q:1,h:20000},{n:"Air bersih",g:"secukupnya",q:1,h:0}],
+   stages:[
+    {n:"Semai benih dan rakit instalasi", day:0, d:"Semai di rockwool sambil merakit tower. Uji semprotan sebelum bibit dipindah.", t:["Rendam benih 6 jam, tabur di rockwool","Rakit tower, pompa, timer, dan nozzle","Isi larutan nutrisi dan uji kabut merata"]},
+    {n:"Perawatan bibit", day:10, d:"Setelah daun sejati muncul, beri nutrisi encer (EC sekitar 0,8) dan cahaya pagi.", t:["Siram nutrisi encer","Pindahkan ke cahaya matahari bertahap"]},
+    {n:"Pindah ke tower", day:26, d:"Bibit 4–6 daun. Pasang di net pot sehingga akar menggantung di ruang kabut.", t:["Masukkan bibit di net pot dengan rockwool","Pasang di lubang tower","Pastikan akar terkena kabut, bukan tergenang"]},
+    {n:"Pertumbuhan vegetatif", day:36, d:"EC sekitar 1,5–2,0 dan pH 5,8–6,3. Akar cepat kering jika pompa berhenti.", t:["Cek pompa, timer, dan nozzle tiap hari","Cek EC dan pH tiap 2 hari","Pangkas tunas air dan beri ajir","Cek kutu daun dan thrips"]},
+    {n:"Berbunga dan berbuah", day:58, d:"Naikkan EC ke sekitar 2,0–2,8 dan pakai formula yang lebih kaya kalium.", t:["Sesuaikan nutrisi untuk fase buah","Jaga siklus semprot stabil","Buang bunga/buah rusak"]},
+    {n:"Mulai panen", day:85, d:"Panen cabai yang sudah merah penuh, dipetik tiap 3–5 hari.", t:["Petik dengan tangkainya","Catat berat hasil panen"], type:"harvest"},
+    {n:"Pengolahan", day:86, d:"Awetkan agar tidak beli lagi.", t:["Jemur atau oven jadi cabai kering","Buat sambal/pasta cabai","Simpan beku dalam wadah kedap"], type:"process"}
+   ]}
+ },
+ tomat:{
+  hidroponik:{ days:95,
+   tools:["Tray semai","Pot/polybag ≥10 L berlubang drainase (media cocopeat)","Reservoir nutrisi, pompa kecil, selang tetes (drip), dan timer","Ajir atau tali penyangga setinggi 1,5–2 m","TDS/EC meter","pH meter atau kertas lakmus","Gunting pangkas","Timbangan dapur digital","Panci dan blender untuk membuat saus"],
+   bahan:[{n:"Benih tomat",g:"10 g",q:1,h:15000},{n:"Rockwool atau media semai halus",g:"1 slab",q:1,h:25000},{n:"Cocopeat atau campuran cocopeat dan sekam bakar",g:"5 kg",q:3,h:18000},{n:"Nutrisi hidroponik AB mix (sayuran buah)",g:"1 set (A dan B)",q:2,h:45000},{n:"pH down/pH up (opsional)",g:"100 ml",q:1,h:20000},{n:"Air bersih",g:"secukupnya",q:1,h:0}],
+   stages:[
+    {n:"Semai benih", day:0, d:"Semai di rockwool, tutup tipis.", t:["Rendam benih semalam","Semai di rockwool atau media halus","Jaga tetap lembap"]},
+    {n:"Pindah ke wadah hidroponik", day:18, d:"Bibit 4–5 daun. Tanam di pot berisi cocopeat dan pasang selang tetes.", t:["Isi pot dengan cocopeat yang sudah dibasahi","Pasang ajir setinggi 1,5–2 m","Pasang selang tetes dan beri nutrisi"]},
+    {n:"Pertumbuhan", day:30, d:"EC sekitar 1,8–2,2 dan pH 5,8–6,3. Ikat batang pada ajir tiap minggu.", t:["Buang tunas air","Cek EC dan pH tiap 2–3 hari","Atur penyiraman tetes agar media tidak kering"]},
+    {n:"Berbunga", day:45, d:"Goyang tandan bunga pelan untuk membantu penyerbukan.", t:["Naikkan EC ke sekitar 2,0–2,5 dan pakai nutrisi untuk fase buah","Pantau hama ulat buah"]},
+    {n:"Berbuah", day:58, d:"Jaga penyiraman dan nutrisi stabil agar buah tidak pecah atau ujungnya busuk.", t:["Siram tetes teratur","Pangkas daun yang menutupi buah"]},
+    {n:"Panen", day:75, d:"Petik saat merah merata atau mulai oranye.", t:["Petik dengan tangkai","Catat berat hasil"], type:"harvest"},
+    {n:"Pengolahan", day:76, d:"Jangan buang buah berlebih.", t:["Buat saus tomat","Jemur jadi tomat kering","Simpan buah matang di suhu ruang"], type:"process"}
+   ]},
+  aeroponik:{ days:90,
+   tools:["Tower atau rangka aeroponik berpenutup gelap","Tangki larutan, pompa, dan timer siklus semprot","Nozzle kabut dan selang","Tray semai","Ajir atau tali penyangga setinggi 1,5–2 m","TDS/EC meter","pH meter atau kertas lakmus","Gunting pangkas","Timbangan dapur digital","Panci dan blender untuk membuat saus"],
+   bahan:[{n:"Benih tomat",g:"10 g",q:1,h:15000},{n:"Rockwool atau media semai halus",g:"1 slab",q:1,h:25000},{n:"Net pot 5 cm",g:"isi 25",q:1,h:12000},{n:"Nutrisi hidroponik AB mix (sayuran buah)",g:"1 set (A dan B)",q:2,h:45000},{n:"Pipa PVC dan sambungan untuk rangka",g:"1 set",q:1,h:90000},{n:"Nozzle kabut cadangan",g:"isi 5",q:1,h:20000},{n:"pH down/pH up (opsional)",g:"100 ml",q:1,h:20000},{n:"Air bersih",g:"secukupnya",q:1,h:0}],
+   stages:[
+    {n:"Semai benih dan rakit instalasi", day:0, d:"Semai di rockwool sambil merakit tower. Uji semprotan sebelum bibit dipindah.", t:["Rendam benih semalam, semai di rockwool","Rakit tower, pompa, timer, dan nozzle","Isi larutan nutrisi dan uji kabut merata"]},
+    {n:"Pindah ke tower", day:16, d:"Bibit 4–5 daun. Pasang di net pot sehingga akar menggantung di ruang kabut.", t:["Masukkan bibit di net pot dengan rockwool","Pasang ajir atau tali penyangga","Pastikan akar terkena kabut, bukan tergenang"]},
+    {n:"Pertumbuhan", day:28, d:"EC sekitar 1,8–2,2 dan pH 5,8–6,3. Akar cepat kering jika pompa berhenti.", t:["Cek pompa, timer, dan nozzle tiap hari","Buang tunas air dan ikat batang pada ajir","Cek EC dan pH tiap 2 hari"]},
+    {n:"Berbunga", day:42, d:"Goyang tandan bunga pelan untuk membantu penyerbukan.", t:["Naikkan EC ke sekitar 2,0–2,5 dan pakai nutrisi untuk fase buah","Pantau hama ulat buah"]},
+    {n:"Berbuah", day:55, d:"Jaga siklus semprot dan nutrisi stabil agar buah tidak pecah atau ujungnya busuk.", t:["Cek siklus semprot tiap hari","Pangkas daun yang menutupi buah"]},
+    {n:"Panen", day:70, d:"Petik saat merah merata atau mulai oranye.", t:["Petik dengan tangkai","Catat berat hasil"], type:"harvest"},
+    {n:"Pengolahan", day:71, d:"Jangan buang buah berlebih.", t:["Buat saus tomat","Jemur jadi tomat kering","Simpan buah matang di suhu ruang"], type:"process"}
+   ]}
+ }
+};
 const byId = id => CATALOG.find(c => c.id === id);
 const clone = o => JSON.parse(JSON.stringify(o));
 const rp = n => "Rp " + Math.round(Number(n) || 0).toLocaleString("id-ID");
 const normBahan = b => typeof b === "string" ? { n: b, g: "", q: 1, h: 0 } : { n: String(b?.n || ""), g: String(b?.g || ""), q: Math.max(0, Number(b?.q) || 0), h: Math.max(0, Number(b?.h) || 0) };
 const bahanTotal = l => l.reduce((a, b) => a + b.q * b.h, 0);
+let catMedia = {}; try { catMedia = JSON.parse(localStorage.getItem("essentera-media")) || {}; } catch(e) { catMedia = {}; }   /* media tanam yang dipilih per panduan */
 const CATALOG_BASE = clone(CATALOG);   /* salinan bawaan, untuk "Kembalikan bawaan" */
 let guideEdits = {}, catOpen = {}, editing = null, customCats = [], catRename = {}, catHidden = [], catOrder = [];   /* kategori: buatan pengguna [{id,name}], nama bawaan yang diganti, bawaan yang dihapus */
 const isBuiltinCat = id => id !== "all" && Object.prototype.hasOwnProperty.call(CATS, id);
@@ -458,6 +562,14 @@ function applyEdits(){
     ["tools", "bahan", "stages"].forEach(k => { c[k] = clone(Array.isArray(e[k]) ? e[k] : (base[k] || [])); });
     c.bahan = c.bahan.map(normBahan);
     c.cat = validCat(e.cat) ? e.cat : (validCat(base.cat) ? base.cat : "");
+    /* varian media tanam: bawaan dari VARIANTS, ditimpa hasil edit pengguna (e.media) */
+    const vb = VARIANTS[c.id] || {}; c.variants = {};
+    Object.keys(MEDIA).filter(m => vb[m]).forEach(m => {
+      const bv = vb[m], ev = (e.media && e.media[m]) || {};
+      c.variants[m] = { days: Number(ev.days) || bv.days, tools: clone(Array.isArray(ev.tools) ? ev.tools : bv.tools),
+        bahan: clone(Array.isArray(ev.bahan) ? ev.bahan : bv.bahan).map(normBahan), stages: clone(Array.isArray(ev.stages) ? ev.stages : bv.stages) };
+    });
+    c.medias = Object.keys(c.variants).length ? ["tanah", ...Object.keys(c.variants)] : [];
   });
   /* Panduan salinan buatan pengguna (tombol Duplikat): disisipkan tepat setelah panduan asalnya. */
   Object.entries(guideEdits).filter(([, e]) => e && e.custom).map(([id, e]) => ({ id, e }))
@@ -465,11 +577,26 @@ function applyEdits(){
       const g = { id, custom: true, root: e.root || "", cat: validCat(e.cat) ? e.cat : (validCat(CATALOG_BASE.find(b => b.id === e.root)?.cat) ? CATALOG_BASE.find(b => b.id === e.root).cat : ""), iconKey: e.iconKey || "custom", icon: e.icon || "🌱",
         name: e.name || "Tanpa nama", level: e.level || "", days: Number(e.days) || 0, desc: e.desc || "", unit: e.unit || "kg",
         tools: clone(Array.isArray(e.tools) ? e.tools : []), bahan: clone(Array.isArray(e.bahan) ? e.bahan : []).map(normBahan),
-        stages: clone(Array.isArray(e.stages) ? e.stages : []) };
+        stages: clone(Array.isArray(e.stages) ? e.stages : []), variants: {} };
+      Object.keys(MEDIA).filter(m => m !== "tanah" && e.media && e.media[m] && Array.isArray(e.media[m].stages)).forEach(m => {
+        const ev = e.media[m];
+        g.variants[m] = { days: Number(ev.days) || 0, tools: clone(Array.isArray(ev.tools) ? ev.tools : []), bahan: clone(Array.isArray(ev.bahan) ? ev.bahan : []).map(normBahan), stages: clone(ev.stages) };
+      });
+      g.medias = Object.keys(g.variants).length ? ["tanah", ...Object.keys(g.variants)] : [];
       let at = -1; CATALOG.forEach((x, i) => { if (g.root && (x.id === g.root || x.root === g.root)) at = i; });
       if (at >= 0) CATALOG.splice(at + 1, 0, g); else CATALOG.push(g);
     });
   if (catFilter !== "all" && !(catFilter === "none" ? CATALOG.some(c => !c.cat) : validCat(catFilter))) catFilter = "all";
+}
+
+/* Media tanam yang sedang dipilih untuk satu panduan, dan salinan panduan dengan isi (hari, alat, bahan, tahap) sesuai media itu. */
+const curMedia = id => { const c = byId(id), m = catMedia[id]; return c && c.medias && c.medias.includes(m) ? m : "tanah"; };
+const withMedia = (c, mk = curMedia(c.id)) => { const v = mk !== "tanah" && c.variants && c.variants[mk]; return v ? { ...c, days: v.days, tools: v.tools, bahan: v.bahan, stages: v.stages, mediaKey: mk } : { ...c, mediaKey: "tanah" }; };
+function rerenderKeep(){   /* render ulang tanpa kehilangan posisi gulir halaman dan deretan kategori */
+  const y = window.scrollY, sl = view.querySelector(".filters")?.scrollLeft || 0;
+  render();
+  const f = view.querySelector(".filters"); if (f) f.scrollLeft = sl;
+  window.scrollTo(0, y);
 }
 
 /* Ikon garis geometris (mengikuti warna tema). Untuk menambah ikon baru, tambahkan di sini sesuai id panduan. */
@@ -718,10 +845,11 @@ function renderCatalog(){
   const list = CATALOG.filter(c => catFilter === "all" || (catFilter === "none" ? !c.cat : c.cat === catFilter));
   view.innerHTML = `
     <div class="catbar">
-    <div class="filters">${[["all", CATS.all], ...allCats().map(k => [k.id, k.name]), ...(CATALOG.some(c => !c.cat) ? [["none", "Tanpa kategori"]] : [])].map(([k, v]) => `<button data-f="${k}" class="${catFilter === k ? "on" : ""}">${esc(v)}</button>`).join("")}<button class="addcat" data-addcat>Atur kategori</button></div>
+    <div class="filterbar"><div class="fixgrp"><button data-f="all" class="${catFilter === "all" ? "on" : ""}" aria-label="${esc(CATS.all)}" title="${esc(CATS.all)} (ketuk 2x untuk tambah kategori)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/></svg></button></div><div class="filters">${[...allCats().map(k => [k.id, k.name]), ...(CATALOG.some(c => !c.cat) ? [["none", "Tanpa kategori"]] : [])].map(([k, v]) => `<button data-f="${k}" class="${catFilter === k ? "on" : ""}">${esc(v)}</button>`).join("")}</div></div>
     <div class="searchbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><input id="catSearch" type="search" enterkeyhint="search" autocomplete="off" placeholder="Cari panduan, bahan, atau alat" aria-label="Cari panduan" value="${esc(catQuery)}"><button class="sclear hidden" id="catClear" aria-label="Hapus pencarian" title="Hapus pencarian">${IC_X}</button></div>
     </div>
-    ${list.map(c => `<div class="cat" data-id="${c.id}" data-q="${esc([c.name, allCats().find(k => k.id === c.cat)?.name || "tanpa kategori", c.level, ...c.tools, ...c.bahan.map(b => b.n)].join(" ").toLowerCase())}"><h3><button class="ctitle" aria-expanded="false"><span class="ico sm">${icon(c.id)}</span><span>${esc(c.name)}</span></button><button class="btn small alt icon dupbtn" data-dup aria-label="Duplikat panduan" title="Duplikat panduan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg></button><button class="chevbtn" aria-label="Buka atau tutup panduan" title="Buka atau tutup"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button></h3>
+    ${list.map(c0 => { const c = withMedia(c0); return `<div class="cat" data-id="${c.id}" data-q="${esc([c.name, allCats().find(k => k.id === c.cat)?.name || "tanpa kategori", c.level, ...(c.medias || []).map(m => MEDIA[m]), ...c.tools, ...c.bahan.map(b => b.n)].join(" ").toLowerCase())}"><h3><button class="ctitle" aria-expanded="false"><span class="ico sm">${icon(c.id)}</span><span>${esc(c.name)}</span></button><button class="btn small alt icon dupbtn" data-dup aria-label="Duplikat panduan" title="Duplikat panduan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg></button><button class="chevbtn" aria-label="Buka atau tutup panduan" title="Buka atau tutup"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button></h3>
+      ${c.medias && c.medias.length ? `<div class="media" role="group" aria-label="Media tanam"><span class="mlabel">Media tanam</span>${c.medias.map(m => `<button data-media="${m}" class="${c.mediaKey === m ? "on" : ""}" aria-pressed="${c.mediaKey === m}">${MEDIA[m]}</button>`).join("")}</div>` : ""}
       <div class="meta"><button class="catchip" data-tag aria-label="Ubah kategori" title="Ketuk untuk ubah kategori">${esc(allCats().find(k => k.id === c.cat)?.name || "Tanpa kategori")}</button><span>${c.level}</span><span>±${Math.max(1, Math.round(c.days / 30))} bulan</span><span>${c.stages.length} tahap</span>${c.custom ? "<span>Salinan</span>" : ""}</div>
       <div class="cat-actions"><button class="btn small icon" data-start="${c.id}" aria-label="Mulai proyek ini" title="Mulai proyek ini"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg></button>
         ${`<button class="btn small alt icon" data-panel-btn="gbahan" data-label="bahan" aria-expanded="false" aria-label="Bahan" title="Bahan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6l-1 3h-4z"/><path d="M10 6C6 8 5 12 5 15.5 5 19 7.5 21 12 21s7-2 7-5.5C19 12 18 8 14 6"/><path d="M12 11v6M9.5 13.5h5"/></svg></button>`}
@@ -734,9 +862,32 @@ function renderCatalog(){
       <div class="gsteps hidden"><div class="phead"><h4>Tahapan</h4><button class="pedit" data-edit="steps" aria-label="Edit tahapan" title="Edit tahapan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></button></div>${c.stages.length ? "" : `<p class="empty">Belum ada tahap. Ketuk pensil untuk menambah.</p>`}${c.stages.map((s, i) => `<div class="gstep"><div class="gnum${s.type === "harvest" ? " h" : ""}">${i + 1}</div>
         <div class="gbody"><h4>${esc(s.n)}${s.type === "harvest" ? '<span class="chip done">Panen</span>' : s.type === "process" ? '<span class="chip">Olah</span>' : ""}</h4>
           <div class="when">Hari ke-${s.day + 1}</div>${s.d ? `<p>${esc(s.d)}</p>` : ""}
-          <ul>${s.t.map(t => `<li>${esc(t)}</li>`).join("")}</ul></div></div>`).join("")}</div></div>`).join("")}
+          <ul>${s.t.map(t => `<li>${esc(t)}</li>`).join("")}</ul></div></div>`).join("")}</div></div>`; }).join("")}
+    ${list.length ? "" : `<div class="empty">Belum ada panduan di kategori ini. Pindahkan panduan lewat ikon tag, atau duplikat panduan lalu ubah kategorinya.</div>`}
     <div class="empty hidden" id="catNone">Tidak ada panduan yang cocok.</div>`;
-  view.querySelectorAll("[data-f]").forEach(b => b.onclick = () => { catFilter = b.dataset.f; render(); });
+  /* Ketuk dua kali pada chip kategori: lepas tanpa geser = ganti nama langsung di chip;
+     tahan pada ketukan kedua lalu geser kiri/kanan = pindah urutan. */
+  const fbar = view.querySelector(".filters");
+  view.querySelectorAll("[data-f]").forEach(b => {
+    const k = b.dataset.f;
+    b.onclick = () => {
+      if (b._renameOnClick) { b._renameOnClick = false; renameCatInline(b, k); return; }
+      if (Date.now() < catTap.block) return;
+      if (k === "all" && catTap.id === "all" && Date.now() - catTap.t < 400) { catTap = { id: "", t: 0, block: 0 }; addCatInline(b); return; }   /* ketuk 2x "Semua" = tambah kategori baru */
+      catTap = { id: k, t: Date.now(), block: 0 };
+      const sl = fbar?.scrollLeft || 0;
+      catFilter = k; render();
+      const f = view.querySelector(".filters"); if (f) f.scrollLeft = sl;
+    };
+    if (k === "all" || k === "none") return;
+    b.addEventListener("touchmove", ev => { if (b._armed && ev.cancelable) ev.preventDefault(); }, { passive: false });
+    b.addEventListener("pointerdown", e => {
+      if (e.button > 0 || catTap.id !== k || Date.now() - catTap.t > 400) return;
+      catTap = { id: "", t: 0, block: 0 };
+      b._armed = true;
+      dragChip(b, e, fbar);
+    });
+  });
   view.querySelectorAll("[data-start]").forEach(b => b.onclick = () => startSheet(b.dataset.start));
   /* Ikon Step by Step / Alat / Bahan: satu panel per kartu. Panah di judul: buka semuanya, ketuk lagi untuk menutup semuanya. */
   const PANELS = { steps:".gsteps", gtools:".gtoolsbox", gbahan:".gbahan" }, PNAMES = Object.keys(PANELS);
@@ -765,7 +916,11 @@ function renderCatalog(){
   qIn.onkeydown = e => { if (e.key === "Enter") qIn.blur(); };
   qClr.onclick = () => { catQuery = ""; qIn.value = ""; applyQ(); qIn.focus(); };
   applyQ();
-  view.querySelectorAll("[data-addcat]").forEach(b => b.onclick = catSheet);
+  view.querySelectorAll("[data-media]").forEach(b => b.onclick = () => {
+    catMedia[b.closest(".cat").dataset.id] = b.dataset.media;
+    try { localStorage.setItem("essentera-media", JSON.stringify(catMedia)); } catch(e) {}
+    rerenderKeep();
+  });
   view.querySelectorAll("[data-tag]").forEach(b => b.onclick = () => categorySheet(b.closest(".cat").dataset.id));
   view.querySelectorAll("[data-dup]").forEach(b => b.onclick = () => duplicateSheet(b.closest(".cat").dataset.id));
   view.querySelectorAll("[data-delguide]").forEach(b => b.onclick = () => deleteGuide(b.closest(".cat").dataset.id));
@@ -777,8 +932,13 @@ function renderCatalog(){
 
 /* ---------------- EDIT PANDUAN (alat, bahan, tahapan): langsung di tempat, tanpa pop up ---------------- */
 const lines = v => String(v || "").split("\n").map(x => x.trim()).filter(Boolean);
-function saveGuide(id, patch){
-  guideEdits[id] = { ...(guideEdits[id] || {}), ...patch }; applyEdits();
+function saveGuide(id, patch, mk){
+  if (mk && mk !== "tanah") {   /* edit untuk media non-tanah disimpan di bawah media.<nama media> */
+    const old = guideEdits[id] || {}, om = old.media || {};
+    guideEdits[id] = { ...old, media: { ...om, [mk]: { ...(om[mk] || {}), ...patch } } };
+    patch = { media: { [mk]: patch } };
+  } else guideEdits[id] = { ...(guideEdits[id] || {}), ...patch };
+  applyEdits();
   toast("Perubahan disimpan."); render();
   setDoc(doc(db, "users", user.uid, "guides", id), { ...patch, updatedAt: serverTimestamp() }, { merge: true }).catch(e => toast(errMsg(e)));
 }
@@ -793,16 +953,18 @@ const PANEL_SEL = { steps:".gsteps", tools:".gtoolsbox", bahan:".gbahan" };
 const PANEL_TITLE = { steps:"Tahapan", tools:"Alat yang dibutuhkan", bahan:"Bahan yang dibutuhkan" };
 /* Mengubah panel yang sedang dibuka menjadi mode edit. Tombol: Kembalikan bawaan (jika pernah diedit), Batal, Simpan. */
 function inlineShell(id, kind, hint, body){
-  const edited = !byId(id)?.custom && Array.isArray(guideEdits[id]?.[kind === "steps" ? "stages" : kind]);
+  const mk = curMedia(id), src = mk === "tanah" ? guideEdits[id] : guideEdits[id]?.media?.[mk];
+  const edited = !byId(id)?.custom && Array.isArray(src?.[kind === "steps" ? "stages" : kind]);
   const panel = view.querySelector(`.cat[data-id="${id}"] ${PANEL_SEL[kind]}`);
   editing = { id, kind };
-  panel.innerHTML = `<div class="phead"><h4>${PANEL_TITLE[kind]}</h4><span class="pacts">${edited ? `<button class="pedit" id="edReset" aria-label="Kembalikan bawaan" title="Kembalikan bawaan">${IC_UNDO}</button>` : ""}<button class="pedit" id="edX" aria-label="Batal" title="Batal">${IC_X}</button><button class="pedit ok" id="edOk" aria-label="Simpan" title="Simpan">${IC_OK}</button></span></div>
+  panel.innerHTML = `<div class="phead"><h4>${PANEL_TITLE[kind]}${mk !== "tanah" ? " · " + MEDIA[mk] : ""}</h4><span class="pacts">${edited ? `<button class="pedit" id="edReset" aria-label="Kembalikan bawaan" title="Kembalikan bawaan">${IC_UNDO}</button>` : ""}<button class="pedit" id="edX" aria-label="Batal" title="Batal">${IC_X}</button><button class="pedit ok" id="edOk" aria-label="Simpan" title="Simpan">${IC_OK}</button></span></div>
     <p class="muted hint">${hint}</p>${body}`;
   panel.querySelector("#edX").onclick = () => render();
   return panel;
 }
 function editGuide(id, kind){
-  const c = byId(id); if (!c) return;
+  const c0 = byId(id); if (!c0) return;
+  const c = withMedia(c0);
   if (kind === "steps") return editSteps(c);
   if (kind === "bahan") return editBahan(c);
   editTools(c);
@@ -818,8 +980,8 @@ function editTools(c){
   };
   draw();
   s.querySelector("#edAdd").onclick = () => { collect(); work.push(""); draw(); box.lastElementChild?.querySelector("input").focus(); };
-  s.querySelector("#edOk").onclick = () => { collect(); saveGuide(c.id, { tools: work.filter(Boolean) }); };
-  s.querySelector("#edReset")?.addEventListener("click", () => { if (confirm("Kembalikan alat ke daftar bawaan?")) saveGuide(c.id, { tools: null }); });
+  s.querySelector("#edOk").onclick = () => { collect(); saveGuide(c.id, { tools: work.filter(Boolean) }, c.mediaKey); };
+  s.querySelector("#edReset")?.addEventListener("click", () => { if (confirm("Kembalikan alat ke daftar bawaan?")) saveGuide(c.id, { tools: null }, c.mediaKey); });
 }
 function editBahan(c){
   let work = clone(c.bahan);
@@ -847,8 +1009,8 @@ function editBahan(c){
   box.addEventListener("input", totals);
   draw();
   s.querySelector("#edAdd").onclick = () => { collect(); work.push({ n: "", g: "", q: 1, h: 0 }); draw(); box.lastElementChild?.querySelector(".b-n").focus(); };
-  s.querySelector("#edOk").onclick = () => { collect(); saveGuide(c.id, { bahan: work.filter(b => b.n) }); };
-  s.querySelector("#edReset")?.addEventListener("click", () => { if (confirm("Kembalikan bahan ke daftar bawaan?")) saveGuide(c.id, { bahan: null }); });
+  s.querySelector("#edOk").onclick = () => { collect(); saveGuide(c.id, { bahan: work.filter(b => b.n) }, c.mediaKey); };
+  s.querySelector("#edReset")?.addEventListener("click", () => { if (confirm("Kembalikan bahan ke daftar bawaan?")) saveGuide(c.id, { bahan: null }, c.mediaKey); });
 }
 function editSteps(c){
   let work = clone(c.stages);
@@ -877,14 +1039,122 @@ function editSteps(c){
     collect();
     const clean = work.filter(st => st.n).map((st, i) => ({ st, i })).sort((a, b) => a.st.day - b.st.day || a.i - b.i).map(x => x.st);
     if (!clean.length) { toast("Isi minimal satu tahap dengan nama."); return; }
-    freezeRunning(c.id); saveGuide(c.id, { stages: clean });
+    if (c.mediaKey === "tanah") freezeRunning(c.id); saveGuide(c.id, { stages: clean }, c.mediaKey);
   };
-  s.querySelector("#edReset")?.addEventListener("click", () => { if (confirm("Kembalikan tahapan ke bawaan?")) { freezeRunning(c.id); saveGuide(c.id, { stages: null }); } });
+  s.querySelector("#edReset")?.addEventListener("click", () => { if (confirm("Kembalikan tahapan ke bawaan?")) { if (c.mediaKey === "tanah") freezeRunning(c.id); saveGuide(c.id, { stages: null }, c.mediaKey); } });
 }
 
 /* ---------------- KATEGORI BUATAN SENDIRI ---------------- */
 function saveCats(){ setDoc(doc(db, "users", user.uid, "meta", "categories"), { list: customCats, renames: catRename, hidden: catHidden, order: catOrder, updatedAt: serverTimestamp() }).catch(e => toast(errMsg(e))); }
 /* Atur kategori: ubah nama, hapus, tambah, dan pulihkan kategori bawaan. Perubahan disimpan saat menekan Simpan. */
+/* Ganti nama kategori langsung di chip-nya (ketuk dua kali): Enter / ketuk di luar = simpan, Esc = batal. */
+let catTap = { id: "", t: 0, block: 0 };
+/* Geser chip kategori kiri/kanan untuk mengubah urutan (dimulai dari ketukan kedua). Lepas tanpa geser = ganti nama. */
+function dragChip(b, e, fbar){
+  const chips = [...fbar.querySelectorAll("button[data-f]")].filter(x => x.dataset.f !== "none");
+  const from = chips.indexOf(b); if (from < 0) { b._armed = false; return; }
+  const fr = fbar.getBoundingClientRect();
+  const L = chips.map(x => x.getBoundingClientRect().left - fr.left + fbar.scrollLeft), W = chips.map(x => x.offsetWidth);
+  const gap = chips.length > 1 ? Math.max(0, L[1] - (L[0] + W[0])) : 8;
+  const pid = e.pointerId, startX = e.clientX, startSL = fbar.scrollLeft;
+  let cx = e.clientX, moved = false, to = from, done = false, raf = 0;
+  try { b.setPointerCapture(pid); } catch (_) {}
+  const update = () => {
+    const dx = (cx - startX) + (fbar.scrollLeft - startSL);
+    if (!moved && Math.abs(dx) < 6) return;
+    if (!moved) { moved = true; b.classList.add("dragging"); }
+    const last = chips.length - 1;
+    const d = Math.max(L[0] - L[from], Math.min(L[last] + W[last] - (L[from] + W[from]), dx));
+    b.style.transform = `translateX(${d}px)`;
+    const c = L[from] + d + W[from] / 2;
+    to = 0; chips.forEach((_, i) => { if (i !== from && L[i] + W[i] / 2 < c) to++; });
+    chips.forEach((el, i) => { if (i === from) return;
+      el.style.transform = (from < to && i > from && i <= to) ? `translateX(${-(W[from] + gap)}px)` : (from > to && i >= to && i < from) ? `translateX(${W[from] + gap}px)` : ""; });
+  };
+  const tick = () => {
+    if (done) return;
+    if (moved) { if (cx < fr.left + 36) fbar.scrollLeft -= 8; else if (cx > fr.right - 36) fbar.scrollLeft += 8; }
+    update(); raf = requestAnimationFrame(tick);
+  };
+  tick();
+  const onMove = ev => { if (ev.pointerId === pid) cx = ev.clientX; };
+  const finish = ev => {
+    if (ev.pointerId !== pid || done) return;
+    done = true; cancelAnimationFrame(raf); b._armed = false;
+    b.removeEventListener("pointermove", onMove); b.removeEventListener("pointerup", finish); b.removeEventListener("pointercancel", finish);
+    catTap.block = Date.now() + 500;   /* klik susulan setelah geser tidak dianggap ketukan baru */
+    if (!moved) { if (ev.type === "pointerup") b._renameOnClick = true; return; }
+    if (ev.type === "pointerup" && to !== from) {
+      const ids = chips.map(x => x.dataset.f); const [m] = ids.splice(from, 1); ids.splice(to, 0, m);
+      catOrder = ids; saveCats(); applyEdits(); toast("Urutan kategori diubah.");
+    }
+    const sl = fbar.scrollLeft; render();
+    const f = view.querySelector(".filters"); if (f) f.scrollLeft = sl;
+  };
+  b.addEventListener("pointermove", onMove); b.addEventListener("pointerup", finish); b.addEventListener("pointercancel", finish);
+}
+function renameCatInline(btn, id){
+  const k = allCats().find(x => x.id === id); if (!k) return;
+  const wrap = document.createElement("span"); wrap.className = "catedwrap";
+  const inp = document.createElement("input");
+  inp.className = "catedit"; inp.value = k.name; inp.maxLength = 24; inp.autocomplete = "off"; inp.setAttribute("aria-label", "Nama kategori");
+  inp.style.width = Math.max(90, btn.offsetWidth - 14) + "px";
+  const del = document.createElement("button");
+  del.className = "catdel"; del.type = "button"; del.setAttribute("aria-label", "Hapus kategori"); del.title = "Hapus kategori";
+  del.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>';
+  wrap.append(inp, del);
+  btn.replaceWith(wrap); inp.focus(); inp.select();
+  let finished = false, deleting = false;
+  const cancel = () => { if (finished) return; finished = true; render(); };
+  const save = () => {
+    if (finished) return;
+    const name = inp.value.trim();
+    if (name === k.name) { cancel(); return; }
+    if (!name) { toast("Nama kategori tidak boleh kosong."); return false; }
+    if (allCats().some(x => x.id !== id && x.name.trim().toLowerCase() === name.toLowerCase())) { toast(`Nama "${name}" sudah dipakai.`); return false; }
+    finished = true;
+    if (isBuiltinCat(id)) { if (name === CATS[id]) delete catRename[id]; else catRename[id] = name; }
+    else customCats = customCats.map(x => x.id === id ? { ...x, name } : x);
+    saveCats(); applyEdits(); toast("Nama kategori diubah."); render();
+  };
+  del.addEventListener("pointerdown", () => { deleting = true; });   /* terjadi sebelum blur, supaya blur tidak menutup kotak lebih dulu */
+  del.addEventListener("click", () => {
+    if (!confirm(`Hapus kategori "${k.name}"? Panduan di dalamnya tidak ikut terhapus, hanya menjadi "Tanpa kategori" atau kembali ke kategori asalnya.`)) { deleting = false; inp.focus(); return; }
+    finished = true;
+    if (isBuiltinCat(id)) { if (!catHidden.includes(id)) catHidden = [...catHidden, id]; delete catRename[id]; }
+    else customCats = customCats.filter(x => x.id !== id);
+    catOrder = catOrder.filter(x => x !== id);
+    if (catFilter === id) catFilter = "all";
+    saveCats(); applyEdits(); toast("Kategori dihapus."); render();
+  });
+  inp.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); save(); } else if (e.key === "Escape") cancel(); });
+  inp.addEventListener("blur", () => { if (deleting) return; if (save() === false) cancel(); });
+}
+
+/* Ketuk dua kali "Semua": chip berubah jadi kotak isian untuk kategori baru. Enter / ketuk di luar = tambah, Esc atau kosong = batal. */
+function addCatInline(btn){
+  const wrap = document.createElement("span"); wrap.className = "catedwrap";
+  const inp = document.createElement("input");
+  inp.className = "catedit"; inp.maxLength = 24; inp.autocomplete = "off"; inp.placeholder = "Kategori baru"; inp.setAttribute("aria-label", "Nama kategori baru");
+  inp.style.width = "130px";
+  wrap.append(inp); btn.replaceWith(wrap); inp.focus();
+  let finished = false;
+  const cancel = () => { if (finished) return; finished = true; render(); };
+  const save = () => {
+    if (finished) return;
+    const name = inp.value.trim();
+    if (!name) { cancel(); return; }
+    if (allCats().some(k => k.name.trim().toLowerCase() === name.toLowerCase())) { toast(`Kategori "${name}" sudah ada.`); return false; }
+    finished = true;
+    const id = "k_" + Date.now().toString(36);
+    customCats = [...customCats, { id, name }];
+    if (catOrder.length) catOrder = [...allCats().map(k => k.id).filter(x => x !== id), id];
+    catFilter = id; saveCats(); applyEdits(); toast("Kategori ditambahkan."); render();
+  };
+  inp.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); save(); } else if (e.key === "Escape") cancel(); });
+  inp.addEventListener("blur", () => { if (save() === false) cancel(); });
+}
+
 function catSheet(){
   let rows = allCats().map(k => ({ id: k.id, name: k.name })), hid = [...catHidden];
   const s = sheet(`<h3>Atur kategori</h3>
@@ -975,6 +1245,7 @@ function duplicateSheet(id){
     const rec = { custom: true, root: c.root || c.id, cat: s.querySelector("#dCat").value, iconKey: c.iconKey || c.id, icon: c.icon, name,
       level: c.level, days: c.days, unit: c.unit, desc: c.desc,
       tools: clone(c.tools), bahan: clone(c.bahan), stages: clone(c.stages), created: Date.now() };
+    if (c.medias && c.medias.length) { rec.media = {}; c.medias.filter(m => m !== "tanah").forEach(m => { const v = c.variants[m]; rec.media[m] = { days: v.days, tools: clone(v.tools), bahan: clone(v.bahan), stages: clone(v.stages) }; }); }
     guideEdits[nid] = rec; applyEdits(); closeSheet(); toast("Panduan diduplikasi."); render();
     view.querySelector(`.cat[data-id="${nid}"]`)?.scrollIntoView({ block: "center" });
     setDoc(doc(db, "users", user.uid, "guides", nid), { ...rec, updatedAt: serverTimestamp() }).catch(e => toast(errMsg(e)));
@@ -997,10 +1268,11 @@ function sheet(html){
 const closeSheet = () => { $("#modalRoot").innerHTML = ""; };
 
 function startSheet(id){
-  const tpl = id === "custom" ? null : byId(id);
+  const tpl0 = id === "custom" ? null : byId(id), tpl = tpl0 ? withMedia(tpl0) : null;   /* tpl: isi sesuai media tanam yang dipilih */
+  const mediaOn = !!(tpl && tpl0.medias && tpl0.medias.length);
   const s = sheet(`<h3>${tpl ? esc(tpl.name) : "Proyek kustom"}</h3>
-    <p class="muted">${tpl ? "Tahapan dan daftar tugas diisi otomatis." : "Anda bisa menambah tahap setelah proyek dibuat."}</p>
-    <label for="pName">Nama proyek</label><input id="pName" value="${tpl ? esc(tpl.name) : ""}" placeholder="Contoh: Cabai halaman belakang">
+    <p class="muted">${tpl ? "Tahapan dan daftar tugas diisi otomatis." + (mediaOn ? " Media tanam: " + MEDIA[tpl.mediaKey] + "." : "") : "Anda bisa menambah tahap setelah proyek dibuat."}</p>
+    <label for="pName">Nama proyek</label><input id="pName" value="${tpl ? esc(tpl.name + (mediaOn && tpl.mediaKey !== "tanah" ? " (" + MEDIA[tpl.mediaKey] + ")" : "")) : ""}" placeholder="Contoh: Cabai halaman belakang">
     <div class="two"><div><label for="pDate">Tanggal mulai</label><input id="pDate" type="date" value="${today()}"></div>
     <div><label for="pUnit">Satuan hasil</label><input id="pUnit" value="${tpl ? esc(tpl.unit) : "kg"}"></div></div>
     <label for="pNote">Catatan (lokasi, jumlah, media)</label><textarea id="pNote"></textarea>
@@ -1011,6 +1283,7 @@ function startSheet(id){
     const data = { tplId: tpl ? tpl.id : "custom", name, icon: tpl ? tpl.icon : "🌱", cat: tpl ? tpl.cat : "tanaman",
       startDate: s.querySelector("#pDate").value || today(), unit: s.querySelector("#pUnit").value.trim() || "kg",
       note: s.querySelector("#pNote").value.trim(), done: {}, harvest: [], completed: false, createdAt: serverTimestamp() };
+    if (mediaOn) { data.media = tpl.mediaKey; data.days = tpl.days; }
     if (tpl) data.stages = clone(tpl.stages);   /* salinan tahap, supaya edit panduan tidak mengubah proyek yang sedang berjalan */
     if (!tpl) data.stages = [{ n:"Persiapan", day:0, d:"", t:["Siapkan lahan/kandang"] }, { n:"Perawatan", day:7, d:"", t:["Perawatan rutin"] }, { n:"Panen", day:60, d:"", t:["Catat hasil panen"], type:"harvest" }, { n:"Pengolahan", day:61, d:"", t:["Olah hasil panen"], type:"process" }];
     try { const r = await addDoc(collection(db, "users", user.uid, "projects"), data); closeSheet(); toast("Proyek dimulai."); tab = "home"; openId = r.id; watchLogs(r.id); render(); }
@@ -1024,14 +1297,14 @@ function renderDetail(p){
   const tpl = byId(p.tplId);
   const pr = progressOf(p); const cur = currentStage(p); const d = Math.max(0, daysSince(p.startDate));
   const items = logs[p.id]?.items || [];
-  const totalDays = tpl?.days || stages[stages.length - 1]?.day || 1;
+  const totalDays = p.days || tpl?.days || stages[stages.length - 1]?.day || 1;
   const fillPct = stages.length > 1 ? Math.min(100, Math.round(cur / (stages.length - 1) * 100)) : 0;
   const harvest = p.harvest || [];
   const hSum = harvest.reduce((n, h) => n + Number(h.qty || 0), 0);
 
   view.innerHTML = `
     <div class="dh"><h2><span class="ico sm">${icon(p.tplId)}</span>${esc(p.name)}</h2>
-      <div class="row"><span class="muted">Mulai ${fmtDate(p.startDate)}</span>${p.completed ? '<span class="chip done">Selesai</span>' : `<span class="chip">Hari ke-${d + 1}</span>`}</div>
+      <div class="row"><span class="muted">Mulai ${fmtDate(p.startDate)}</span>${p.media && MEDIA[p.media] ? `<span class="chip">${MEDIA[p.media]}</span>` : ""}${p.completed ? '<span class="chip done">Selesai</span>' : `<span class="chip">Hari ke-${d + 1}</span>`}</div>
       ${p.note ? `<p class="muted" style="margin-top:.4rem">${esc(p.note)}</p>` : ""}</div>
     <div class="bigprog"><div class="num">${pr.pct}%</div><div class="muted">${pr.done} dari ${pr.total} tugas selesai · perkiraan ${totalDays} hari</div>
       <div class="bar"><i style="width:${pr.pct}%"></i></div></div>
