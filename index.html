@@ -9,7 +9,7 @@
 <script>try{var _t=localStorage.getItem("essentera-theme");if(_t)document.documentElement.setAttribute("data-theme",_t);var _f=parseInt(localStorage.getItem("essentera-fs"),10);if(_f>=80&&_f<=150)document.documentElement.style.fontSize=_f+"%"}catch(e){}</script>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" id="favicon" href="data:image/png;base64,iVBORw0KGgo=">
-<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png?v=2">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Essentera">
@@ -98,9 +98,8 @@ nav.tabs button.fab span{position:absolute;width:1px;height:1px;overflow:hidden;
 
 /* Login */
 #login{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:2rem 1.4rem;max-width:420px;margin:0 auto}
-#login img{width:92px;height:92px;margin-bottom:1rem}
-#login h1{font-size:2.4rem}
-#login p.lead{margin:.5rem 0 1.5rem;color:var(--ink2)}
+#login img{width:56px;height:56px;margin:0 auto .6rem;align-self:center}
+#login h1{font-size:2.4rem;text-align:center;margin-bottom:1.6rem}
 .divider{display:flex;align-items:center;gap:.6rem;color:var(--ink2);font-size:.85rem;margin:1rem 0}
 .divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--line)}
 .err{color:var(--danger);font-size:.88rem;margin-top:.6rem;min-height:1.2em}
@@ -132,7 +131,17 @@ nav.tabs button.fab span{position:absolute;width:1px;height:1px;overflow:hidden;
 /* Catalog */
 .filters{display:flex;gap:.5rem;overflow-x:auto;padding-bottom:.4rem;margin-bottom:.6rem}
 .filters button{padding:.4rem .9rem;border-radius:99px;border:1.5px solid var(--sage);color:var(--moss);white-space:nowrap;font-size:.88rem}
+.filters button.addcat{border-style:dashed}
 .filters button.on{background:var(--moss);color:var(--btntext);border-color:var(--moss)}
+.catbar{position:sticky;top:calc(var(--hdr,70px) - 1px);z-index:4;background:var(--bg);margin:-.35rem -1rem .5rem;padding:.35rem 1rem .05rem}
+.catbar .filters{margin-bottom:.5rem}
+.catbar .searchbox{margin:0 0 .6rem}
+.searchbox{position:relative;margin:.1rem 0 .9rem}
+.searchbox>svg{position:absolute;left:.85rem;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--ink2);pointer-events:none}
+.searchbox input{padding:.65rem 2.6rem .65rem 2.5rem;border-radius:12px;-webkit-appearance:none;appearance:none}
+.searchbox input::-webkit-search-cancel-button{-webkit-appearance:none}
+.searchbox .sclear{position:absolute;right:.35rem;top:50%;transform:translateY(-50%);width:34px;height:34px;border-radius:50%;display:grid;place-items:center;color:var(--ink2)}
+.searchbox .sclear svg{width:16px;height:16px}
 .cat{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:1rem;margin-bottom:.8rem}
 .cat h3{font-size:1.1rem;display:flex;gap:.5rem;align-items:center}
 .cat-actions{display:flex;flex-wrap:wrap;gap:.5rem}
@@ -144,8 +153,11 @@ nav.tabs button.fab span{position:absolute;width:1px;height:1px;overflow:hidden;
 .btn.icon:active{background:var(--mist)}
 .cat-actions .btn.icon[aria-expanded="true"]{color:var(--moss);background:var(--mist);border:0}
 .cat-actions .btn.icon[aria-expanded="true"]::after{content:none}
-.ctitle{display:flex;align-items:center;gap:.5rem;width:100%;text-align:left;font:inherit;border-radius:10px}
-.ctitle .chev{width:20px;height:20px;margin-left:auto;color:var(--ink2);transition:transform .2s;flex:none}
+.ctitle{display:flex;align-items:center;gap:.5rem;flex:1;min-width:0;text-align:left;font:inherit;border-radius:10px}
+.chev{width:20px;height:20px;color:var(--ink2);transition:transform .2s;flex:none}
+.chevbtn{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;flex:none;color:var(--ink2)}
+.chevbtn:active{background:var(--mist)}
+.cat h3 .dupbtn{margin-left:auto}
 .cat.open .chev{transform:rotate(180deg)}
 .gsteps{border-top:1px solid var(--line);margin-top:1rem;padding-top:1rem}
 .gtools{border-top:1px solid var(--line);margin-top:1rem;padding-top:1rem}
@@ -174,6 +186,11 @@ nav.tabs button.fab span{position:absolute;width:1px;height:1px;overflow:hidden;
 .pedit.x{color:var(--danger)}
 .gtools .hint,.gsteps .hint{font-size:.78rem;margin:0 0 .6rem}
 .inrow{display:flex;gap:.3rem;align-items:center;margin-bottom:.4rem}
+.krow{transition:transform .15s;background:var(--paper)}
+.krow.drag{position:relative;z-index:3;transition:none;box-shadow:0 6px 18px rgba(31,43,34,.25);border-radius:10px}
+.grip{width:30px;height:36px;display:grid;place-items:center;color:var(--ink2);touch-action:none;cursor:grab;flex:none;border-radius:8px}
+.grip svg{width:18px;height:18px}
+.grip:active{background:var(--mist)}
 .inrow input{flex:1;min-width:0;padding:.45rem .6rem;font-size:.88rem;border-radius:9px}
 .btable.edit{min-width:560px;table-layout:fixed}
 .btable.edit td{vertical-align:middle;padding:.3rem .25rem}
@@ -191,7 +208,8 @@ nav.tabs button.fab span{position:absolute;width:1px;height:1px;overflow:hidden;
 .gbody ul{margin-left:1.1rem;font-size:.88rem}
 .gbody li{margin:.15rem 0}
 .cat p{font-size:.9rem;color:var(--ink2);margin:.35rem 0 .7rem}
-.meta{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.8rem}
+.meta{display:flex;flex-wrap:wrap;gap:.4rem;margin:.8rem 0}
+.meta button.catchip{font-size:.78rem;background:var(--moss);color:var(--btntext);padding:.15rem .6rem;border-radius:8px;font-weight:600}
 .meta span{font-size:.78rem;background:var(--mist);padding:.15rem .6rem;border-radius:8px;color:var(--ink2)}
 
 /* Detail: batang tumbuh (timeline) */
@@ -252,8 +270,7 @@ nav.tabs button.fab span{position:absolute;width:1px;height:1px;overflow:hidden;
 <!-- LOGIN -->
 <section id="login" class="hidden">
   <img data-logo alt="Logo Essentera">
-  <h1>Essentera</h1>
-  <p class="lead">Tanam, ternak, dan kelola energi sendiri. Catat langkah demi langkah sampai panen dan olah, supaya hidup makin berdikari.</p>
+  <h1>Essenterra</h1>
   <button class="btn" id="btnGoogle">Masuk dengan Google</button>
   <div class="divider">atau pakai email</div>
   <label for="email" style="margin-top:0">Email</label>
@@ -419,20 +436,40 @@ const CATALOG = [
     {n:"Pengolahan ampas", day:36, d:"Ampas (slurry) jadi pupuk cair dan padat.", t:["Pisahkan cair dan padat","Pakai pupuk untuk kebun","Isi bahan baku tiap hari"], type:"process"}
    ]}
 ];
-const CATS = { all:"Semua", tanaman:"Tanaman", ternak:"Ternak", energi:"Energi" };
+const CATS = { all:"Semua", tanaman:"Tanaman", ternak:"Ternak", energi:"Energi", air:"Air", kompos:"Kompos & Limbah", obat:"Tanaman obat" };
 const byId = id => CATALOG.find(c => c.id === id);
 const clone = o => JSON.parse(JSON.stringify(o));
 const rp = n => "Rp " + Math.round(Number(n) || 0).toLocaleString("id-ID");
 const normBahan = b => typeof b === "string" ? { n: b, g: "", q: 1, h: 0 } : { n: String(b?.n || ""), g: String(b?.g || ""), q: Math.max(0, Number(b?.q) || 0), h: Math.max(0, Number(b?.h) || 0) };
 const bahanTotal = l => l.reduce((a, b) => a + b.q * b.h, 0);
 const CATALOG_BASE = clone(CATALOG);   /* salinan bawaan, untuk "Kembalikan bawaan" */
-let guideEdits = {}, catOpen = {}, editing = null;      /* hasil edit pengguna per panduan; panel yang sedang terbuka */
+let guideEdits = {}, catOpen = {}, editing = null, customCats = [], catRename = {}, catHidden = [], catOrder = [];   /* kategori: buatan pengguna [{id,name}], nama bawaan yang diganti, bawaan yang dihapus */
+const isBuiltinCat = id => id !== "all" && Object.prototype.hasOwnProperty.call(CATS, id);
+const allCats = () => {
+  const list = [...Object.entries(CATS).filter(([k]) => k !== "all" && !catHidden.includes(k)).map(([id, name]) => ({ id, name: catRename[id] || name })), ...customCats];
+  const pos = id => { const i = catOrder.indexOf(id); return i < 0 ? 1e6 : i; };
+  return list.map((k, i) => ({ k, i })).sort((a, b) => pos(a.k.id) - pos(b.k.id) || a.i - b.i).map(x => x.k);   /* urutan buatan pengguna; yang belum diurutkan tetap di belakang */
+};
+const validCat = id => allCats().some(k => k.id === id);      /* hasil edit pengguna per panduan; panel yang sedang terbuka */
 function applyEdits(){
+  for (let i = CATALOG.length - 1; i >= 0; i--) if (CATALOG[i].custom) CATALOG.splice(i, 1);   /* buang salinan lama, dibangun ulang di bawah */
   CATALOG.forEach(c => {
     const base = CATALOG_BASE.find(b => b.id === c.id), e = guideEdits[c.id] || {};
     ["tools", "bahan", "stages"].forEach(k => { c[k] = clone(Array.isArray(e[k]) ? e[k] : (base[k] || [])); });
     c.bahan = c.bahan.map(normBahan);
+    c.cat = validCat(e.cat) ? e.cat : (validCat(base.cat) ? base.cat : "");
   });
+  /* Panduan salinan buatan pengguna (tombol Duplikat): disisipkan tepat setelah panduan asalnya. */
+  Object.entries(guideEdits).filter(([, e]) => e && e.custom).map(([id, e]) => ({ id, e }))
+    .sort((a, b) => (a.e.created || 0) - (b.e.created || 0)).forEach(({ id, e }) => {
+      const g = { id, custom: true, root: e.root || "", cat: validCat(e.cat) ? e.cat : (validCat(CATALOG_BASE.find(b => b.id === e.root)?.cat) ? CATALOG_BASE.find(b => b.id === e.root).cat : ""), iconKey: e.iconKey || "custom", icon: e.icon || "🌱",
+        name: e.name || "Tanpa nama", level: e.level || "", days: Number(e.days) || 0, desc: e.desc || "", unit: e.unit || "kg",
+        tools: clone(Array.isArray(e.tools) ? e.tools : []), bahan: clone(Array.isArray(e.bahan) ? e.bahan : []).map(normBahan),
+        stages: clone(Array.isArray(e.stages) ? e.stages : []) };
+      let at = -1; CATALOG.forEach((x, i) => { if (g.root && (x.id === g.root || x.root === g.root)) at = i; });
+      if (at >= 0) CATALOG.splice(at + 1, 0, g); else CATALOG.push(g);
+    });
+  if (catFilter !== "all" && !(catFilter === "none" ? CATALOG.some(c => !c.cat) : validCat(catFilter))) catFilter = "all";
 }
 
 /* Ikon garis geometris (mengikuti warna tema). Untuk menambah ikon baru, tambahkan di sini sesuai id panduan. */
@@ -446,10 +483,10 @@ const ICONS = {
   biogas:'<path d="M12 3c1 4 5 5.5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 .3 1.5 1 2.2 2 2.5C11 9 11.5 6 12 3z"/>',
   custom:'<path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 9v6M9 12h6"/>'
 };
-const icon = id => `<svg class="ic" viewBox="0 0 24 24" aria-hidden="true">${ICONS[id] || ICONS.custom}</svg>`;
+const icon = id => { const k = ICONS[id] ? id : (byId(id)?.iconKey || "custom"); return `<svg class="ic" viewBox="0 0 24 24" aria-hidden="true">${ICONS[k] || ICONS.custom}</svg>`; };
 
 /* ---------------- STATE & UTIL ---------------- */
-let user = null, projects = [], logs = {}, unsubs = [], tab = "home", openId = null, catFilter = "all";
+let user = null, projects = [], logs = {}, unsubs = [], tab = "home", openId = null, catFilter = "all", catQuery = "";
 const $ = s => document.querySelector(s);
 const view = $("#view");
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
@@ -505,7 +542,7 @@ $("#btnReset").onclick = async () => {
 
 onAuthStateChanged(auth, u => {
   user = u;
-  unsubs.forEach(f => f()); unsubs = []; projects = []; logs = {}; guideEdits = {}; applyEdits();
+  unsubs.forEach(f => f()); unsubs = []; projects = []; logs = {}; guideEdits = {}; customCats = []; catRename = {}; catHidden = []; catOrder = []; applyEdits();
   if (!u) { $("#app").classList.add("hidden"); $("#login").classList.remove("hidden"); return; }
   $("#login").classList.add("hidden"); $("#app").classList.remove("hidden");
   setDoc(doc(db, "users", u.uid), { email: u.email || null, name: u.displayName || null, lastSeen: serverTimestamp() }, { merge: true }).catch(() => {});
@@ -514,6 +551,15 @@ onAuthStateChanged(auth, u => {
     e => { toast(errMsg(e)); }));
   unsubs.push(onSnapshot(collection(db, "users", u.uid, "guides"), snap => {
     guideEdits = {}; snap.docs.forEach(d => { guideEdits[d.id] = d.data(); }); applyEdits();
+    if (tab === "catalog" && !openId && !editing) render();
+  }, () => {}));
+  unsubs.push(onSnapshot(doc(db, "users", u.uid, "meta", "categories"), snap => {
+    const d = snap.exists() ? snap.data() : {};
+    customCats = Array.isArray(d.list) ? d.list.filter(k => k && k.id && k.name) : [];
+    catRename = (d.renames && typeof d.renames === "object") ? d.renames : {};
+    catHidden = Array.isArray(d.hidden) ? d.hidden.filter(isBuiltinCat) : [];
+    catOrder = Array.isArray(d.order) ? d.order.filter(x => typeof x === "string") : [];
+    applyEdits();
     if (tab === "catalog" && !openId && !editing) render();
   }, () => {}));
   render();
@@ -537,6 +583,7 @@ $("#btnBack").onclick = () => { openId = null; render(); };
 function render(){
   if (!user) return;
   editing = null;
+  document.documentElement.style.setProperty("--hdr", ($("header.top")?.offsetHeight || 70) + "px");   /* tinggi header, supaya filter & pencarian menempel tepat di bawahnya */
   document.querySelectorAll("nav.tabs button").forEach(b => b.classList.toggle("on", b.dataset.tab === tab && !openId));
   const back = $("#btnBack"), logo = $("#topLogo"), title = $("#topTitle");
   if (openId) {
@@ -668,16 +715,18 @@ function renderHarvest(){
 /* ---------------- PANDUAN ---------------- */
 function renderCatalog(){
   editing = null;
-  const list = CATALOG.filter(c => catFilter === "all" || c.cat === catFilter);
+  const list = CATALOG.filter(c => catFilter === "all" || (catFilter === "none" ? !c.cat : c.cat === catFilter));
   view.innerHTML = `
-    <div class="filters">${Object.entries(CATS).map(([k, v]) => `<button data-f="${k}" class="${catFilter === k ? "on" : ""}">${v}</button>`).join("")}</div>
-    ${list.map(c => `<div class="cat" data-id="${c.id}"><h3><button class="ctitle" aria-expanded="false"><span class="ico sm">${icon(c.id)}</span><span>${esc(c.name)}</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button></h3>
-      <p>${esc(c.desc)}</p>
-      <div class="meta"><span>${c.level}</span><span>±${c.days} hari</span><span>${c.stages.length} tahap</span><span>Hasil: ${c.unit}</span></div>
+    <div class="catbar">
+    <div class="filters">${[["all", CATS.all], ...allCats().map(k => [k.id, k.name]), ...(CATALOG.some(c => !c.cat) ? [["none", "Tanpa kategori"]] : [])].map(([k, v]) => `<button data-f="${k}" class="${catFilter === k ? "on" : ""}">${esc(v)}</button>`).join("")}<button class="addcat" data-addcat>Atur kategori</button></div>
+    <div class="searchbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><input id="catSearch" type="search" enterkeyhint="search" autocomplete="off" placeholder="Cari panduan, bahan, atau alat" aria-label="Cari panduan" value="${esc(catQuery)}"><button class="sclear hidden" id="catClear" aria-label="Hapus pencarian" title="Hapus pencarian">${IC_X}</button></div>
+    </div>
+    ${list.map(c => `<div class="cat" data-id="${c.id}" data-q="${esc([c.name, allCats().find(k => k.id === c.cat)?.name || "tanpa kategori", c.level, ...c.tools, ...c.bahan.map(b => b.n)].join(" ").toLowerCase())}"><h3><button class="ctitle" aria-expanded="false"><span class="ico sm">${icon(c.id)}</span><span>${esc(c.name)}</span></button><button class="btn small alt icon dupbtn" data-dup aria-label="Duplikat panduan" title="Duplikat panduan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg></button><button class="chevbtn" aria-label="Buka atau tutup panduan" title="Buka atau tutup"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button></h3>
+      <div class="meta"><button class="catchip" data-tag aria-label="Ubah kategori" title="Ketuk untuk ubah kategori">${esc(allCats().find(k => k.id === c.cat)?.name || "Tanpa kategori")}</button><span>${c.level}</span><span>±${Math.max(1, Math.round(c.days / 30))} bulan</span><span>${c.stages.length} tahap</span>${c.custom ? "<span>Salinan</span>" : ""}</div>
       <div class="cat-actions"><button class="btn small icon" data-start="${c.id}" aria-label="Mulai proyek ini" title="Mulai proyek ini"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg></button>
         ${`<button class="btn small alt icon" data-panel-btn="gbahan" data-label="bahan" aria-expanded="false" aria-label="Bahan" title="Bahan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6l-1 3h-4z"/><path d="M10 6C6 8 5 12 5 15.5 5 19 7.5 21 12 21s7-2 7-5.5C19 12 18 8 14 6"/><path d="M12 11v6M9.5 13.5h5"/></svg></button>`}
         ${`<button class="btn small alt icon" data-panel-btn="gtools" data-label="alat" aria-expanded="false" aria-label="Alat" title="Alat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></button>`}
-        <button class="btn small alt icon" data-steps-btn aria-expanded="false" aria-label="Step by Step" title="Step by Step"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/></svg></button></div>
+        <button class="btn small alt icon" data-steps-btn aria-expanded="false" aria-label="Step by Step" title="Step by Step"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/></svg></button><button class="btn small alt icon" data-tag aria-label="Pindah kategori" title="Pindah kategori"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><path d="M7 7h.01"/></svg></button>${c.custom ? `<button class="btn small alt icon" data-delguide aria-label="Hapus panduan salinan" title="Hapus panduan salinan" style="margin-left:auto;color:var(--danger)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg></button>` : ""}</div>
       <div class="gtools gbahan hidden"><div class="phead"><h4>Bahan yang dibutuhkan</h4><button class="pedit" data-edit="bahan" aria-label="Edit bahan" title="Edit bahan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></button></div>${c.bahan.length ? `<div class="btable-wrap"><table class="btable"><thead><tr><th>Bahan</th><th>Gramasi</th><th class="num">Qty</th><th class="num">Harga</th><th class="num">Total</th></tr></thead>
         <tbody>${c.bahan.map(b => `<tr><td>${esc(b.n)}</td><td>${esc(b.g) || "–"}</td><td class="num">${b.q}</td><td class="num">${rp(b.h)}</td><td class="num">${rp(b.q * b.h)}</td></tr>`).join("")}</tbody>
         <tfoot><tr><td colspan="4">Total harga bahan</td><td class="num">${rp(bahanTotal(c.bahan))}</td></tr></tfoot></table></div>` : `<p class="empty">Belum ada bahan. Ketuk pensil untuk menambah.</p>`}</div>
@@ -685,7 +734,8 @@ function renderCatalog(){
       <div class="gsteps hidden"><div class="phead"><h4>Tahapan</h4><button class="pedit" data-edit="steps" aria-label="Edit tahapan" title="Edit tahapan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></button></div>${c.stages.length ? "" : `<p class="empty">Belum ada tahap. Ketuk pensil untuk menambah.</p>`}${c.stages.map((s, i) => `<div class="gstep"><div class="gnum${s.type === "harvest" ? " h" : ""}">${i + 1}</div>
         <div class="gbody"><h4>${esc(s.n)}${s.type === "harvest" ? '<span class="chip done">Panen</span>' : s.type === "process" ? '<span class="chip">Olah</span>' : ""}</h4>
           <div class="when">Hari ke-${s.day + 1}</div>${s.d ? `<p>${esc(s.d)}</p>` : ""}
-          <ul>${s.t.map(t => `<li>${esc(t)}</li>`).join("")}</ul></div></div>`).join("")}</div></div>`).join("")}`;
+          <ul>${s.t.map(t => `<li>${esc(t)}</li>`).join("")}</ul></div></div>`).join("")}</div></div>`).join("")}
+    <div class="empty hidden" id="catNone">Tidak ada panduan yang cocok.</div>`;
   view.querySelectorAll("[data-f]").forEach(b => b.onclick = () => { catFilter = b.dataset.f; render(); });
   view.querySelectorAll("[data-start]").forEach(b => b.onclick = () => startSheet(b.dataset.start));
   /* Ikon Step by Step / Alat / Bahan: satu panel per kartu. Panah di judul: buka semuanya, ketuk lagi untuk menutup semuanya. */
@@ -704,7 +754,21 @@ function renderCatalog(){
     if (name === "all") return setPanels(card, open.length === PNAMES.length ? [] : PNAMES);
     setPanels(card, open.length === 1 && open[0] === name ? [] : [name]);
   }
-  view.querySelectorAll(".ctitle").forEach(b => b.onclick = () => showPanel(b.closest(".cat"), "all"));
+  view.querySelectorAll(".ctitle, .chevbtn").forEach(b => b.onclick = () => showPanel(b.closest(".cat"), "all"));
+  const qIn = view.querySelector("#catSearch"), qClr = view.querySelector("#catClear"), qNone = view.querySelector("#catNone");
+  const applyQ = () => {
+    const toks = catQuery.trim().toLowerCase().split(/\s+/).filter(Boolean); let n = 0;
+    view.querySelectorAll(".cat[data-id]").forEach(card => { const ok = toks.every(t => card.dataset.q.includes(t)); card.classList.toggle("hidden", !ok); if (ok) n++; });
+    qNone.classList.toggle("hidden", n > 0); qClr.classList.toggle("hidden", !catQuery);
+  };
+  qIn.oninput = () => { catQuery = qIn.value; applyQ(); };
+  qIn.onkeydown = e => { if (e.key === "Enter") qIn.blur(); };
+  qClr.onclick = () => { catQuery = ""; qIn.value = ""; applyQ(); qIn.focus(); };
+  applyQ();
+  view.querySelectorAll("[data-addcat]").forEach(b => b.onclick = catSheet);
+  view.querySelectorAll("[data-tag]").forEach(b => b.onclick = () => categorySheet(b.closest(".cat").dataset.id));
+  view.querySelectorAll("[data-dup]").forEach(b => b.onclick = () => duplicateSheet(b.closest(".cat").dataset.id));
+  view.querySelectorAll("[data-delguide]").forEach(b => b.onclick = () => deleteGuide(b.closest(".cat").dataset.id));
   view.querySelectorAll("[data-steps-btn]").forEach(b => b.onclick = () => showPanel(b.closest(".cat"), "steps"));
   view.querySelectorAll("[data-panel-btn]").forEach(b => b.onclick = () => showPanel(b.closest(".cat"), b.dataset.panelBtn));
   view.querySelectorAll("[data-edit]").forEach(b => b.onclick = () => editGuide(b.closest(".cat").dataset.id, b.dataset.edit));
@@ -729,7 +793,7 @@ const PANEL_SEL = { steps:".gsteps", tools:".gtoolsbox", bahan:".gbahan" };
 const PANEL_TITLE = { steps:"Tahapan", tools:"Alat yang dibutuhkan", bahan:"Bahan yang dibutuhkan" };
 /* Mengubah panel yang sedang dibuka menjadi mode edit. Tombol: Kembalikan bawaan (jika pernah diedit), Batal, Simpan. */
 function inlineShell(id, kind, hint, body){
-  const edited = Array.isArray(guideEdits[id]?.[kind === "steps" ? "stages" : kind]);
+  const edited = !byId(id)?.custom && Array.isArray(guideEdits[id]?.[kind === "steps" ? "stages" : kind]);
   const panel = view.querySelector(`.cat[data-id="${id}"] ${PANEL_SEL[kind]}`);
   editing = { id, kind };
   panel.innerHTML = `<div class="phead"><h4>${PANEL_TITLE[kind]}</h4><span class="pacts">${edited ? `<button class="pedit" id="edReset" aria-label="Kembalikan bawaan" title="Kembalikan bawaan">${IC_UNDO}</button>` : ""}<button class="pedit" id="edX" aria-label="Batal" title="Batal">${IC_X}</button><button class="pedit ok" id="edOk" aria-label="Simpan" title="Simpan">${IC_OK}</button></span></div>
@@ -816,6 +880,111 @@ function editSteps(c){
     freezeRunning(c.id); saveGuide(c.id, { stages: clean });
   };
   s.querySelector("#edReset")?.addEventListener("click", () => { if (confirm("Kembalikan tahapan ke bawaan?")) { freezeRunning(c.id); saveGuide(c.id, { stages: null }); } });
+}
+
+/* ---------------- KATEGORI BUATAN SENDIRI ---------------- */
+function saveCats(){ setDoc(doc(db, "users", user.uid, "meta", "categories"), { list: customCats, renames: catRename, hidden: catHidden, order: catOrder, updatedAt: serverTimestamp() }).catch(e => toast(errMsg(e))); }
+/* Atur kategori: ubah nama, hapus, tambah, dan pulihkan kategori bawaan. Perubahan disimpan saat menekan Simpan. */
+function catSheet(){
+  let rows = allCats().map(k => ({ id: k.id, name: k.name })), hid = [...catHidden];
+  const s = sheet(`<h3>Atur kategori</h3>
+    <p class="muted">Ubah nama langsung di kolom, tahan ikon titik di kiri lalu geser untuk mengurutkan, ketuk silang untuk menghapus. Panduan dalam kategori yang dihapus kembali ke kategori asalnya, atau menjadi "Tanpa kategori".</p>
+    <div id="kRows"></div>
+    <label for="kName">Tambah kategori baru</label><input id="kName" maxlength="24" placeholder="Contoh: Buah, Tanaman hias">
+    <div id="kHid"></div>
+    <div class="actions"><button class="btn alt" id="x">Batal</button><button class="btn" id="ok">Simpan</button></div>`);
+  const box = s.querySelector("#kRows"), hbox = s.querySelector("#kHid");
+  const collect = () => { box.querySelectorAll(".k-n").forEach((i, n) => { if (rows[n]) rows[n].name = i.value; }); };
+  const draw = () => {
+    box.innerHTML = rows.length ? rows.map((r, i) => `<div class="inrow krow"><button class="grip" data-grip="${i}" aria-label="Geser untuk mengurutkan" title="Tahan lalu geser (atau panah atas/bawah)"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/></svg></button><input class="k-n" maxlength="24" value="${esc(r.name)}" aria-label="Nama kategori"><button class="pedit x" data-rm="${i}" aria-label="Hapus kategori" title="Hapus kategori">${IC_X}</button></div>`).join("")
+      : `<p class="empty">Belum ada kategori. Tambahkan di bawah.</p>`;
+    hbox.innerHTML = hid.length ? `<label>Kategori bawaan yang dihapus</label>${hid.map(id => `<div class="inrow"><span style="flex:1;min-width:0">${esc(CATS[id])}</span><button class="btn small alt" data-restore="${id}">Pulihkan</button></div>`).join("")}` : "";
+    box.querySelectorAll("[data-rm]").forEach(b => b.onclick = () => {
+      collect(); const r = rows[Number(b.dataset.rm)];
+      if (!confirm(`Hapus kategori "${r.name}"?`)) return;
+      rows.splice(Number(b.dataset.rm), 1); if (isBuiltinCat(r.id)) hid.push(r.id); draw();
+    });
+    box.querySelectorAll("[data-grip]").forEach(g => {
+      const from = Number(g.dataset.grip);
+      g.onpointerdown = e => {
+        e.preventDefault(); collect();
+        const els = [...box.querySelectorAll(".krow")], n = els.length; if (n < 2) return;
+        const stride = els[1].getBoundingClientRect().top - els[0].getBoundingClientRect().top || els[0].offsetHeight;
+        const startY = e.clientY; let to = from; els[from].classList.add("drag"); g.setPointerCapture(e.pointerId);
+        g.onpointermove = ev => {
+          const dy = Math.max(-from * stride, Math.min((n - 1 - from) * stride, ev.clientY - startY));
+          els[from].style.transform = `translateY(${dy}px)`;
+          to = Math.max(0, Math.min(n - 1, Math.round(from + dy / stride)));
+          els.forEach((el, i) => { if (i !== from) el.style.transform = (from < to && i > from && i <= to) ? `translateY(${-stride}px)` : (from > to && i >= to && i < from) ? `translateY(${stride}px)` : ""; });
+        };
+        const end = () => { g.onpointermove = g.onpointerup = g.onpointercancel = null; if (to !== from) { const [m] = rows.splice(from, 1); rows.splice(to, 0, m); } draw(); };
+        g.onpointerup = g.onpointercancel = end;
+      };
+      g.onkeydown = e => {
+        const to = from + (e.key === "ArrowUp" ? -1 : e.key === "ArrowDown" ? 1 : 0);
+        if (to === from || to < 0 || to >= rows.length) return;
+        e.preventDefault(); collect(); const [m] = rows.splice(from, 1); rows.splice(to, 0, m); draw(); box.querySelector(`[data-grip="${to}"]`)?.focus();
+      };
+    });
+    hbox.querySelectorAll("[data-restore]").forEach(b => b.onclick = () => { collect(); const id = b.dataset.restore; hid = hid.filter(x => x !== id); rows.push({ id, name: CATS[id] }); draw(); });
+  };
+  draw();
+  s.querySelector("#x").onclick = closeSheet;
+  const save = () => {
+    collect();
+    const nk = s.querySelector("#kName").value.trim();
+    const all = rows.map(r => ({ ...r, name: r.name.trim() }));
+    if (all.some(r => !r.name)) { toast("Nama kategori tidak boleh kosong."); return; }
+    if (nk) all.push({ id: "k_" + Date.now().toString(36), name: nk });
+    const seen = new Set();
+    for (const r of all) { const k = r.name.toLowerCase(); if (seen.has(k)) { toast(`Nama "${r.name}" dipakai dua kali.`); return; } seen.add(k); }
+    customCats = all.filter(r => !isBuiltinCat(r.id));
+    catRename = {}; all.forEach(r => { if (isBuiltinCat(r.id) && r.name !== CATS[r.id]) catRename[r.id] = r.name; });
+    catHidden = hid.filter(isBuiltinCat);
+    catOrder = all.map(r => r.id);
+    if (nk) catFilter = all[all.length - 1].id;
+    saveCats(); applyEdits(); closeSheet(); toast("Kategori disimpan."); render();
+  };
+  s.querySelector("#ok").onclick = save;
+  s.querySelector("#kName").addEventListener("keydown", e => { if (e.key === "Enter") save(); });
+}
+function categorySheet(id){
+  const c = byId(id); if (!c) return;
+  const s = sheet(`<h3>Pindah kategori</h3><p class="muted">${esc(c.name)}</p>
+    <label for="mCat">Kategori</label><select id="mCat">${allCats().map(k => `<option value="${k.id}"${k.id === c.cat ? " selected" : ""}>${esc(k.name)}</option>`).join("")}</select>
+    <button class="btn alt small" id="mng" style="margin-top:.8rem">+ Kelola kategori</button>
+    <div class="actions"><button class="btn alt" id="x">Batal</button><button class="btn" id="ok">Simpan</button></div>`);
+  s.querySelector("#x").onclick = closeSheet;
+  s.querySelector("#mng").onclick = catSheet;
+  s.querySelector("#ok").onclick = () => { const v = s.querySelector("#mCat").value; if (!v) { toast("Belum ada kategori. Tambahkan lewat Kelola kategori."); return; } closeSheet(); catFilter = "all"; saveGuide(c.id, { cat: v }); };
+}
+
+/* ---------------- DUPLIKAT PANDUAN: benih/jenis sama, tipe atau varietas berbeda ---------------- */
+function duplicateSheet(id){
+  const c = byId(id); if (!c) return;
+  const s = sheet(`<h3>Duplikat panduan</h3>
+    <p class="muted">Salinan membawa alat, bahan, dan tahapan dari "${esc(c.name)}", lalu bisa diubah sendiri tanpa memengaruhi panduan asli. Cocok untuk benih sama dengan tipe atau varietas berbeda, tulis tipenya di nama.</p>
+    <label for="dName">Nama panduan baru</label><input id="dName" value="${esc(c.name)} (salinan)">
+    <label for="dCat">Kategori</label><select id="dCat">${allCats().map(k => `<option value="${k.id}"${k.id === c.cat ? " selected" : ""}>${esc(k.name)}</option>`).join("")}</select>
+    <div class="actions"><button class="btn alt" id="x">Batal</button><button class="btn" id="ok">Duplikat</button></div>`);
+  s.querySelector("#x").onclick = closeSheet;
+  const nm = s.querySelector("#dName"); nm.focus(); nm.select();
+  s.querySelector("#ok").onclick = () => {
+    const name = nm.value.trim(); if (!name) { toast("Isi nama panduan."); return; }
+    const nid = "c_" + Date.now().toString(36);
+    const rec = { custom: true, root: c.root || c.id, cat: s.querySelector("#dCat").value, iconKey: c.iconKey || c.id, icon: c.icon, name,
+      level: c.level, days: c.days, unit: c.unit, desc: c.desc,
+      tools: clone(c.tools), bahan: clone(c.bahan), stages: clone(c.stages), created: Date.now() };
+    guideEdits[nid] = rec; applyEdits(); closeSheet(); toast("Panduan diduplikasi."); render();
+    view.querySelector(`.cat[data-id="${nid}"]`)?.scrollIntoView({ block: "center" });
+    setDoc(doc(db, "users", user.uid, "guides", nid), { ...rec, updatedAt: serverTimestamp() }).catch(e => toast(errMsg(e)));
+  };
+}
+function deleteGuide(id){
+  const c = byId(id); if (!c || !c.custom) return;
+  if (!confirm(`Hapus panduan "${c.name}"? Proyek yang sudah dibuat dari panduan ini tidak ikut terhapus.`)) return;
+  delete guideEdits[id]; delete catOpen[id]; applyEdits(); render(); toast("Panduan dihapus.");
+  deleteDoc(doc(db, "users", user.uid, "guides", id)).catch(e => toast(errMsg(e)));
 }
 
 /* ---------------- MODAL ---------------- */
@@ -1036,6 +1205,7 @@ paintTheme();
 /* ---------------- PWA & JARINGAN ---------------- */
 const netBadge = $("#netBadge");
 const updNet = () => netBadge.classList.toggle("hidden", navigator.onLine);
+addEventListener("resize", () => document.documentElement.style.setProperty("--hdr", ($("header.top")?.offsetHeight || 70) + "px"));
 addEventListener("online", updNet); addEventListener("offline", updNet); updNet();
 if ("serviceWorker" in navigator) addEventListener("load", () => navigator.serviceWorker.register("service-worker.js").catch(() => {}));
 </script>
