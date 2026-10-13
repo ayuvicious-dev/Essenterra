@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Essentera</title>
+<meta name="description" content="Hidup berkelanjutan: tanam, ternak, dan kelola energi sendiri dari awal sampai panen dan olah.">
+<meta name="theme-color" content="#2f4a35">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Essentera">
+<style>
+:root{
+  --moss:#2f4a35; --leaf:#5f8f55; --sage:#a9c49b; --mist:#eef3ea; --paper:#f8faf5;
+  --soil:#6b4f3a; --sun:#d4a72c; --water:#4b87a8; --danger:#b3412f;
+  --ink:#1f2b22; --ink2:#5a6a5d; --line:#d5e0cd; --card:#ffffff; --bg:#eef3ea;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root{--ink:#e6efe2;--ink2:#9fb2a3;--line:#2e4333;--card:#1a2a1f;--bg:#121c15;--paper:#162219;--mist:#1d2e22;--moss:#8fbf82;--leaf:#78ad6b;--sage:#3e5f3f;--soil:#c29a78}
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:var(--sans);background:var(--bg);color:var(--ink);line-height:1.5;-webkit-tap-highlight-color:transparent;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.2;letter-spacing:-.01em}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+input,select,textarea{font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:.65rem .8rem;width:100%}
+textarea{resize:vertical;min-height:84px}
+label{display:block;font-size:.85rem;color:var(--ink2);margin:.8rem 0 .25rem}
+:focus-visible{outline:3px solid var(--leaf);outline-offset:2px}
+.hidden{display:none!important}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;padding:.7rem 1.1rem;border-radius:12px;background:var(--moss);color:var(--paper);font-weight:600}
+@media (prefers-color-scheme:dark){.btn{color:#10190f}}
+.btn.alt{background:transparent;color:var(--moss);border:1.5px solid var(--sage)}
+.btn.danger{background:transparent;color:var(--danger);border:1.5px solid var(--danger)}
+.btn.small{padding:.4rem .75rem;font-size:.85rem;border-radius:9px}
+.btn:disabled{opacity:.5}
+.muted{color:var(--ink2);font-size:.9rem}
+
+/* Layout */
+#app{max-width:720px;margin:0 auto;min-height:100%;display:flex;flex-direction:column}
+header.top{display:flex;align-items:center;gap:.7rem;padding:.9rem 1rem;position:sticky;top:0;background:var(--bg);z-index:5;border-bottom:1px solid var(--line)}
+header.top img{width:34px;height:34px}
+header.top h1{font-size:1.35rem;flex:1}
+header.top .back{font-size:1.5rem;padding:.1rem .6rem;border-radius:8px;color:var(--moss)}
+main{flex:1;padding:1rem 1rem 6rem}
+nav.tabs{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--line);display:flex;justify-content:center;padding-bottom:env(safe-area-inset-bottom,0px);z-index:6}
+nav.tabs .in{display:flex;width:100%;max-width:720px}
+nav.tabs button{flex:1;padding:.7rem .2rem;font-size:.8rem;color:var(--ink2);display:flex;flex-direction:column;align-items:center;gap:.15rem}
+nav.tabs button svg{width:22px;height:22px}
+nav.tabs button.on{color:var(--moss);font-weight:700}
+
+/* Login */
+#login{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:2rem 1.4rem;max-width:420px;margin:0 auto}
+#login img{width:92px;height:92px;margin-bottom:1rem}
+#login h1{font-size:2.4rem}
+#login p.lead{margin:.5rem 0 1.5rem;color:var(--ink2)}
+.divider{display:flex;align-items:center;gap:.6rem;color:var(--ink2);font-size:.85rem;margin:1rem 0}
+.divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--line)}
+.err{color:var(--danger);font-size:.88rem;margin-top:.6rem;min-height:1.2em}
+
+/* Home */
+.hero{background:var(--moss);color:var(--paper);border-radius:20px;padding:1.2rem 1.2rem 1.3rem;margin-bottom:1.1rem}
+@media (prefers-color-scheme:dark){.hero{background:#24402a;color:#e6efe2}}
+.hero h2{font-size:1.5rem;margin-bottom:.2rem}
+.hero p{opacity:.85;font-size:.92rem}
+.stats{display:flex;gap:1.4rem;margin-top:1rem}
+.stats b{display:block;font-family:var(--serif);font-size:1.7rem;line-height:1}
+.stats span{font-size:.78rem;opacity:.8}
+.section-title{display:flex;justify-content:space-between;align-items:center;margin:1.3rem 0 .6rem}
+.section-title h3{font-size:1.15rem}
+.proj{display:flex;gap:.85rem;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:.85rem;margin-bottom:.7rem;width:100%;text-align:left}
+.proj .ico{width:46px;height:46px;border-radius:13px;display:grid;place-items:center;font-size:1.5rem;background:var(--mist);flex:none}
+.proj .body{flex:1;min-width:0}
+.proj .name{font-weight:600}
+.proj .sub{font-size:.82rem;color:var(--ink2)}
+.bar{height:7px;border-radius:99px;background:var(--mist);margin-top:.5rem;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--leaf);border-radius:99px}
+.chip{display:inline-block;font-size:.75rem;padding:.12rem .55rem;border-radius:99px;background:var(--mist);color:var(--moss);margin-left:.4rem}
+.chip.done{background:var(--sun);color:#2b2208}
+.empty{text-align:center;padding:2rem 1rem;color:var(--ink2);background:var(--card);border:1px dashed var(--sage);border-radius:16px}
+
+/* Catalog */
+.filters{display:flex;gap:.5rem;overflow-x:auto;padding-bottom:.4rem;margin-bottom:.6rem}
+.filters button{padding:.4rem .9rem;border-radius:99px;border:1.5px solid var(--sage);color:var(--moss);white-space:nowrap;font-size:.88rem}
+.filters button.on{background:var(--moss);color:var(--paper);border-color:var(--moss)}
+@media (prefers-color-scheme:dark){.filters button.on{color:#10190f}}
+.cat{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:1rem;margin-bottom:.8rem}
+.cat h3{font-size:1.1rem;display:flex;gap:.5rem;align-items:center}
+.cat p{font-size:.9rem;color:var(--ink2);margin:.35rem 0 .7rem}
+.meta{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.8rem}
+.meta span{font-size:.78rem;background:var(--mist);padding:.15rem .6rem;border-radius:8px;color:var(--ink2)}
+
+/* Detail: batang tumbuh (timeline) */
+.dh{margin-bottom:1rem}
+.dh h2{font-size:1.6rem}
+.dh .row{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;margin-top:.3rem}
+.bigprog{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:1rem;margin-bottom:1.2rem}
+.bigprog .num{font-family:var(--serif);font-size:2.2rem;line-height:1}
+.bigprog .bar{height:10px}
+.stem{position:relative;margin-left:.5rem;padding-left:2.1rem}
+.stem::before{content:"";position:absolute;left:11px;top:6px;bottom:6px;width:3px;background:var(--line);border-radius:3px}
+.stem .fill{position:absolute;left:11px;top:6px;width:3px;background:var(--leaf);border-radius:3px;transition:height .5s}
+.stage{position:relative;margin-bottom:1.1rem}
+.stage .node{position:absolute;left:-2.1rem;top:.15rem;width:25px;height:25px;border-radius:50% 50% 50% 4px;background:var(--card);border:3px solid var(--line);transform:rotate(-45deg);display:grid;place-items:center}
+.stage.done .node{background:var(--leaf);border-color:var(--leaf)}
+.stage.now .node{border-color:var(--leaf);background:var(--sage)}
+.stage.harvest .node{border-color:var(--sun)} .stage.harvest.done .node{background:var(--sun);border-color:var(--sun)}
+.stage h3{font-size:1.05rem}
+.stage .when{font-size:.8rem;color:var(--ink2)}
+.stage .desc{font-size:.9rem;color:var(--ink2);margin:.25rem 0 .4rem}
+.task{display:flex;gap:.6rem;align-items:flex-start;padding:.35rem 0;font-size:.92rem;cursor:pointer}
+.task input{width:20px;height:20px;margin-top:.1rem;accent-color:var(--leaf);padding:0;flex:none}
+.task.done span{text-decoration:line-through;color:var(--ink2)}
+.stage:not(.now):not(.done) .desc,.stage:not(.now):not(.done) .tasks{opacity:.75}
+
+/* Log */
+.log{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:.8rem;margin-bottom:.6rem}
+.log .d{font-size:.78rem;color:var(--ink2);display:flex;justify-content:space-between}
+.log img{width:100%;max-height:260px;object-fit:cover;border-radius:10px;margin-top:.5rem}
+.log .t{margin-top:.3rem;white-space:pre-wrap;font-size:.92rem}
+
+/* Modal */
+.modal{position:fixed;inset:0;background:rgba(10,20,12,.55);display:flex;align-items:flex-end;justify-content:center;z-index:20}
+.sheet{background:var(--paper);width:100%;max-width:560px;max-height:92vh;overflow:auto;border-radius:22px 22px 0 0;padding:1.2rem 1.1rem calc(1.4rem + env(safe-area-inset-bottom,0px))}
+.sheet h3{font-size:1.25rem;margin-bottom:.2rem}
+.sheet .actions{display:flex;gap:.6rem;margin-top:1.2rem}
+.sheet .actions .btn{flex:1}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+#toast{position:fixed;left:50%;bottom:5.2rem;transform:translateX(-50%);background:var(--moss);color:var(--paper);padding:.6rem 1rem;border-radius:12px;font-size:.9rem;z-index:30;max-width:90%}
+@media (prefers-color-scheme:dark){#toast{color:#10190f}}
+.net{font-size:.75rem;padding:.15rem .55rem;border-radius:99px;background:var(--sun);color:#2b2208}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<section id="login" class="hidden">
+  <img src="icons/logo.png" alt="Logo Essentera">
+  <h1>Essentera</h1>
+  <p class="lead">Tanam, ternak, dan kelola energi sendiri. Catat langkah demi langkah sampai panen dan olah, supaya hidup makin berdikari.</p>
+  <button class="btn" id="btnGoogle">Masuk dengan Google</button>
+  <div class="divider">atau pakai email</div>
+  <label for="email" style="margin-top:0">Email</label>
+  <input id="email" type="email" autocomplete="email" inputmode="email">
+  <label for="pass">Kata sandi (minimal 6 karakter)</label>
+  <input id="pass" type="password" autocomplete="current-password">
+  <div style="display:flex;gap:.6rem;margin-top:1rem">
+    <button class="btn" id="btnLogin" style="flex:1">Masuk</button>
+    <button class="btn alt" id="btnSignup" style="flex:1">Daftar</button>
+  </div>
+  <button class="muted" id="btnReset" style="margin-top:.8rem;text-decoration:underline;align-self:flex-start">Lupa kata sandi?</button>
+  <div class="err" id="loginErr" role="alert"></div>
+</section>
+
+<!-- APP -->
+<div id="app" class="hidden">
+  <header class="top">
+    <button class="back hidden" id="btnBack" aria-label="Kembali">‹</button>
+    <img src="icons/logo.png" alt="" id="topLogo">
+    <h1 id="topTitle">Essentera</h1>
+    <span class="net hidden" id="netBadge">Offline</span>
+  </header>
+  <main id="view"></main>
+  <nav class="tabs"><div class="in">
+    <button data-tab="home" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8M5 10v10h14V10"/></svg>Beranda</button>
+    <button data-tab="catalog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V11M12 11C12 6 8 4 4 4c0 5 3 7 8 7zM12 14c0-4 3-6 8-6 0 5-3 7-8 6z"/></svg>Panduan</button>
+    <button data-tab="account"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>Akun</button>
+  </div></nav>
+</div>
+<div id="modalRoot"></div>
+<div id="toast" class="hidden" role="status"></div>
+
+<script type="module">
+/* =====================================================================
+   ESSENTERA — semua logika ada di file ini. Revisi cukup edit index.html.
+   ===================================================================== */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+import { getAuth, onAuthStateChanged, signInWithPopup, signInWithRedirect, getRedirectResult, GoogleAuthProvider,
+  signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signOut }
+  from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager, collection, doc, setDoc, addDoc,
+  updateDoc, deleteDoc, onSnapshot, query, orderBy, serverTimestamp }
+  from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import { getStorage, ref as sRef, uploadBytes, getDownloadURL, deleteObject }
+  from "https://www.gstatic.com/firebasejs/10.14.1/firebase-storage.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDAjahfIr2D1DaD3vbiMp8yKow1FF7LtNo",
+  authDomain: "essenterra-fad5a.firebaseapp.com",
+  projectId: "essenterra-fad5a",
+  storageBucket: "essenterra-fad5a.firebasestorage.app",
+  messagingSenderId: "309169352796",
+  appId: "1:309169352796:web:b434eb9f0aa5143717b699"
+};
+const fbApp = initializeApp(firebaseConfig);
+const auth = getAuth(fbApp);
+const db = initializeFirestore(fbApp, { localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }) });
+const storage = getStorage(fbApp);
+
+/* ---------------- KATALOG PANDUAN ----------------
+   day = hari ke-n sejak mulai (0 = hari pertama). Tahap terakhir bertipe "harvest" / "process". */
+const CATALOG = [
+ { id:"kangkung", cat:"tanaman", icon:"🥬", name:"Kangkung darat", level:"Pemula", days:35,
+   desc:"Sayur tercepat panen. Cocok untuk pot, polybag, atau bedengan kecil.",
+   unit:"ikat",
+   stages:[
+    {n:"Siapkan media tanam", day:0, d:"Campur tanah, kompos, dan sekam dengan perbandingan 2:1:1. Isi polybag atau bedengan.", t:["Siapkan wadah/bedengan berlubang drainase","Campur media tanam","Rendam benih 8–12 jam"]},
+    {n:"Semai dan tanam", day:1, d:"Tebar atau tanam benih langsung, tutup tipis dengan tanah.", t:["Tebar benih rata, jarak ±3 cm","Siram halus pagi dan sore"]},
+    {n:"Perkecambahan", day:5, d:"Benih tumbuh dalam 2–4 hari. Jaga media tetap lembap, bukan tergenang.", t:["Pastikan media selalu lembap","Cek hama semut dan ulat"]},
+    {n:"Pertumbuhan daun", day:12, d:"Tanaman butuh banyak air dan nitrogen.", t:["Beri pupuk cair organik (POC) 1x seminggu","Cabut gulma","Jarangkan tanaman yang terlalu rapat"]},
+    {n:"Siap panen", day:25, d:"Tinggi 20–25 cm. Panen dengan memotong 5 cm di atas tanah agar tumbuh lagi.", t:["Potong batang sisakan 2–3 ruas","Beri POC setelah panen"], type:"harvest"},
+    {n:"Pengolahan", day:26, d:"Segarkan dan simpan, atau olah segera.", t:["Cuci bersih dan tiriskan","Simpan di kulkas dibungkus kertas lembap (3–4 hari)","Olah jadi tumis, pecel, atau keripik"], type:"process"}
+   ]},
+ { id:"cabai", cat:"tanaman", icon:"🌶️", name:"Cabai rawit", level:"Menengah", days:130,
+   desc:"Tanaman bernilai tinggi, bisa dipanen berulang selama berbulan-bulan.",
+   unit:"gram",
+   stages:[
+    {n:"Semai benih", day:0, d:"Semai di tray atau pot kecil dengan media halus dan kompos.", t:["Rendam benih 6 jam dalam air hangat","Tabur 1–2 benih per lubang","Letakkan di tempat teduh terang"]},
+    {n:"Perawatan bibit", day:10, d:"Bibit tumbuh 2–4 daun sejati. Jaga kelembapan dan beri cahaya pagi.", t:["Siram pagi hari","Pindahkan ke cahaya matahari bertahap"]},
+    {n:"Pindah tanam", day:30, d:"Pindahkan ke pot 30–40 cm atau bedengan jarak 60 cm.", t:["Siapkan media: tanah + kompos + sekam","Pindahkan bibit sore hari","Beri ajir/penyangga"]},
+    {n:"Pertumbuhan vegetatif", day:45, d:"Fokus pada daun dan batang.", t:["Pupuk kompos/POC tiap 10 hari","Pangkas tunas air di bawah cabang pertama","Cek kutu daun dan thrips"]},
+    {n:"Berbunga dan berbuah", day:75, d:"Kurangi nitrogen, tambah kalium (abu sekam, kulit pisang).", t:["Beri pupuk kaya kalium","Siram teratur, hindari kekeringan","Buang bunga/buah rusak"]},
+    {n:"Mulai panen", day:100, d:"Panen cabai yang sudah merah penuh, dipetik tiap 3–5 hari.", t:["Petik dengan tangkainya","Catat berat hasil panen"], type:"harvest"},
+    {n:"Pengolahan", day:101, d:"Awetkan agar tidak beli lagi.", t:["Jemur atau oven jadi cabai kering","Buat sambal/pasta cabai","Simpan beku dalam wadah kedap"], type:"process"}
+   ]},
+ { id:"tomat", cat:"tanaman", icon:"🍅", name:"Tomat", level:"Menengah", days:100,
+   desc:"Buah segar untuk dapur. Butuh sinar matahari penuh dan penyangga.",
+   unit:"gram",
+   stages:[
+    {n:"Semai benih", day:0, d:"Semai di media halus, tutup tipis.", t:["Rendam benih semalam","Semai di tray","Jaga tetap lembap"]},
+    {n:"Pindah tanam", day:21, d:"Bibit 4–5 daun. Tanam dalam, sampai daun bawah.", t:["Siapkan pot ≥ 20 L atau bedengan","Pasang ajir setinggi 1,5 m","Siram setelah tanam"]},
+    {n:"Pertumbuhan", day:35, d:"Ikat batang pada ajir tiap minggu.", t:["Buang tunas air","Beri kompos sebagai mulsa","Siram dekat akar, bukan daun"]},
+    {n:"Berbunga", day:50, d:"Goyang tandan bunga pelan untuk membantu penyerbukan.", t:["Beri pupuk kalium/fosfor","Pantau hama ulat buah"]},
+    {n:"Berbuah", day:65, d:"Buah hijau membesar. Jaga kelembapan stabil agar tidak pecah.", t:["Siram teratur","Pangkas daun yang menutupi buah"]},
+    {n:"Panen", day:85, d:"Petik saat merah merata atau mulai oranye.", t:["Petik dengan tangkai","Catat berat hasil"], type:"harvest"},
+    {n:"Pengolahan", day:86, d:"Jangan buang buah berlebih.", t:["Buat saus tomat","Jemur jadi tomat kering","Simpan buah matang di suhu ruang"], type:"process"}
+   ]},
+ { id:"lele", cat:"ternak", icon:"🐟", name:"Lele kolam terpal", level:"Menengah", days:90,
+   desc:"Protein hewani cepat panen dengan lahan kecil. Kualitas air kunci utamanya.",
+   unit:"kg",
+   stages:[
+    {n:"Siapkan kolam", day:0, d:"Kolam terpal diameter 2 m, tinggi air 60–80 cm. Isi air dan diamkan 5–7 hari.", t:["Pasang kolam dan tutup jaring","Isi air, fermentasi dengan EM4/probiotik","Cek pH (6,5–8)"]},
+    {n:"Tebar benih", day:7, d:"Tebar 100–150 ekor/m² benih ukuran 5–7 cm pagi/sore hari.", t:["Aklimatisasi benih 15 menit","Tebar pelan-pelan","Catat jumlah benih"]},
+    {n:"Pemberian pakan awal", day:10, d:"Beri pakan 3x/hari secukupnya, 3% bobot tubuh.", t:["Beri pakan pagi, siang, sore","Buang sisa pakan"]},
+    {n:"Pembesaran", day:30, d:"Ganti air 20–30% tiap minggu. Seleksi ikan (grading) agar ukuran seragam.", t:["Ganti sebagian air","Pisahkan ikan kecil dan besar","Cek ikan sakit/mati"]},
+    {n:"Pemeliharaan lanjut", day:60, d:"Pantau pertumbuhan dengan sampling berat.", t:["Timbang sampel 10 ekor","Atur ulang pakan"]},
+    {n:"Panen", day:85, d:"Ukuran konsumsi 8–10 ekor/kg. Puasakan ikan 1 hari sebelum panen.", t:["Puasakan pakan 24 jam","Panen dengan serok","Timbang dan catat hasil"], type:"harvest"},
+    {n:"Pengolahan", day:86, d:"Olah segar atau awetkan.", t:["Bersihkan dan bumbui","Goreng, pepes, atau asap","Simpan beku"], type:"process"}
+   ]},
+ { id:"ayam", cat:"ternak", icon:"🐔", name:"Ayam kampung petelur", level:"Menengah", days:150,
+   desc:"Telur harian dan pupuk kandang untuk kebun. Mulai dari DOC sampai bertelur.",
+   unit:"butir",
+   stages:[
+    {n:"Siapkan kandang", day:0, d:"Kandang kering, ventilasi baik, 3–4 ekor/m².", t:["Siapkan litter sekam","Pasang tempat makan dan minum","Siapkan pemanas lampu untuk DOC"]},
+    {n:"DOC (0–4 minggu)", day:1, d:"Jaga suhu 32–34°C minggu pertama, turun bertahap.", t:["Beri air gula di hari pertama","Vaksin ND sesuai jadwal","Cek suhu tiap hari"]},
+    {n:"Grower (5–16 minggu)", day:30, d:"Mulai pakan peralihan dan biarkan bergerak/umbaran.", t:["Ganti ke pakan grower","Bersihkan kandang tiap minggu","Pantau kesehatan"]},
+    {n:"Pra-bertelur", day:110, d:"Siapkan sarang dan pakan layer.", t:["Pasang sarang bertelur","Ganti ke pakan layer"]},
+    {n:"Mulai bertelur", day:140, d:"Ambil telur tiap hari dan catat jumlahnya.", t:["Ambil telur pagi dan sore","Catat jumlah telur"], type:"harvest"},
+    {n:"Pengolahan", day:141, d:"Telur segar dan kotoran jadi pupuk.", t:["Simpan telur di tempat sejuk","Kompos kotoran ayam 2–3 minggu","Gunakan untuk kebun sendiri"], type:"process"}
+   ]},
+ { id:"maggot", cat:"energi", icon:"🪱", name:"Budidaya maggot BSF", level:"Pemula", days:45,
+   desc:"Ubah sisa dapur jadi pakan ikan/ayam gratis. Menutup siklus pangan di rumah.",
+   unit:"kg",
+   stages:[
+    {n:"Siapkan wadah dan media", day:0, d:"Wadah berlubang dengan media sisa sayur/buah yang dicacah.", t:["Siapkan wadah bertingkat","Kumpulkan sisa organik","Letakkan di tempat teduh"]},
+    {n:"Tebar telur/bibit", day:1, d:"Tebar telur BSF atau bayi maggot di atas media.", t:["Tebar bibit merata","Tutup dengan kain"]},
+    {n:"Pemberian pakan", day:5, d:"Beri sisa organik tiap hari secukupnya.", t:["Tambahkan pakan tiap hari","Jaga media tidak terlalu basah"]},
+    {n:"Pembesaran", day:15, d:"Maggot membesar cepat. Kendalikan bau dengan aerasi.", t:["Aduk media tiap 2 hari","Cek suhu dan kelembapan"]},
+    {n:"Panen maggot", day:20, d:"Pisahkan maggot dewasa dari media. Sisakan sebagian untuk siklus berikutnya.", t:["Ayak maggot dari media","Sisihkan 10% untuk bibit","Timbang hasil"], type:"harvest"},
+    {n:"Pengolahan", day:21, d:"Manfaatkan hasil panen.", t:["Beri langsung ke ikan/ayam","Jemur sebagai pakan awet","Pakai kasgot sebagai pupuk"], type:"process"}
+   ]},
+ { id:"biogas", cat:"energi", icon:"🔥", name:"Biogas skala rumah", level:"Lanjut", days:60,
+   desc:"Gas masak dari kotoran ternak dan sisa organik, plus pupuk cair dari ampasnya.",
+   unit:"jam masak",
+   stages:[
+    {n:"Rencana dan bahan", day:0, d:"Hitung kebutuhan dan sumber bahan baku (kotoran ternak, sisa dapur).", t:["Tentukan ukuran digester","Siapkan lahan datar","Kumpulkan bahan baku rutin"]},
+    {n:"Pasang digester", day:7, d:"Pasang tabung/drum digester, pipa, dan penampung gas.", t:["Pasang wadah digester kedap udara","Pasang pipa masuk dan keluar","Uji kebocoran dengan air sabun"]},
+    {n:"Isi awal (starter)", day:14, d:"Campur kotoran dan air 1:1, tambah starter bila ada.", t:["Isi digester sampai 70%","Catat tanggal isi awal"]},
+    {n:"Fermentasi", day:21, d:"Gas mulai terbentuk 2–3 minggu. Gas awal dibuang karena banyak CO₂.", t:["Buang gas awal","Cek tekanan tiap hari"]},
+    {n:"Mulai pemakaian", day:35, d:"Gas bisa dipakai untuk kompor biogas.", t:["Sambungkan ke kompor","Uji nyala api","Catat durasi masak"], type:"harvest"},
+    {n:"Pengolahan ampas", day:36, d:"Ampas (slurry) jadi pupuk cair dan padat.", t:["Pisahkan cair dan padat","Pakai pupuk untuk kebun","Isi bahan baku tiap hari"], type:"process"}
+   ]}
+];
+const CATS = { all:"Semua", tanaman:"Tanaman", ternak:"Ternak", energi:"Energi & siklus" };
+const byId = id => CATALOG.find(c => c.id === id);
+
+/* ---------------- STATE & UTIL ---------------- */
+let user = null, projects = [], logs = {}, unsubs = [], tab = "home", openId = null, catFilter = "all";
+const $ = s => document.querySelector(s);
+const view = $("#view");
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+const DAY = 86400000;
+const today = () => new Date().toISOString().slice(0, 10);
+const daysSince = iso => Math.floor((Date.now() - new Date(iso + "T00:00:00").getTime()) / DAY);
+const fmtDate = iso => new Date(iso + "T00:00:00").toLocaleDateString("id-ID", { day:"numeric", month:"short", year:"numeric" });
+const addDays = (iso, n) => { const d = new Date(iso + "T00:00:00"); d.setDate(d.getDate() + n); return d.toISOString().slice(0, 10); };
+function toast(msg){ const t = $("#toast"); t.textContent = msg; t.classList.remove("hidden"); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.add("hidden"), 2600); }
+const errMsg = e => ({
+  "auth/invalid-credential":"Email atau kata sandi salah.","auth/invalid-email":"Format email tidak valid.",
+  "auth/email-already-in-use":"Email sudah terdaftar. Silakan masuk.","auth/weak-password":"Kata sandi minimal 6 karakter.",
+  "auth/popup-closed-by-user":"Jendela masuk ditutup.","auth/network-request-failed":"Tidak ada koneksi internet.",
+  "auth/unauthorized-domain":"Domain ini belum diizinkan di Firebase (Authentication > Settings > Authorized domains).",
+  "auth/operation-not-allowed":"Metode masuk ini belum diaktifkan di Firebase Console.","auth/too-many-requests":"Terlalu banyak percobaan. Coba lagi nanti.",
+  "permission-denied":"Akses ditolak. Periksa Firestore Rules di Firebase Console."
+}[e?.code] || e?.message || "Terjadi kesalahan.");
+
+function progressOf(p){
+  const tpl = byId(p.tplId); const stages = p.stages || tpl?.stages || [];
+  const total = stages.reduce((n, s) => n + s.t.length, 0);
+  const done = Object.values(p.done || {}).filter(Boolean).length;
+  const pct = total ? Math.round(done / total * 100) : 0;
+  return { total, done, pct: p.completed ? 100 : pct };
+}
+function currentStage(p){
+  const stages = p.stages || byId(p.tplId)?.stages || [];
+  const d = Math.max(0, daysSince(p.startDate));
+  let idx = 0; stages.forEach((s, i) => { if (d >= s.day) idx = i; });
+  return idx;
+}
+
+/* ---------------- AUTH ---------------- */
+const loginErr = $("#loginErr");
+$("#btnGoogle").onclick = async () => {
+  loginErr.textContent = "";
+  const prov = new GoogleAuthProvider();
+  try { await signInWithPopup(auth, prov); }
+  catch (e) {
+    if (["auth/popup-blocked","auth/operation-not-supported-in-this-environment"].includes(e.code)) { try { await signInWithRedirect(auth, prov); return; } catch(e2){ e = e2; } }
+    loginErr.textContent = errMsg(e);
+  }
+};
+getRedirectResult(auth).catch(e => { loginErr.textContent = errMsg(e); });
+$("#btnLogin").onclick = async () => { loginErr.textContent = ""; try { await signInWithEmailAndPassword(auth, $("#email").value.trim(), $("#pass").value); } catch(e){ loginErr.textContent = errMsg(e); } };
+$("#btnSignup").onclick = async () => { loginErr.textContent = ""; try { await createUserWithEmailAndPassword(auth, $("#email").value.trim(), $("#pass").value); } catch(e){ loginErr.textContent = errMsg(e); } };
+$("#btnReset").onclick = async () => {
+  const em = $("#email").value.trim(); if (!em) { loginErr.textContent = "Isi email dulu, lalu tekan Lupa kata sandi."; return; }
+  try { await sendPasswordResetEmail(auth, em); loginErr.style.color = "var(--leaf)"; loginErr.textContent = "Tautan reset dikirim ke email Anda."; }
+  catch(e){ loginErr.style.color = ""; loginErr.textContent = errMsg(e); }
+};
+
+onAuthStateChanged(auth, u => {
+  user = u;
+  unsubs.forEach(f => f()); unsubs = []; projects = []; logs = {};
+  if (!u) { $("#app").classList.add("hidden"); $("#login").classList.remove("hidden"); return; }
+  $("#login").classList.add("hidden"); $("#app").classList.remove("hidden");
+  setDoc(doc(db, "users", u.uid), { email: u.email || null, name: u.displayName || null, lastSeen: serverTimestamp() }, { merge: true }).catch(() => {});
+  const q = query(collection(db, "users", u.uid, "projects"), orderBy("createdAt", "desc"));
+  unsubs.push(onSnapshot(q, snap => { projects = snap.docs.map(d => ({ id: d.id, ...d.data() })); render(); },
+    e => { toast(errMsg(e)); }));
+  render();
+});
+
+function watchLogs(pid){
+  if (logs[pid]?.unsub) return;
+  logs[pid] = { items: [], unsub: null };
+  const q = query(collection(db, "users", user.uid, "projects", pid, "logs"), orderBy("date", "desc"));
+  logs[pid].unsub = onSnapshot(q, snap => { logs[pid].items = snap.docs.map(d => ({ id: d.id, ...d.data() })); if (openId === pid) render(); });
+  unsubs.push(logs[pid].unsub);
+}
+
+/* ---------------- NAVIGASI ---------------- */
+document.querySelectorAll("nav.tabs button").forEach(b => b.onclick = () => { tab = b.dataset.tab; openId = null; render(); window.scrollTo(0, 0); });
+$("#btnBack").onclick = () => { openId = null; render(); };
+
+function render(){
+  if (!user) return;
+  document.querySelectorAll("nav.tabs button").forEach(b => b.classList.toggle("on", b.dataset.tab === tab && !openId));
+  const back = $("#btnBack"), logo = $("#topLogo"), title = $("#topTitle");
+  if (openId) {
+    const p = projects.find(x => x.id === openId);
+    if (!p) { openId = null; return render(); }
+    back.classList.remove("hidden"); logo.classList.add("hidden"); title.textContent = "Detail";
+    return renderDetail(p);
+  }
+  back.classList.add("hidden"); logo.classList.remove("hidden");
+  title.textContent = { home:"Essentera", catalog:"Panduan", account:"Akun" }[tab];
+  if (tab === "home") renderHome(); else if (tab === "catalog") renderCatalog(); else renderAccount();
+}
+
+/* ---------------- BERANDA ---------------- */
+function projCard(p){
+  const tpl = byId(p.tplId); const pr = progressOf(p);
+  const d = Math.max(0, daysSince(p.startDate));
+  return `<button class="proj" data-open="${p.id}">
+    <div class="ico">${esc(p.icon || tpl?.icon || "🌱")}</div>
+    <div class="body"><div class="name">${esc(p.name)}${p.completed ? '<span class="chip done">Selesai</span>' : ''}</div>
+    <div class="sub">Hari ke-${d + 1} · ${pr.pct}% tahap selesai</div>
+    <div class="bar"><i style="width:${pr.pct}%"></i></div></div></button>`;
+}
+function renderHome(){
+  const active = projects.filter(p => !p.completed), finished = projects.filter(p => p.completed);
+  const harvestTotal = projects.reduce((n, p) => n + (p.harvest || []).length, 0);
+  const name = (user.displayName || user.email || "").split(/[ @]/)[0];
+  view.innerHTML = `
+    <div class="hero"><h2>Halo${name ? ", " + esc(name) : ""}</h2>
+      <p>Tiap panen kecil adalah satu langkah menuju kemandirian.</p>
+      <div class="stats"><div><b>${active.length}</b><span>sedang berjalan</span></div>
+      <div><b>${finished.length}</b><span>selesai</span></div><div><b>${harvestTotal}</b><span>catatan panen</span></div></div></div>
+    <div class="section-title"><h3>Proyek saya</h3><button class="btn small" id="btnNew">+ Mulai baru</button></div>
+    ${projects.length ? projects.map(projCard).join("") :
+      `<div class="empty">Belum ada proyek. Pilih satu panduan dan mulai tanam atau ternak pertama Anda.<br><br><button class="btn" id="btnNew2">Lihat panduan</button></div>`}`;
+  $("#btnNew")?.addEventListener("click", () => { tab = "catalog"; render(); });
+  $("#btnNew2")?.addEventListener("click", () => { tab = "catalog"; render(); });
+  view.querySelectorAll("[data-open]").forEach(b => b.onclick = () => { openId = b.dataset.open; watchLogs(openId); render(); window.scrollTo(0, 0); });
+}
+
+/* ---------------- PANDUAN ---------------- */
+function renderCatalog(){
+  const list = CATALOG.filter(c => catFilter === "all" || c.cat === catFilter);
+  view.innerHTML = `
+    <div class="filters">${Object.entries(CATS).map(([k, v]) => `<button data-f="${k}" class="${catFilter === k ? "on" : ""}">${v}</button>`).join("")}</div>
+    ${list.map(c => `<div class="cat"><h3><span>${c.icon}</span>${esc(c.name)}</h3>
+      <p>${esc(c.desc)}</p>
+      <div class="meta"><span>${c.level}</span><span>±${c.days} hari</span><span>${c.stages.length} tahap</span><span>Hasil: ${c.unit}</span></div>
+      <button class="btn small" data-start="${c.id}">Mulai proyek ini</button></div>`).join("")}
+    <div class="cat"><h3><span>✏️</span>Proyek sendiri</h3><p>Punya tanaman atau ternak yang tidak ada di daftar? Buat dengan tahap sendiri.</p>
+      <button class="btn small alt" data-start="custom">Buat proyek kustom</button></div>`;
+  view.querySelectorAll("[data-f]").forEach(b => b.onclick = () => { catFilter = b.dataset.f; render(); });
+  view.querySelectorAll("[data-start]").forEach(b => b.onclick = () => startSheet(b.dataset.start));
+}
+
+/* ---------------- MODAL ---------------- */
+function sheet(html){
+  const root = $("#modalRoot");
+  root.innerHTML = `<div class="modal"><div class="sheet" role="dialog" aria-modal="true">${html}</div></div>`;
+  root.querySelector(".modal").addEventListener("click", e => { if (e.target.classList.contains("modal")) closeSheet(); });
+  return root.querySelector(".sheet");
+}
+const closeSheet = () => { $("#modalRoot").innerHTML = ""; };
+
+function startSheet(id){
+  const tpl = id === "custom" ? null : byId(id);
+  const s = sheet(`<h3>${tpl ? esc(tpl.name) : "Proyek kustom"}</h3>
+    <p class="muted">${tpl ? "Tahapan dan daftar tugas diisi otomatis." : "Anda bisa menambah tahap setelah proyek dibuat."}</p>
+    <label for="pName">Nama proyek</label><input id="pName" value="${tpl ? esc(tpl.name) : ""}" placeholder="Contoh: Cabai halaman belakang">
+    <div class="two"><div><label for="pDate">Tanggal mulai</label><input id="pDate" type="date" value="${today()}"></div>
+    <div><label for="pUnit">Satuan hasil</label><input id="pUnit" value="${tpl ? esc(tpl.unit) : "kg"}"></div></div>
+    <label for="pNote">Catatan (lokasi, jumlah, media)</label><textarea id="pNote"></textarea>
+    <div class="actions"><button class="btn alt" id="cX">Batal</button><button class="btn" id="cOk">Mulai</button></div>`);
+  s.querySelector("#cX").onclick = closeSheet;
+  s.querySelector("#cOk").onclick = async () => {
+    const name = s.querySelector("#pName").value.trim(); if (!name) { toast("Isi nama proyek."); return; }
+    const data = { tplId: tpl ? tpl.id : "custom", name, icon: tpl ? tpl.icon : "🌱", cat: tpl ? tpl.cat : "tanaman",
+      startDate: s.querySelector("#pDate").value || today(), unit: s.querySelector("#pUnit").value.trim() || "kg",
+      note: s.querySelector("#pNote").value.trim(), done: {}, harvest: [], completed: false, createdAt: serverTimestamp() };
+    if (!tpl) data.stages = [{ n:"Persiapan", day:0, d:"", t:["Siapkan lahan/kandang"] }, { n:"Perawatan", day:7, d:"", t:["Perawatan rutin"] }, { n:"Panen", day:60, d:"", t:["Catat hasil panen"], type:"harvest" }, { n:"Pengolahan", day:61, d:"", t:["Olah hasil panen"], type:"process" }];
+    try { const r = await addDoc(collection(db, "users", user.uid, "projects"), data); closeSheet(); toast("Proyek dimulai."); tab = "home"; openId = r.id; watchLogs(r.id); render(); }
+    catch(e){ toast(errMsg(e)); }
+  };
+}
+
+/* ---------------- DETAIL ---------------- */
+function renderDetail(p){
+  const stages = p.stages || byId(p.tplId)?.stages || [];
+  const tpl = byId(p.tplId);
+  const pr = progressOf(p); const cur = currentStage(p); const d = Math.max(0, daysSince(p.startDate));
+  const items = logs[p.id]?.items || [];
+  const totalDays = tpl?.days || stages[stages.length - 1]?.day || 1;
+  const fillPct = stages.length > 1 ? Math.min(100, Math.round(cur / (stages.length - 1) * 100)) : 0;
+  const harvest = p.harvest || [];
+  const hSum = harvest.reduce((n, h) => n + Number(h.qty || 0), 0);
+
+  view.innerHTML = `
+    <div class="dh"><h2>${esc(p.icon || "🌱")} ${esc(p.name)}</h2>
+      <div class="row"><span class="muted">Mulai ${fmtDate(p.startDate)}</span>${p.completed ? '<span class="chip done">Selesai</span>' : `<span class="chip">Hari ke-${d + 1}</span>`}</div>
+      ${p.note ? `<p class="muted" style="margin-top:.4rem">${esc(p.note)}</p>` : ""}</div>
+    <div class="bigprog"><div class="num">${pr.pct}%</div><div class="muted">${pr.done} dari ${pr.total} tugas selesai · perkiraan ${totalDays} hari</div>
+      <div class="bar"><i style="width:${pr.pct}%"></i></div></div>
+
+    <div class="stem"><div class="fill" style="height:calc(${fillPct}% - 6px)"></div>
+    ${stages.map((s, i) => {
+      const keys = s.t.map((_, j) => `${i}_${j}`);
+      const allDone = keys.every(k => p.done?.[k]);
+      const cls = ["stage", allDone ? "done" : "", i === cur && !allDone ? "now" : "", s.type === "harvest" ? "harvest" : ""].join(" ");
+      return `<div class="${cls}"><div class="node" aria-hidden="true"></div>
+        <h3>${esc(s.n)}${i === cur && !allDone && !p.completed ? '<span class="chip">Sekarang</span>' : ""}</h3>
+        <div class="when">Hari ke-${s.day + 1} · ${fmtDate(addDays(p.startDate, s.day))}</div>
+        ${s.d ? `<div class="desc">${esc(s.d)}</div>` : ""}
+        <div class="tasks">${s.t.map((t, j) => `<label class="task ${p.done?.[i + "_" + j] ? "done" : ""}" style="margin:0"><input type="checkbox" data-k="${i}_${j}" ${p.done?.[i + "_" + j] ? "checked" : ""}><span>${esc(t)}</span></label>`).join("")}</div>
+        ${s.type === "harvest" ? `<button class="btn small" style="margin-top:.5rem" data-harvest>+ Catat panen</button>` : ""}
+      </div>`; }).join("")}</div>
+
+    ${harvest.length ? `<div class="section-title"><h3>Hasil panen</h3><span class="muted">Total ${hSum} ${esc(p.unit || "")}</span></div>
+      ${harvest.map((h, i) => `<div class="log"><div class="d"><span>${fmtDate(h.date)}</span><button data-delh="${i}" class="muted">Hapus</button></div><div class="t"><b>${esc(h.qty)} ${esc(p.unit || "")}</b>${h.note ? " — " + esc(h.note) : ""}</div></div>`).join("")}` : ""}
+
+    <div class="section-title"><h3>Jurnal & foto</h3><button class="btn small" id="btnLog">+ Catatan</button></div>
+    ${items.length ? items.map(l => `<div class="log"><div class="d"><span>${fmtDate(l.date)}</span><button data-dell="${l.id}" class="muted">Hapus</button></div>
+      ${l.text ? `<div class="t">${esc(l.text)}</div>` : ""}${l.photo ? `<img src="${esc(l.photo)}" alt="Foto jurnal" loading="lazy">` : ""}</div>`).join("")
+      : `<div class="empty">Belum ada catatan. Foto tiap perkembangan membantu Anda belajar di siklus berikutnya.</div>`}
+
+    <div style="display:flex;gap:.6rem;margin-top:1.4rem;flex-wrap:wrap">
+      ${p.completed ? `<button class="btn alt" id="btnReopen">Buka kembali</button>` : `<button class="btn" id="btnFinish">Tandai selesai</button>`}
+      <button class="btn danger" id="btnDel">Hapus proyek</button></div>`;
+
+  const pref = doc(db, "users", user.uid, "projects", p.id);
+  view.querySelectorAll("input[data-k]").forEach(c => c.onchange = () => updateDoc(pref, { ["done." + c.dataset.k]: c.checked }).catch(e => toast(errMsg(e))));
+  view.querySelector("[data-harvest]")?.addEventListener("click", () => harvestSheet(p));
+  view.querySelectorAll("[data-delh]").forEach(b => b.onclick = () => { if (confirm("Hapus catatan panen ini?")) { const h = [...harvest]; h.splice(Number(b.dataset.delh), 1); updateDoc(pref, { harvest: h }).catch(e => toast(errMsg(e))); } });
+  $("#btnLog").onclick = () => logSheet(p);
+  view.querySelectorAll("[data-dell]").forEach(b => b.onclick = async () => {
+    if (!confirm("Hapus catatan ini?")) return;
+    const l = items.find(x => x.id === b.dataset.dell);
+    try { await deleteDoc(doc(db, "users", user.uid, "projects", p.id, "logs", l.id)); if (l.photoPath) deleteObject(sRef(storage, l.photoPath)).catch(() => {}); } catch(e){ toast(errMsg(e)); }
+  });
+  $("#btnFinish")?.addEventListener("click", () => updateDoc(pref, { completed: true }).then(() => toast("Proyek selesai. Selamat!")).catch(e => toast(errMsg(e))));
+  $("#btnReopen")?.addEventListener("click", () => updateDoc(pref, { completed: false }).catch(e => toast(errMsg(e))));
+  $("#btnDel").onclick = async () => {
+    if (!confirm("Hapus proyek ini beserta jurnalnya?")) return;
+    try {
+      for (const l of (logs[p.id]?.items || [])) { await deleteDoc(doc(db, "users", user.uid, "projects", p.id, "logs", l.id)); if (l.photoPath) deleteObject(sRef(storage, l.photoPath)).catch(() => {}); }
+      await deleteDoc(pref); openId = null; toast("Proyek dihapus."); render();
+    } catch(e){ toast(errMsg(e)); }
+  };
+}
+
+function harvestSheet(p){
+  const s = sheet(`<h3>Catat panen</h3>
+    <div class="two"><div><label for="hQ">Jumlah (${esc(p.unit || "")})</label><input id="hQ" type="number" inputmode="decimal" min="0" step="any"></div>
+    <div><label for="hD">Tanggal</label><input id="hD" type="date" value="${today()}"></div></div>
+    <label for="hN">Catatan (kualitas, rasa, ukuran)</label><textarea id="hN"></textarea>
+    <div class="actions"><button class="btn alt" id="x">Batal</button><button class="btn" id="ok">Simpan</button></div>`);
+  s.querySelector("#x").onclick = closeSheet;
+  s.querySelector("#ok").onclick = async () => {
+    const qty = s.querySelector("#hQ").value; if (qty === "") { toast("Isi jumlah panen."); return; }
+    const h = [...(p.harvest || []), { qty: Number(qty), date: s.querySelector("#hD").value || today(), note: s.querySelector("#hN").value.trim() }];
+    h.sort((a, b) => b.date.localeCompare(a.date));
+    try { await updateDoc(doc(db, "users", user.uid, "projects", p.id), { harvest: h }); closeSheet(); toast("Panen tercatat."); } catch(e){ toast(errMsg(e)); }
+  };
+}
+
+/* Foto: kompres di perangkat. Utamanya ke Firebase Storage; jika Storage belum aktif, jatuh ke versi kecil di Firestore. */
+function compress(file, max, quality){
+  return new Promise((res, rej) => {
+    const img = new Image(), url = URL.createObjectURL(file);
+    img.onload = () => {
+      const k = Math.min(1, max / Math.max(img.width, img.height));
+      const c = document.createElement("canvas"); c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+      c.getContext("2d").drawImage(img, 0, 0, c.width, c.height); URL.revokeObjectURL(url);
+      c.toBlob(b => b ? res(b) : rej(new Error("Gagal memproses foto.")), "image/jpeg", quality);
+    };
+    img.onerror = () => rej(new Error("File bukan gambar yang valid.")); img.src = url;
+  });
+}
+const blobToDataUrl = b => new Promise(r => { const f = new FileReader(); f.onload = () => r(f.result); f.readAsDataURL(b); });
+
+function logSheet(p){
+  const s = sheet(`<h3>Catatan baru</h3>
+    <label for="lD">Tanggal</label><input id="lD" type="date" value="${today()}">
+    <label for="lT">Catatan perkembangan</label><textarea id="lT" placeholder="Misal: daun mulai menguning, sudah diberi POC"></textarea>
+    <label for="lF">Foto (opsional)</label><input id="lF" type="file" accept="image/*" capture="environment">
+    <div class="actions"><button class="btn alt" id="x">Batal</button><button class="btn" id="ok">Simpan</button></div>`);
+  s.querySelector("#x").onclick = closeSheet;
+  s.querySelector("#ok").onclick = async (ev) => {
+    const text = s.querySelector("#lT").value.trim(), file = s.querySelector("#lF").files[0];
+    if (!text && !file) { toast("Isi catatan atau pilih foto."); return; }
+    ev.target.disabled = true; ev.target.textContent = "Menyimpan…";
+    const data = { date: s.querySelector("#lD").value || today(), text, createdAt: serverTimestamp() };
+    try {
+      if (file) {
+        const blob = await compress(file, 1280, 0.78);
+        const path = `users/${user.uid}/${p.id}/${Date.now()}.jpg`;
+        try {
+          await uploadBytes(sRef(storage, path), blob, { contentType: "image/jpeg" });
+          data.photo = await getDownloadURL(sRef(storage, path)); data.photoPath = path;
+        } catch (se) {
+          if (!navigator.onLine) throw new Error("Foto butuh koneksi internet untuk diunggah.");
+          const small = await compress(file, 640, 0.6); data.photo = await blobToDataUrl(small);
+          toast("Storage belum aktif, foto disimpan dalam ukuran kecil.");
+        }
+      }
+      await addDoc(collection(db, "users", user.uid, "projects", p.id, "logs"), data);
+      closeSheet(); toast("Catatan disimpan.");
+    } catch(e){ toast(errMsg(e)); ev.target.disabled = false; ev.target.textContent = "Simpan"; }
+  };
+}
+
+/* ---------------- AKUN ---------------- */
+function renderAccount(){
+  view.innerHTML = `<div class="cat"><h3>${esc(user.displayName || "Akun saya")}</h3><p>${esc(user.email || "")}</p>
+    <p>Data Anda tersimpan di akun ini dan hanya bisa dibaca oleh Anda. Aplikasi tetap bisa dibuka tanpa internet; perubahan akan tersinkron saat online.</p>
+    <button class="btn alt" id="btnOut">Keluar</button></div>
+    <p class="muted" style="text-align:center;margin-top:1rem">Essentera · hidup berkelanjutan dan berdikari</p>`;
+  $("#btnOut").onclick = () => signOut(auth);
+}
+
+/* ---------------- PWA & JARINGAN ---------------- */
+const netBadge = $("#netBadge");
+const updNet = () => netBadge.classList.toggle("hidden", navigator.onLine);
+addEventListener("online", updNet); addEventListener("offline", updNet); updNet();
+if ("serviceWorker" in navigator) addEventListener("load", () => navigator.serviceWorker.register("service-worker.js").catch(() => {}));
+</script>
+</body>
+</html>

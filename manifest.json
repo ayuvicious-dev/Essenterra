@@ -1,0 +1,17 @@
+{
+  "name": "Essentera",
+  "short_name": "Essentera",
+  "description": "Hidup berkelanjutan: tanam, ternak, dan kelola energi sendiri dari awal sampai panen dan olah.",
+  "lang": "id",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#eef3ea",
+  "theme_color": "#2f4a35",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
