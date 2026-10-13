@@ -172,6 +172,7 @@ nav.tabs button.fab span{position:absolute;width:1px;height:1px;overflow:hidden;
 .chevbtn{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;flex:none;color:var(--ink2)}
 .chevbtn:active{background:var(--mist)}
 .cat h3 .dupbtn{margin-left:auto}
+.cat h3 .gnameedit{flex:1;min-width:0;width:auto;font:inherit;letter-spacing:inherit;line-height:inherit;color:inherit;padding:.2rem .3rem;margin:-.2rem -.3rem;border:0;border-radius:0;background:transparent;outline:none;overflow:visible}
 .cat.open .chev{transform:rotate(180deg)}
 .gsteps{border-top:1px solid var(--line);margin-top:1rem;padding-top:1rem}
 .gtools{border-top:1px solid var(--line);margin-top:1rem;padding-top:1rem}
@@ -222,9 +223,8 @@ nav.tabs button.fab span{position:absolute;width:1px;height:1px;overflow:hidden;
 .gbody ul{margin-left:1.1rem;font-size:.88rem}
 .gbody li{margin:.15rem 0}
 .media{display:flex;align-items:center;flex-wrap:wrap;gap:.4rem;margin:.8rem 0 0}
-.media .mlabel{font-size:.78rem;color:var(--ink2);margin-right:.2rem}
-.media button{padding:.3rem .8rem;border-radius:99px;border:1.5px solid var(--sage);color:var(--moss);font-size:.82rem;touch-action:manipulation}
-.media button.on{background:var(--moss);color:var(--btntext);border-color:var(--moss);font-weight:600}
+.media button{font-size:.78rem;background:var(--mist);padding:.15rem .6rem;border-radius:8px;color:var(--ink2);touch-action:manipulation}
+.media button.on{background:var(--moss);color:var(--btntext);font-weight:600}
 .cat p{font-size:.9rem;color:var(--ink2);margin:.35rem 0 .7rem}
 .meta{display:flex;flex-wrap:wrap;gap:.4rem;margin:.8rem 0}
 .meta button.catchip{font-size:.78rem;background:var(--moss);color:var(--btntext);padding:.15rem .6rem;border-radius:8px;font-weight:600}
@@ -452,6 +452,539 @@ const CATALOG = [
     {n:"Fermentasi", day:21, d:"Gas mulai terbentuk 2–3 minggu. Gas awal dibuang karena banyak CO₂.", t:["Buang gas awal","Cek tekanan tiap hari"]},
     {n:"Mulai pemakaian", day:35, d:"Gas bisa dipakai untuk kompor biogas.", t:["Sambungkan ke kompor","Uji nyala api","Catat durasi masak"], type:"harvest"},
     {n:"Pengolahan ampas", day:36, d:"Ampas (slurry) jadi pupuk cair dan padat.", t:["Pisahkan cair dan padat","Pakai pupuk untuk kebun","Isi bahan baku tiap hari"], type:"process"}
+   ]},
+ { id:"terong-ungu", cat:"tanaman", icon:"🍆", iconKey:"terong", name:"Terong ungu", level:"Menengah", days:130,
+   desc:"Buah ungu mengilap yang bisa dipanen berulang. Suka matahari penuh dan penyiraman teratur.",
+   unit:"gram",
+   tools:["Tray semai atau pot kecil","Polybag atau pot besar (≥ 30 L) atau bedengan","Sekop tangan","Gembor atau selang air","Ajir bambu dan tali rafia","Gunting pangkas","Timbangan dapur digital","Hand sprayer untuk pupuk cair dan pengendali hama","Alat jemur atau oven (opsional) untuk pengolahan"],
+   bahan:[{n:"Benih terong ungu",u:"g",q:5,h:4000},{n:"Tanah gembur",u:"kg",q:20,h:1000},{n:"Kompos atau pupuk kandang matang",u:"kg",q:10,h:2000},{n:"Sekam padi",u:"kg",q:3,h:3000},{n:"Pupuk kaya kalium (misalnya abu sekam atau pupuk kalium)",u:"kg",q:1,h:25000},{n:"Pupuk cair organik (POC)",u:"ml",q:250,h:100},{n:"Pestisida nabati (opsional)",u:"ml",q:250,h:80},{n:"Ajir bambu",u:"batang",q:10,h:1500},{n:"Tali rafia",u:"gulung",q:1,h:5000},{n:"Air bersih",u:"secukupnya",q:1,h:0}],
+   stages:[
+    {n:"Semai benih",day:0,d:"Semai di tray dengan media halus (tanah, kompos, sekam 1:1:1). Benih tumbuh dalam 5–10 hari.",t:["Rendam benih 6–8 jam dalam air hangat","Tabur 1–2 benih per lubang, tutup tipis","Letakkan di tempat teduh terang dan jaga tetap lembap"]},
+    {n:"Perawatan bibit",day:10,d:"Bibit mulai berdaun sejati. Bertahap kenalkan cahaya matahari pagi.",t:["Siram halus pagi hari","Jemur pagi 1–2 jam, tambah bertahap","Pilih bibit yang paling sehat"]},
+    {n:"Pindah tanam",day:28,d:"Bibit 4–5 daun, tinggi 12–15 cm. Tanam di pot besar atau bedengan dengan jarak 60 × 70 cm.",t:["Siapkan media: tanah + kompos + sekam","Pindahkan bibit sore hari","Pasang ajir dan siram setelah tanam"]},
+    {n:"Pertumbuhan vegetatif",day:45,d:"Fokus pada daun dan batang. Terong butuh air teratur dan pupuk berkala.",t:["Beri kompos atau POC tiap 10 hari","Ikat batang pada ajir","Cek kutu kebul, ulat, dan tungau di bawah daun"]},
+    {n:"Berbunga dan berbuah",day:65,d:"Bunga ungu mulai muncul. Kurangi nitrogen, tambah kalium agar buah tumbuh baik.",t:["Beri pupuk kaya kalium","Siram teratur, hindari kekeringan","Buang bunga atau buah muda yang rusak"]},
+    {n:"Mulai panen",day:90,d:"Panen saat kulit buah mengilap dan belum keriput. Petik dengan gunting beserta tangkainya, tiap 3–4 hari.",t:["Potong tangkai dengan gunting, jangan ditarik","Catat berat hasil panen","Beri pupuk setelah panen agar berbuah lagi"],type:"harvest"},
+    {n:"Pengolahan",day:91,d:"Terong tidak tahan lama jika dibiarkan, olah segera.",t:["Simpan di suhu ruang sejuk, 3–4 hari","Olah jadi balado, terong bakar, atau tumis","Iris dan beku untuk stok tumisan"],type:"process"}
+   ]},
+ { id:"bayam-hijau", cat:"tanaman", icon:"🥬", iconKey:"kangkung", name:"Bayam hijau", level:"Pemula", days:30,
+   desc:"Sayur daun cepat panen, cocok untuk pot atau bedengan kecil.",
+   unit:"ikat",
+   tools:["Polybag, pot, atau bedengan (berlubang drainase)","Sekop tangan atau cangkul kecil","Ember untuk mencampur media dan merendam benih","Gembor atau semprotan air halus","Gunting atau pisau tajam untuk panen","Saringan/tiris untuk mencuci hasil panen"],
+   bahan:[{n:"Benih bayam hijau",u:"g",q:20,h:400},{n:"Tanah gembur",u:"kg",q:10,h:1000},{n:"Kompos atau pupuk kandang matang",u:"kg",q:5,h:2000},{n:"Sekam padi",u:"kg",q:2,h:3000},{n:"Pupuk cair organik (POC)",u:"ml",q:250,h:100},{n:"Air bersih",u:"secukupnya",q:1,h:0}],
+   stages:[
+    {n:"Siapkan media tanam",day:0,d:"Campur tanah, kompos, dan sekam 2:1:1. Isi polybag atau bedengan, ratakan.",t:["Siapkan wadah/bedengan berlubang drainase","Campur media tanam","Buat alur dangkal jarak 10 cm"]},
+    {n:"Tebar benih",day:1,d:"Benih bayam sangat kecil. Taburkan tipis di alur dan tutup tanah tipis.",t:["Tabur benih tipis dan merata","Tutup tanah setebal ±0,5 cm","Siram halus pagi dan sore"]},
+    {n:"Perkecambahan",day:5,d:"Benih tumbuh dalam 3–5 hari. Jaga media tetap lembap.",t:["Pastikan media selalu lembap","Cek hama semut dan ulat"]},
+    {n:"Pertumbuhan daun",day:12,d:"Jarangkan tanaman agar daun tumbuh lebar.",t:["Jarangkan hingga jarak 5–7 cm","Beri POC 1x seminggu","Cabut gulma"]},
+    {n:"Siap panen",day:25,d:"Tinggi 20–25 cm. Cabut seluruh tanaman, atau petik daun luar untuk panen bertahap.",t:["Siram media agar mudah dicabut","Ikat per 250 g atau sesuai selera","Catat jumlah ikat hasil panen"],type:"harvest"},
+    {n:"Pengolahan",day:26,d:"Bayam cepat layu, olah segera.",t:["Cuci bersih dan tiriskan","Simpan di kulkas dibungkus kertas lembap (2–3 hari)","Olah jadi sayur bening, tumis, atau keripik"],type:"process"}
+   ]},
+ { id:"lobak", cat:"tanaman", icon:"🥕", iconKey:"lobak", name:"Lobak", level:"Pemula", days:60,
+   desc:"Umbi putih yang ditanam langsung dari benih. Butuh media gembur dan dalam agar umbi tumbuh lurus.",
+   unit:"gram",
+   tools:["Polybag besar atau pot dalam (≥ 30 cm), atau bedengan","Sekop tangan atau cangkul kecil","Ember untuk mencampur media","Gembor atau semprotan air halus","Pisau untuk panen","Timbangan dapur digital"],
+   bahan:[{n:"Benih lobak",u:"g",q:20,h:750},{n:"Tanah gembur",u:"kg",q:15,h:1000},{n:"Kompos atau pupuk kandang matang",u:"kg",q:5,h:2000},{n:"Sekam padi",u:"kg",q:3,h:3000},{n:"Pupuk cair organik (POC)",u:"ml",q:250,h:100},{n:"Air bersih",u:"secukupnya",q:1,h:0}],
+   stages:[
+    {n:"Siapkan media tanam",day:0,d:"Umbi butuh tanah sangat gembur dan bebas batu. Campur tanah, kompos, dan sekam, sedalam minimal 30 cm.",t:["Gemburkan tanah dalam-dalam","Buang batu dan sisa akar","Campur tanah, kompos, dan sekam"]},
+    {n:"Tanam benih langsung",day:1,d:"Lobak tidak dipindah tanam. Tanam 1–2 benih per lubang sedalam 1–2 cm, jarak 15–20 cm.",t:["Buat lubang tanam sedalam 1–2 cm","Tutup tipis dan siram halus","Jaga media tetap lembap"]},
+    {n:"Perkecambahan",day:6,d:"Benih tumbuh dalam 3–7 hari.",t:["Siram pagi hari","Cek hama kutu daun dan ulat"]},
+    {n:"Penjarangan",day:15,d:"Sisakan satu tanaman terkuat per lubang agar umbi punya ruang.",t:["Cabut tanaman yang lemah","Beri POC encer, jangan terlalu banyak nitrogen","Cabut gulma"]},
+    {n:"Pembentukan umbi",day:30,d:"Umbi mulai membesar. Siram teratur agar umbi tidak pecah atau pahit.",t:["Naikkan tanah ke pangkal tanaman","Siram teratur, tanpa tergenang","Pantau hama pada daun"]},
+    {n:"Siap panen",day:50,d:"Umbi berdiameter 4–6 cm, lebih lama dibiarkan akan berserat. Cabut dengan menggoyang pelan.",t:["Siram tanah agar mudah dicabut","Catat berat hasil panen"],type:"harvest"},
+    {n:"Pengolahan",day:51,d:"Daun lobak juga bisa dimasak.",t:["Pisahkan daun, cuci bersih","Olah umbi jadi sup, acar, atau asinan","Simpan di kulkas 1–2 minggu"],type:"process"}
+   ]},
+ { id:"sawi-keriting", cat:"tanaman", icon:"🥬", iconKey:"kangkung", name:"Sawi keriting", level:"Pemula", days:40,
+   desc:"Sayur daun bergelombang yang tumbuh cepat dan bisa dipanen bertahap.",
+   unit:"ikat",
+   tools:["Tray semai atau pot kecil","Polybag, pot, atau bedengan (berlubang drainase)","Sekop tangan atau cangkul kecil","Ember untuk mencampur media dan merendam benih","Gembor atau semprotan air halus","Gunting atau pisau tajam untuk panen","Saringan/tiris untuk mencuci hasil panen"],
+   bahan:[{n:"Benih sawi keriting",u:"g",q:10,h:1000},{n:"Tanah gembur",u:"kg",q:10,h:1000},{n:"Kompos atau pupuk kandang matang",u:"kg",q:5,h:2000},{n:"Sekam padi",u:"kg",q:3,h:3000},{n:"Pupuk cair organik (POC)",u:"ml",q:250,h:100},{n:"Pestisida nabati (opsional)",u:"ml",q:250,h:80},{n:"Air bersih",u:"secukupnya",q:1,h:0}],
+   stages:[
+    {n:"Semai benih",day:0,d:"Semai di tray dengan media halus, tutup tipis. Benih tumbuh dalam 2–4 hari.",t:["Rendam benih 4–6 jam","Tabur benih tipis di tray","Letakkan di tempat teduh terang"]},
+    {n:"Perawatan bibit",day:7,d:"Bibit mulai berdaun. Jaga kelembapan dan beri cahaya pagi.",t:["Siram halus pagi dan sore","Siapkan media tanam: tanah + kompos + sekam"]},
+    {n:"Pindah tanam",day:12,d:"Bibit 3–4 daun. Tanam dengan jarak 20–25 cm.",t:["Pindahkan bibit sore hari","Siram setelah tanam","Naungi 2–3 hari jika cuaca panas"]},
+    {n:"Pertumbuhan daun",day:20,d:"Daun tumbuh cepat. Jaga kelembapan dan beri POC.",t:["Beri POC 1x seminggu","Cabut gulma","Cek ulat daun dan kutu daun"]},
+    {n:"Siap panen",day:32,d:"Daun sudah lebar dan keriting. Cabut seluruh tanaman, atau petik daun luar secara bertahap.",t:["Cabut dengan akarnya atau potong di pangkal","Ikat per ikat","Catat jumlah ikat hasil panen"],type:"harvest"},
+    {n:"Pengolahan",day:33,d:"Sawi cepat layu, olah segera.",t:["Cuci bersih dan tiriskan","Simpan di kulkas dibungkus kertas lembap (3–4 hari)","Olah jadi tumis, sup, atau sayur bening"],type:"process"}
+   ]},
+ { id:"pakchoy", cat:"tanaman", icon:"🥬", iconKey:"kangkung", name:"Pakchoy", level:"Pemula", days:35,
+   desc:"Sayur daun tebal dan renyah, cepat panen, cocok untuk pot kecil.",
+   unit:"ikat",
+   tools:["Tray semai atau pot kecil","Polybag, pot, atau bedengan (berlubang drainase)","Sekop tangan atau cangkul kecil","Ember untuk mencampur media dan merendam benih","Gembor atau semprotan air halus","Gunting atau pisau tajam untuk panen","Saringan/tiris untuk mencuci hasil panen"],
+   bahan:[{n:"Benih pakchoy",u:"g",q:10,h:1500},{n:"Tanah gembur",u:"kg",q:10,h:1000},{n:"Kompos atau pupuk kandang matang",u:"kg",q:5,h:2000},{n:"Sekam padi",u:"kg",q:3,h:3000},{n:"Pupuk cair organik (POC)",u:"ml",q:250,h:100},{n:"Pestisida nabati (opsional)",u:"ml",q:250,h:80},{n:"Air bersih",u:"secukupnya",q:1,h:0}],
+   stages:[
+    {n:"Semai benih",day:0,d:"Semai di tray dengan media halus, tutup tipis. Benih tumbuh dalam 2–4 hari.",t:["Tabur benih tipis di tray","Letakkan di tempat teduh terang","Jaga media tetap lembap"]},
+    {n:"Perawatan bibit",day:7,d:"Bibit mulai berdaun. Beri cahaya pagi.",t:["Siram halus pagi dan sore","Siapkan media tanam: tanah + kompos + sekam"]},
+    {n:"Pindah tanam",day:10,d:"Bibit 3–4 daun. Tanam dengan jarak 15–20 cm.",t:["Pindahkan bibit sore hari","Siram setelah tanam"]},
+    {n:"Pertumbuhan daun",day:18,d:"Batang dan daun menebal. Siram teratur, tanpa tergenang.",t:["Beri POC 1x seminggu","Cabut gulma","Cek kutu daun dan ulat"]},
+    {n:"Siap panen",day:30,d:"Tinggi 20–25 cm dan batang tebal. Cabut seluruh tanaman atau potong di pangkal.",t:["Panen pagi hari","Cuci pangkal dari sisa tanah","Catat jumlah ikat hasil panen"],type:"harvest"},
+    {n:"Pengolahan",day:31,d:"Pakchoy tahan beberapa hari di kulkas.",t:["Cuci bersih dan tiriskan","Simpan di kulkas dibungkus kertas lembap (4–5 hari)","Olah jadi tumis bawang putih, sup, atau tim"],type:"process"}
+   ]},
+ { id:"kecipir", cat:"tanaman", icon:"🌱", iconKey:"polong", name:"Kecipir", level:"Menengah", days:110,
+   desc:"Polong bersirip empat yang merambat. Butuh rambatan dan matahari penuh.",
+   unit:"gram",
+   tools:["Polybag besar, pot ≥ 20 L, atau bedengan","Sekop tangan","Ember untuk merendam benih","Gembor atau selang air","Ajir bambu setinggi 2 m, tali rafia, atau para-para (rambatan)","Gunting pangkas","Timbangan dapur digital","Hand sprayer untuk pupuk cair dan pengendali hama"],
+   bahan:[{n:"Benih kecipir",u:"butir",q:50,h:200},{n:"Tanah gembur",u:"kg",q:20,h:1000},{n:"Kompos atau pupuk kandang matang",u:"kg",q:8,h:2000},{n:"Sekam padi",u:"kg",q:3,h:3000},{n:"Pupuk kaya kalium (misalnya abu sekam atau pupuk kalium)",u:"kg",q:1,h:25000},{n:"Pupuk cair organik (POC)",u:"ml",q:250,h:100},{n:"Ajir bambu",u:"batang",q:6,h:1500},{n:"Tali rafia",u:"gulung",q:1,h:5000},{n:"Air bersih",u:"secukupnya",q:1,h:0}],
+   stages:[
+    {n:"Siapkan media dan rambatan",day:0,d:"Siapkan wadah atau bedengan dan pasang ajir atau para-para setinggi 2 m. Rendam benih karena kulitnya keras.",t:["Campur tanah, kompos, dan sekam","Pasang ajir/para-para sebelum tanam","Rendam benih 12–24 jam"]},
+    {n:"Tanam benih langsung",day:1,d:"Tanam 2 benih per lubang sedalam 2–3 cm, jarak 50–60 cm.",t:["Buat lubang tanam","Tutup tanah, siram halus","Jaga media tetap lembap"]},
+    {n:"Perkecambahan",day:8,d:"Benih tumbuh dalam 5–10 hari. Sisakan satu tanaman terkuat per lubang.",t:["Siram pagi hari","Jarangkan, sisakan 1 tanaman per lubang"]},
+    {n:"Mulai merambat",day:20,d:"Sulur mulai tumbuh. Arahkan agar naik pada ajir.",t:["Ikat batang pada ajir dengan tali rafia","Beri kompos atau POC","Cabut gulma"]},
+    {n:"Berbunga",day:40,d:"Bunga biru keunguan muncul. Kurangi nitrogen, tambah kalium.",t:["Beri pupuk kaya kalium","Siram teratur, hindari kekeringan","Cek kutu daun dan ulat"]},
+    {n:"Berpolong",day:60,d:"Polong muda bersirip empat mulai terbentuk.",t:["Siram teratur","Buang polong cacat atau terserang hama"]},
+    {n:"Mulai panen",day:70,d:"Panen polong muda saat panjang 10–15 cm dan masih lunak, sebelum berserat. Petik tiap 3–4 hari.",t:["Petik polong beserta tangkainya","Catat berat hasil panen","Beri pupuk kalium ringan setelah panen"],type:"harvest"},
+    {n:"Pengolahan",day:71,d:"Polong muda paling enak segar.",t:["Cuci bersih","Olah jadi tumis, urap, atau lalap rebus","Simpan di kulkas 3–4 hari"],type:"process"}
+   ]},
+ { id:"sawi-putih", cat:"tanaman", icon:"🥬", iconKey:"kangkung", name:"Sawi putih", level:"Menengah", days:65,
+   desc:"Membentuk kepala daun bertumpuk. Lebih cocok di dataran sejuk, di dataran rendah pilih varietas tahan panas.",
+   unit:"gram",
+   tools:["Tray semai atau pot kecil","Polybag, pot, atau bedengan (berlubang drainase)","Sekop tangan atau cangkul kecil","Ember untuk mencampur media dan merendam benih","Gembor atau semprotan air halus","Gunting atau pisau tajam untuk panen","Saringan/tiris untuk mencuci hasil panen","Timbangan dapur digital"],
+   bahan:[{n:"Benih sawi putih",u:"g",q:5,h:3000},{n:"Tanah gembur",u:"kg",q:12,h:1000},{n:"Kompos atau pupuk kandang matang",u:"kg",q:6,h:2000},{n:"Sekam padi",u:"kg",q:3,h:3000},{n:"Pupuk cair organik (POC)",u:"ml",q:250,h:100},{n:"Pestisida nabati (opsional)",u:"ml",q:250,h:80},{n:"Air bersih",u:"secukupnya",q:1,h:0}],
+   stages:[
+    {n:"Semai benih",day:0,d:"Semai di tray dengan media halus. Benih tumbuh dalam 3–5 hari.",t:["Tabur 1–2 benih per lubang","Letakkan di tempat teduh terang","Jaga media tetap lembap"]},
+    {n:"Perawatan bibit",day:7,d:"Jaga kelembapan dan beri cahaya pagi.",t:["Siram halus pagi hari","Siapkan media tanam: tanah + kompos + sekam"]},
+    {n:"Pindah tanam",day:14,d:"Bibit 3–4 daun. Tanam dengan jarak 30–40 cm agar kepala daun punya ruang.",t:["Pindahkan bibit sore hari","Siram setelah tanam","Naungi bila cuaca sangat panas"]},
+    {n:"Pertumbuhan daun",day:28,d:"Daun melebar. Pupuk dan air cukup menentukan kepala padat.",t:["Beri kompos atau POC tiap 10 hari","Cabut gulma","Cek ulat dan kutu daun"]},
+    {n:"Pembentukan kepala",day:42,d:"Daun bagian dalam mulai menggulung membentuk kepala.",t:["Siram teratur, tanpa tergenang","Hindari pupuk nitrogen berlebihan","Pantau ulat yang masuk ke dalam kepala"]},
+    {n:"Siap panen",day:60,d:"Kepala terasa padat saat ditekan. Potong di pangkal batang.",t:["Potong pangkal dengan pisau tajam","Buang daun luar yang rusak","Timbang dan catat hasil panen"],type:"harvest"},
+    {n:"Pengolahan",day:61,d:"Kepala padat tahan lebih lama di kulkas.",t:["Simpan utuh di kulkas, tanpa dicuci (1–2 minggu)","Olah jadi sup, tumis, atau kimchi","Buat asinan sawi"],type:"process"}
+   ]},
+ { id:"seledri", cat:"tanaman", icon:"🌿", iconKey:"kangkung", name:"Seledri", level:"Menengah", days:100,
+   desc:"Bumbu dapur harian. Benih sangat halus dan lambat tumbuh, tetapi bisa dipanen berulang.",
+   unit:"ikat",
+   tools:["Tray semai atau pot kecil","Polybag, pot, atau bedengan (berlubang drainase)","Sekop tangan atau cangkul kecil","Ember untuk mencampur media dan merendam benih","Gembor atau semprotan air halus","Gunting atau pisau tajam untuk panen","Saringan/tiris untuk mencuci hasil panen"],
+   bahan:[{n:"Benih seledri",u:"g",q:5,h:3000},{n:"Tanah gembur",u:"kg",q:10,h:1000},{n:"Kompos atau pupuk kandang matang",u:"kg",q:5,h:2000},{n:"Sekam padi",u:"kg",q:3,h:3000},{n:"Pupuk cair organik (POC)",u:"ml",q:250,h:100},{n:"Air bersih",u:"secukupnya",q:1,h:0}],
+   stages:[
+    {n:"Semai benih",day:0,d:"Benih sangat halus dan butuh cahaya. Taburkan di permukaan media lembap dan jangan ditimbun tebal.",t:["Siapkan media halus yang lembap","Tabur benih tipis dan tekan pelan","Tutup dengan plastik bening atau semprot tiap hari"]},
+    {n:"Perkecambahan",day:14,d:"Benih lambat tumbuh, 10–21 hari. Jaga media tidak kering.",t:["Semprot air halus tiap hari","Letakkan di tempat teduh terang"]},
+    {n:"Perawatan bibit",day:30,d:"Bibit mulai kuat. Mulai kenalkan cahaya lebih banyak.",t:["Siram halus pagi hari","Siapkan media tanam: tanah + kompos + sekam"]},
+    {n:"Pindah tanam",day:40,d:"Bibit 4–5 cm dengan 3–4 daun. Tanam di tempat dengan matahari pagi dan teduh siang, jarak 20–25 cm.",t:["Pindahkan bibit sore hari","Siram setelah tanam","Jaga media selalu lembap"]},
+    {n:"Pertumbuhan rumpun",day:55,d:"Rumpun mulai membesar. Seledri butuh air teratur.",t:["Beri POC 1x seminggu","Cabut gulma","Cek kutu daun"]},
+    {n:"Panen",day:80,d:"Petik batang luar dengan memotong dekat pangkal, sisakan batang tengah agar tumbuh lagi.",t:["Potong batang luar dengan gunting","Ikat per ikat","Catat jumlah ikat hasil panen"],type:"harvest"},
+    {n:"Pengolahan",day:81,d:"Seledri paling harum saat segar.",t:["Cuci bersih dan tiriskan","Simpan dalam wadah kedap di kulkas","Iris dan beku, atau keringkan untuk bumbu"],type:"process"}
+   ]},
+ { id:"timun-baby", cat:"tanaman", icon:"🥒", iconKey:"timun", name:"Timun baby", level:"Menengah", days:65,
+   desc:"Timun mini yang merambat dan berbuah banyak. Cocok untuk pot besar dengan rambatan.",
+   unit:"gram",
+   tools:["Polybag besar, pot ≥ 20 L, atau bedengan","Sekop tangan","Ember untuk merendam benih","Gembor atau selang air","Ajir bambu setinggi 2 m, tali rafia, atau para-para (rambatan)","Gunting pangkas","Timbangan dapur digital","Hand sprayer untuk pupuk cair dan pengendali hama"],
+   bahan:[{n:"Benih timun baby",u:"butir",q:10,h:1500},{n:"Tanah gembur",u:"kg",q:15,h:1000},{n:"Kompos atau pupuk kandang matang",u:"kg",q:8,h:2000},{n:"Sekam padi",u:"kg",q:3,h:3000},{n:"Pupuk kaya kalium (misalnya abu sekam atau pupuk kalium)",u:"kg",q:1,h:25000},{n:"Pupuk cair organik (POC)",u:"ml",q:250,h:100},{n:"Pestisida nabati (opsional)",u:"ml",q:250,h:80},{n:"Ajir bambu",u:"batang",q:6,h:1500},{n:"Tali rafia",u:"gulung",q:1,h:5000},{n:"Air bersih",u:"secukupnya",q:1,h:0}],
+   stages:[
+    {n:"Siapkan media dan rambatan",day:0,d:"Siapkan wadah atau bedengan dan pasang ajir atau para-para setinggi 1,5–2 m.",t:["Campur tanah, kompos, dan sekam","Pasang ajir/para-para","Rendam benih 6–8 jam"]},
+    {n:"Tanam benih langsung",day:1,d:"Tanam 2 benih per lubang sedalam 1–2 cm, jarak 40–50 cm.",t:["Buat lubang tanam","Tutup tanah, siram halus","Jaga media tetap lembap"]},
+    {n:"Perkecambahan",day:6,d:"Benih tumbuh dalam 3–6 hari. Sisakan satu tanaman terkuat per lubang.",t:["Siram pagi hari","Jarangkan, sisakan 1 tanaman per lubang"]},
+    {n:"Mulai merambat",day:18,d:"Sulur mulai tumbuh. Arahkan agar naik pada ajir.",t:["Ikat batang pada ajir dengan tali rafia","Beri kompos atau POC","Pangkas tunas samping di bawah daun ke-5"]},
+    {n:"Berbunga",day:28,d:"Bunga kuning muncul. Kurangi nitrogen, tambah kalium.",t:["Beri pupuk kaya kalium","Siram teratur, hindari kekeringan","Cek kutu daun dan tungau"]},
+    {n:"Berbuah",day:38,d:"Buah kecil mulai terbentuk. Kelembapan stabil menjaga rasa tidak pahit.",t:["Siram teratur di pangkal","Buang buah cacat atau bengkok"]},
+    {n:"Mulai panen",day:42,d:"Panen saat panjang 8–12 cm dan kulit hijau muda. Petik tiap 2–3 hari agar terus berbuah.",t:["Potong tangkai dengan gunting","Catat berat hasil panen","Beri POC setelah panen"],type:"harvest"},
+    {n:"Pengolahan",day:43,d:"Timun paling segar langsung dimakan.",t:["Cuci bersih","Olah jadi salad, lalapan, atau acar","Simpan di kulkas 5–7 hari"],type:"process"}
+   ]},
+ { id:"buncis", cat:"tanaman", icon:"🫛", iconKey:"polong", name:"Buncis", level:"Pemula", days:70,
+   desc:"Polong hijau renyah. Jenis tegak mudah ditanam dan cepat panen.",
+   unit:"gram",
+   tools:["Polybag besar, pot ≥ 20 L, atau bedengan","Sekop tangan","Gembor atau selang air","Ajir pendek dan tali rafia (opsional)","Gunting pangkas","Timbangan dapur digital","Hand sprayer untuk pupuk cair dan pengendali hama"],
+   bahan:[{n:"Benih buncis tegak",u:"butir",q:50,h:150},{n:"Tanah gembur",u:"kg",q:15,h:1000},{n:"Kompos atau pupuk kandang matang",u:"kg",q:6,h:2000},{n:"Sekam padi",u:"kg",q:3,h:3000},{n:"Pupuk kaya kalium (misalnya abu sekam atau pupuk kalium)",u:"kg",q:1,h:25000},{n:"Pupuk cair organik (POC)",u:"ml",q:250,h:100},{n:"Ajir bambu",u:"batang",q:6,h:1500},{n:"Tali rafia",u:"gulung",q:1,h:5000},{n:"Air bersih",u:"secukupnya",q:1,h:0}],
+   stages:[
+    {n:"Siapkan media tanam",day:0,d:"Campur tanah, kompos, dan sekam. Buncis tidak suka tanah tergenang.",t:["Siapkan wadah/bedengan berlubang drainase","Campur media tanam","Rendam benih 2–4 jam (jangan terlalu lama)"]},
+    {n:"Tanam benih langsung",day:1,d:"Tanam 2 benih per lubang sedalam 2–3 cm, jarak 30 × 40 cm.",t:["Buat lubang tanam","Tutup tanah, siram halus","Jaga media tetap lembap"]},
+    {n:"Perkecambahan",day:7,d:"Benih tumbuh dalam 5–8 hari.",t:["Siram pagi hari","Sisakan satu tanaman terkuat per lubang"]},
+    {n:"Pertumbuhan",day:20,d:"Daun tumbuh lebat. Berikan penyangga ringan agar tidak roboh.",t:["Beri kompos atau POC","Naikkan tanah ke pangkal batang","Cabut gulma"]},
+    {n:"Berbunga",day:35,d:"Bunga putih atau ungu muncul. Hindari nitrogen berlebihan dan tambah kalium.",t:["Beri pupuk kaya kalium","Siram teratur, hindari kekeringan","Cek kutu daun dan ulat"]},
+    {n:"Berpolong",day:45,d:"Polong muda mulai terbentuk.",t:["Siram teratur","Buang polong cacat atau terserang hama"]},
+    {n:"Mulai panen",day:52,d:"Panen polong muda saat panjang 12–15 cm dan biji belum menonjol. Petik tiap 2–3 hari.",t:["Petik polong beserta tangkainya","Catat berat hasil panen","Beri POC setelah panen"],type:"harvest"},
+    {n:"Pengolahan",day:53,d:"Buncis bisa disimpan lebih lama jika diblansir.",t:["Cuci bersih","Olah jadi tumis, urap, atau sup","Blansir 2 menit lalu beku untuk stok"],type:"process"}
+   ]},
+ { id:"terong-lalap", cat:"tanaman", icon:"🍆", iconKey:"terong", name:"Terong lalap", level:"Menengah", days:120,
+   desc:"Terong hijau bulat kecil yang dimakan segar sebagai lalap. Berbuah banyak dan bisa dipanen berulang.",
+   unit:"gram",
+   tools:["Tray semai atau pot kecil","Polybag atau pot besar (≥ 30 L) atau bedengan","Sekop tangan","Gembor atau selang air","Ajir bambu dan tali rafia","Gunting pangkas","Timbangan dapur digital","Hand sprayer untuk pupuk cair dan pengendali hama"],
+   bahan:[{n:"Benih terong lalap",u:"g",q:5,h:3500},{n:"Tanah gembur",u:"kg",q:20,h:1000},{n:"Kompos atau pupuk kandang matang",u:"kg",q:10,h:2000},{n:"Sekam padi",u:"kg",q:3,h:3000},{n:"Pupuk kaya kalium (misalnya abu sekam atau pupuk kalium)",u:"kg",q:1,h:25000},{n:"Pupuk cair organik (POC)",u:"ml",q:250,h:100},{n:"Pestisida nabati (opsional)",u:"ml",q:250,h:80},{n:"Ajir bambu",u:"batang",q:10,h:1500},{n:"Tali rafia",u:"gulung",q:1,h:5000},{n:"Air bersih",u:"secukupnya",q:1,h:0}],
+   stages:[
+    {n:"Semai benih",day:0,d:"Semai di tray dengan media halus. Benih tumbuh dalam 5–10 hari.",t:["Rendam benih 6–8 jam dalam air hangat","Tabur 1–2 benih per lubang, tutup tipis","Letakkan di tempat teduh terang dan jaga tetap lembap"]},
+    {n:"Perawatan bibit",day:10,d:"Bibit mulai berdaun sejati. Kenalkan cahaya pagi secara bertahap.",t:["Siram halus pagi hari","Jemur pagi 1–2 jam, tambah bertahap"]},
+    {n:"Pindah tanam",day:25,d:"Bibit 4–5 daun. Tanam di pot besar atau bedengan dengan jarak 50 × 60 cm.",t:["Siapkan media: tanah + kompos + sekam","Pindahkan bibit sore hari","Pasang ajir dan siram setelah tanam"]},
+    {n:"Pertumbuhan vegetatif",day:40,d:"Fokus pada daun dan batang. Siram teratur.",t:["Beri kompos atau POC tiap 10 hari","Ikat batang pada ajir","Cek kutu kebul dan ulat"]},
+    {n:"Berbunga dan berbuah",day:55,d:"Bunga mulai muncul dan buah kecil terbentuk. Tambah kalium.",t:["Beri pupuk kaya kalium","Siram teratur","Buang buah muda yang rusak"]},
+    {n:"Mulai panen",day:80,d:"Panen saat buah hijau mengilap, sebesar bola pingpong hingga bola tenis. Petik tiap 3–4 hari.",t:["Potong tangkai dengan gunting","Catat berat hasil panen","Beri pupuk setelah panen"],type:"harvest"},
+    {n:"Pengolahan",day:81,d:"Terong lalap paling enak segar.",t:["Simpan di suhu ruang sejuk, 3–4 hari","Sajikan mentah dengan sambal terasi","Olah jadi tumis atau terong bakar"],type:"process"}
+   ]},
+ { id:"brokoli", cat:"tanaman", icon:"🥦", iconKey:"brokoli", name:"Brokoli", level:"Lanjut", days:100,
+   desc:"Butuh suhu sejuk dan perawatan teliti. Di dataran rendah pilih varietas tahan panas dan tanam di musim lebih sejuk.",
+   unit:"gram",
+   tools:["Tray semai atau pot kecil","Polybag atau pot besar (≥ 30 L) atau bedengan","Sekop tangan","Gembor atau selang air","Ajir bambu dan tali rafia","Gunting pangkas","Timbangan dapur digital","Hand sprayer untuk pupuk cair dan pengendali hama"],
+   bahan:[{n:"Benih brokoli",u:"butir",q:100,h:250},{n:"Tanah gembur",u:"kg",q:20,h:1000},{n:"Kompos atau pupuk kandang matang",u:"kg",q:10,h:2000},{n:"Sekam padi",u:"kg",q:3,h:3000},{n:"Pupuk kaya kalium (misalnya abu sekam atau pupuk kalium)",u:"kg",q:1,h:25000},{n:"Pupuk cair organik (POC)",u:"ml",q:250,h:100},{n:"Pestisida nabati (opsional)",u:"ml",q:250,h:80},{n:"Mulsa (jerami atau kompos)",u:"kg",q:1,h:5000},{n:"Air bersih",u:"secukupnya",q:1,h:0}],
+   stages:[
+    {n:"Semai benih",day:0,d:"Semai di tray dengan media halus. Benih tumbuh dalam 3–6 hari.",t:["Tabur 1–2 benih per lubang","Letakkan di tempat teduh terang","Jaga media tetap lembap"]},
+    {n:"Perawatan bibit",day:10,d:"Bibit mulai berdaun. Kenalkan cahaya pagi secara bertahap.",t:["Siram halus pagi hari","Siapkan media tanam: tanah + kompos + sekam"]},
+    {n:"Pindah tanam",day:25,d:"Bibit 4–5 daun. Tanam dengan jarak 50 cm. Beri naungan bila cuaca panas.",t:["Pindahkan bibit sore hari","Siram setelah tanam","Pasang mulsa di sekitar pangkal"]},
+    {n:"Pertumbuhan daun",day:40,d:"Daun melebar dan tanaman menguat. Brokoli butuh air dan pupuk teratur.",t:["Beri kompos atau POC tiap 10 hari","Naikkan tanah ke pangkal batang","Cek ulat daun dan kutu daun"]},
+    {n:"Pembentukan kepala",day:65,d:"Kepala hijau mulai terlihat di tengah. Kurangi nitrogen, tambah kalium.",t:["Beri pupuk kaya kalium","Siram teratur, hindari kekeringan","Pantau ulat yang bersembunyi di kepala"]},
+    {n:"Siap panen",day:80,d:"Panen kepala utama saat kuncup padat dan sebelum bunga kuning mekar. Potong batang 15 cm dari kepala.",t:["Potong dengan pisau tajam di pagi hari","Timbang dan catat hasil panen","Biarkan tanaman, tunas samping akan tumbuh"],type:"harvest"},
+    {n:"Pengolahan",day:81,d:"Brokoli paling segar langsung diolah.",t:["Cuci bersih, rendam air garam sebentar","Olah jadi tumis, kukus, atau sup","Blansir 2 menit lalu beku untuk stok"],type:"process"}
+   ]},
+ { id:"kacang-panjang", cat:"tanaman", icon:"🫛", iconKey:"polong", name:"Kacang panjang", level:"Pemula", days:75,
+   desc:"Polong hijau panjang yang merambat. Tumbuh cepat dan berbuah berulang.",
+   unit:"gram",
+   tools:["Polybag besar, pot ≥ 20 L, atau bedengan","Sekop tangan","Ember untuk merendam benih","Gembor atau selang air","Ajir bambu setinggi 2 m, tali rafia, atau para-para (rambatan)","Gunting pangkas","Timbangan dapur digital","Hand sprayer untuk pupuk cair dan pengendali hama"],
+   bahan:[{n:"Benih kacang panjang",u:"butir",q:50,h:100},{n:"Tanah gembur",u:"kg",q:20,h:1000},{n:"Kompos atau pupuk kandang matang",u:"kg",q:8,h:2000},{n:"Sekam padi",u:"kg",q:3,h:3000},{n:"Pupuk kaya kalium (misalnya abu sekam atau pupuk kalium)",u:"kg",q:1,h:25000},{n:"Pupuk cair organik (POC)",u:"ml",q:250,h:100},{n:"Ajir bambu",u:"batang",q:6,h:1500},{n:"Tali rafia",u:"gulung",q:1,h:5000},{n:"Air bersih",u:"secukupnya",q:1,h:0}],
+   stages:[
+    {n:"Siapkan media dan rambatan",day:0,d:"Siapkan wadah atau bedengan dan pasang ajir atau para-para setinggi 2 m.",t:["Campur tanah, kompos, dan sekam","Pasang ajir/para-para sebelum tanam","Rendam benih 4–6 jam (jangan terlalu lama)"]},
+    {n:"Tanam benih langsung",day:1,d:"Tanam 2–3 benih per lubang sedalam 2–3 cm, jarak 40–50 cm.",t:["Buat lubang tanam","Tutup tanah, siram halus","Jaga media tetap lembap"]},
+    {n:"Perkecambahan",day:7,d:"Benih tumbuh dalam 4–7 hari. Sisakan dua tanaman terkuat per lubang.",t:["Siram pagi hari","Jarangkan bila terlalu rapat"]},
+    {n:"Mulai merambat",day:20,d:"Sulur mulai tumbuh. Arahkan agar naik pada ajir.",t:["Ikat batang pada ajir dengan tali rafia","Beri kompos atau POC","Cabut gulma"]},
+    {n:"Berbunga",day:32,d:"Bunga muncul. Kurangi nitrogen, tambah kalium.",t:["Beri pupuk kaya kalium","Siram teratur, hindari kekeringan","Cek kutu daun dan penggerek polong"]},
+    {n:"Berpolong",day:42,d:"Polong muda memanjang.",t:["Siram teratur","Buang polong cacat atau terserang hama"]},
+    {n:"Mulai panen",day:48,d:"Panen polong muda saat biji belum menonjol. Petik tiap 2 hari agar terus berbuah.",t:["Petik polong beserta tangkainya","Catat berat hasil panen","Beri POC setelah panen"],type:"harvest"},
+    {n:"Pengolahan",day:49,d:"Kacang panjang tahan beberapa hari di kulkas.",t:["Cuci bersih","Olah jadi tumis, urap, atau lalapan","Blansir 2 menit lalu beku untuk stok"],type:"process"}
+   ]},
+ { id:"daun-bawang", cat:"tanaman", icon:"🌿", iconKey:"daunbawang", name:"Daun bawang", level:"Pemula", days:70,
+   desc:"Bumbu dapur yang paling mudah ditanam dari anakan rumpun. Bisa dipanen berulang.",
+   unit:"ikat",
+   tools:["Polybag, pot, atau bedengan (berlubang drainase)","Sekop tangan atau cangkul kecil","Ember untuk mencampur media","Gembor atau semprotan air halus","Gunting atau pisau tajam untuk panen","Saringan/tiris untuk mencuci hasil panen"],
+   bahan:[{n:"Anakan atau bibit daun bawang",u:"rumpun",q:20,h:500},{n:"Tanah gembur",u:"kg",q:10,h:1000},{n:"Kompos atau pupuk kandang matang",u:"kg",q:5,h:2000},{n:"Sekam padi",u:"kg",q:3,h:3000},{n:"Pupuk cair organik (POC)",u:"ml",q:250,h:100},{n:"Air bersih",u:"secukupnya",q:1,h:0}],
+   stages:[
+    {n:"Siapkan bibit dan media",day:0,d:"Pilih anakan rumpun yang sehat atau bibit hasil semai. Campur tanah, kompos, dan sekam.",t:["Pisahkan rumpun menjadi 2–3 anakan","Pangkas ujung daun dan akar yang terlalu panjang","Campur media tanam"]},
+    {n:"Tanam anakan",day:1,d:"Tanam 2–3 anakan per lubang sedalam 3–5 cm, jarak 15–20 cm.",t:["Buat lubang tanam","Tanam dan padatkan tanah di pangkal","Siram halus pagi dan sore"]},
+    {n:"Akar tumbuh",day:10,d:"Akar baru dan daun mulai muncul. Jaga media tetap lembap.",t:["Siram teratur","Ganti anakan yang layu"]},
+    {n:"Pertumbuhan rumpun",day:25,d:"Rumpun membesar. Naikkan tanah agar batang putih lebih panjang.",t:["Beri POC 1x seminggu","Naikkan tanah ke pangkal batang","Cabut gulma"]},
+    {n:"Perawatan rutin",day:40,d:"Daun menebal. Jaga air dan pantau hama.",t:["Cek ulat dan hama daun","Siram teratur, tanpa tergenang"]},
+    {n:"Siap panen",day:55,d:"Tinggi 30–40 cm. Potong daun luar atau cabut rumpun, sisakan pangkal agar tumbuh lagi.",t:["Potong 3 cm di atas tanah","Ikat per ikat","Beri POC setelah panen"],type:"harvest"},
+    {n:"Pengolahan",day:56,d:"Daun bawang mudah layu, olah atau simpan segera.",t:["Cuci bersih dan tiriskan","Simpan di kulkas dibungkus kertas lembap (1–2 minggu)","Iris dan beku untuk stok bumbu"],type:"process"}
+   ]},
+ { id:"kacang-panjang-merah", cat:"tanaman", icon:"🫛", iconKey:"polong", name:"Kacang panjang merah", level:"Pemula", days:80,
+   desc:"Polong berwarna merah keunguan yang merambat. Rasa renyah, sedikit lebih lama panen dibanding yang hijau.",
+   unit:"gram",
+   tools:["Polybag besar, pot ≥ 20 L, atau bedengan","Sekop tangan","Ember untuk merendam benih","Gembor atau selang air","Ajir bambu setinggi 2 m, tali rafia, atau para-para (rambatan)","Gunting pangkas","Timbangan dapur digital","Hand sprayer untuk pupuk cair dan pengendali hama"],
+   bahan:[{n:"Benih kacang panjang merah",u:"butir",q:50,h:150},{n:"Tanah gembur",u:"kg",q:20,h:1000},{n:"Kompos atau pupuk kandang matang",u:"kg",q:8,h:2000},{n:"Sekam padi",u:"kg",q:3,h:3000},{n:"Pupuk kaya kalium (misalnya abu sekam atau pupuk kalium)",u:"kg",q:1,h:25000},{n:"Pupuk cair organik (POC)",u:"ml",q:250,h:100},{n:"Ajir bambu",u:"batang",q:6,h:1500},{n:"Tali rafia",u:"gulung",q:1,h:5000},{n:"Air bersih",u:"secukupnya",q:1,h:0}],
+   stages:[
+    {n:"Siapkan media dan rambatan",day:0,d:"Siapkan wadah atau bedengan dan pasang ajir atau para-para setinggi 2 m.",t:["Campur tanah, kompos, dan sekam","Pasang ajir/para-para sebelum tanam","Rendam benih 4–6 jam (jangan terlalu lama)"]},
+    {n:"Tanam benih langsung",day:1,d:"Tanam 2–3 benih per lubang sedalam 2–3 cm, jarak 40–50 cm.",t:["Buat lubang tanam","Tutup tanah, siram halus","Jaga media tetap lembap"]},
+    {n:"Perkecambahan",day:7,d:"Benih tumbuh dalam 4–7 hari. Sisakan dua tanaman terkuat per lubang.",t:["Siram pagi hari","Jarangkan bila terlalu rapat"]},
+    {n:"Mulai merambat",day:22,d:"Sulur mulai tumbuh. Arahkan agar naik pada ajir.",t:["Ikat batang pada ajir dengan tali rafia","Beri kompos atau POC","Cabut gulma"]},
+    {n:"Berbunga",day:35,d:"Bunga muncul. Kurangi nitrogen, tambah kalium.",t:["Beri pupuk kaya kalium","Siram teratur, hindari kekeringan","Cek kutu daun dan penggerek polong"]},
+    {n:"Berpolong",day:45,d:"Polong muda memanjang dan mulai berwarna merah keunguan.",t:["Siram teratur","Buang polong cacat atau terserang hama"]},
+    {n:"Mulai panen",day:55,d:"Panen polong muda saat biji belum menonjol. Petik tiap 2 hari agar terus berbuah.",t:["Petik polong beserta tangkainya","Catat berat hasil panen","Beri POC setelah panen"],type:"harvest"},
+    {n:"Pengolahan",day:56,d:"Warna merah memudar saat dimasak lama, masak singkat agar warna bertahan.",t:["Cuci bersih","Olah jadi tumis cepat, urap, atau lalapan mentah","Blansir 2 menit lalu beku untuk stok"],type:"process"}
+   ]},
+ { id:"kubis", cat:"tanaman", icon:"🥬", iconKey:"kubis", name:"Kubis", level:"Menengah", days:85,
+   desc:"Sayur kepala bertumpuk yang tumbuh baik di tempat sejuk. Di dataran rendah pilih varietas tahan panas.",
+   unit:"gram",
+   tools:["Tray semai atau pot kecil","Polybag atau pot besar (≥ 30 L) atau bedengan","Sekop tangan","Gembor atau selang air","Ajir bambu dan tali rafia","Gunting pangkas","Timbangan dapur digital","Hand sprayer untuk pupuk cair dan pengendali hama","Timbangan dapur digital"],
+   bahan:[{n:"Benih kubis",u:"butir",q:100,h:200},{n:"Tanah gembur",u:"kg",q:20,h:1000},{n:"Kompos atau pupuk kandang matang",u:"kg",q:10,h:2000},{n:"Sekam padi",u:"kg",q:3,h:3000},{n:"Pupuk kaya kalium (misalnya abu sekam atau pupuk kalium)",u:"kg",q:1,h:25000},{n:"Pupuk cair organik (POC)",u:"ml",q:250,h:100},{n:"Pestisida nabati (opsional)",u:"ml",q:250,h:80},{n:"Mulsa (jerami atau kompos)",u:"kg",q:1,h:5000},{n:"Air bersih",u:"secukupnya",q:1,h:0}],
+   stages:[
+    {n:"Semai benih",day:0,d:"Semai di tray dengan media halus. Benih tumbuh dalam 3–6 hari.",t:["Tabur 1–2 benih per lubang","Letakkan di tempat teduh terang","Jaga media tetap lembap"]},
+    {n:"Perawatan bibit",day:10,d:"Bibit mulai berdaun. Kenalkan cahaya pagi secara bertahap.",t:["Siram halus pagi hari","Siapkan media tanam: tanah + kompos + sekam"]},
+    {n:"Pindah tanam",day:22,d:"Bibit 4–5 daun. Tanam dengan jarak 50 cm. Naungi bila cuaca panas.",t:["Pindahkan bibit sore hari","Siram setelah tanam","Pasang mulsa di sekitar pangkal"]},
+    {n:"Pertumbuhan daun",day:38,d:"Daun melebar dan tanaman menguat. Butuh air dan pupuk teratur.",t:["Beri kompos atau POC tiap 10 hari","Naikkan tanah ke pangkal batang","Cek ulat daun dan kutu daun"]},
+    {n:"Pembentukan kepala",day:55,d:"Daun bagian dalam mulai menggulung membentuk kepala. Kurangi nitrogen, jaga air stabil agar kepala tidak pecah.",t:["Beri pupuk kaya kalium","Siram teratur, tanpa tergenang","Pantau ulat daun yang masuk ke dalam kepala"]},
+    {n:"Siap panen",day:78,d:"Panen saat kepala sudah padat dan sebelum membuka atau berbunga.",t:["Potong dengan pisau tajam di pagi hari","Buang daun luar yang rusak","Timbang dan catat hasil panen"],type:"harvest"},
+    {n:"Pengolahan",day:79,d:"Sayur kepala tahan lebih lama jika disimpan benar.",t:["Olah jadi tumis, sup, atau lalapan","Simpan utuh di kulkas, tanpa dicuci (2–3 minggu)","Buat asinan atau sauerkraut"],type:"process"}
+   ]},
+ { id:"sawi-pagoda", cat:"tanaman", icon:"🥬", iconKey:"kangkung", name:"Sawi pagoda", level:"Pemula", days:45,
+   desc:"Sawi roset berdaun gelap dan tebal, dikenal juga sebagai tatsoi. Tumbuh menyebar dan cepat panen.",
+   unit:"ikat",
+   tools:["Tray semai atau pot kecil","Polybag, pot, atau bedengan (berlubang drainase)","Sekop tangan atau cangkul kecil","Ember untuk mencampur media dan merendam benih","Gembor atau semprotan air halus","Gunting atau pisau tajam untuk panen","Saringan/tiris untuk mencuci hasil panen"],
+   bahan:[{n:"Benih sawi pagoda",u:"g",q:5,h:3000},{n:"Tanah gembur",u:"kg",q:10,h:1000},{n:"Kompos atau pupuk kandang matang",u:"kg",q:5,h:2000},{n:"Sekam padi",u:"kg",q:3,h:3000},{n:"Pupuk cair organik (POC)",u:"ml",q:250,h:100},{n:"Pestisida nabati (opsional)",u:"ml",q:250,h:80},{n:"Air bersih",u:"secukupnya",q:1,h:0}],
+   stages:[
+    {n:"Semai benih",day:0,d:"Semai di tray dengan media halus. Benih tumbuh dalam 2–5 hari.",t:["Tabur benih tipis di tray","Letakkan di tempat teduh terang","Jaga media tetap lembap"]},
+    {n:"Perawatan bibit",day:7,d:"Bibit mulai berdaun. Jaga kelembapan dan beri cahaya pagi.",t:["Siram halus pagi dan sore","Siapkan media tanam: tanah + kompos + sekam"]},
+    {n:"Pindah tanam",day:10,d:"Bibit 3–4 daun. Tanam dengan jarak 20–25 cm (daun menyebar).",t:["Pindahkan bibit sore hari","Siram setelah tanam","Naungi 2–3 hari jika cuaca panas"]},
+    {n:"Pertumbuhan daun",day:18,d:"Daun tumbuh cepat. Roset melebar, beri ruang.",t:["Beri POC 1x seminggu","Cabut gulma","Cek ulat daun dan kutu daun"]},
+    {n:"Siap panen",day:38,d:"Daun sudah lebar dan segar. Cabut seluruh tanaman atau petik daun luar secara bertahap.",t:["Panen pagi hari","Cuci pangkal dari sisa tanah","Catat hasil panen"],type:"harvest"},
+    {n:"Pengolahan",day:39,d:"Sayur daun cepat layu, olah segera.",t:["Cuci bersih dan tiriskan","Simpan di kulkas dibungkus kertas lembap (3–4 hari)","Olah jadi tumis, sup, atau salad daun muda"],type:"process"}
+   ]},
+ { id:"selada-air", cat:"tanaman", icon:"🌿", iconKey:"kangkung", name:"Selada air", level:"Pemula", days:45,
+   desc:"Sayur daun yang suka air dan teduh. Mudah diperbanyak dari stek batang di wadah dangkal.",
+   unit:"ikat",
+   tools:["Baskom atau nampan dangkal berlubang drainase (tinggi ≥ 10 cm)","Gelas atau botol bening untuk menumbuhkan akar stek","Sekop tangan","Gembor atau semprotan air halus","Gunting untuk panen","Saringan/tiris untuk mencuci hasil panen"],
+   bahan:[{n:"Batang selada air untuk stek",u:"batang",q:20,h:500},{n:"Tanah gembur",u:"kg",q:5,h:1000},{n:"Kompos atau pupuk kandang matang",u:"kg",q:2,h:2000},{n:"Pupuk cair organik (POC)",u:"ml",q:250,h:100},{n:"Air bersih",u:"secukupnya",q:1,h:0}],
+   stages:[
+    {n:"Siapkan stek",day:0,d:"Ambil batang selada air segar sepanjang 10–15 cm dari pasar atau kebun. Rendam di air bersih hingga akar muncul.",t:["Pilih batang yang segar dan tidak layu","Buang daun bagian bawah","Rendam di gelas berisi air bersih di tempat teduh"]},
+    {n:"Akar tumbuh",day:7,d:"Akar putih muncul dalam 5–7 hari. Ganti air tiap 2 hari.",t:["Ganti air tiap 2 hari","Siapkan wadah dangkal berisi tanah dan kompos"]},
+    {n:"Tanam di media lembap",day:10,d:"Tanam stek berakar di wadah dangkal. Jaga tanah tergenang air setinggi 2–3 cm.",t:["Tanam stek dengan jarak 5–8 cm","Isi air sampai menggenangi tanah 2–3 cm","Letakkan di tempat teduh sebagian"]},
+    {n:"Pertumbuhan",day:20,d:"Tanaman merimbun dan menjalar. Jaga air tetap bersih dan tidak tergenang berlebihan.",t:["Ganti sebagian air tiap 3–4 hari","Beri POC encer 1x dua minggu","Cek siput dan kutu daun"]},
+    {n:"Panen pertama",day:30,d:"Potong pucuk sepanjang 10 cm. Sisakan bagian bawah agar tumbuh kembali.",t:["Potong pucuk dengan gunting","Cuci bersih dan tiriskan","Catat jumlah ikat hasil panen"],type:"harvest"},
+    {n:"Pengolahan",day:31,d:"Selada air paling segar langsung dimakan. Cuci sangat bersih sebelum dimakan mentah.",t:["Cuci bersih dengan air mengalir","Simpan di kulkas dalam air atau kertas lembap (2–3 hari)","Olah jadi sup, tumis ringan, atau salad"],type:"process"}
+   ]},
+ { id:"selada-keriting", cat:"tanaman", icon:"🥬", iconKey:"kangkung", name:"Selada keriting", level:"Pemula", days:50,
+   desc:"Selada berdaun keriting renyah. Tumbuh cepat, tetapi mudah pahit dan berbunga jika terlalu panas.",
+   unit:"ikat",
+   tools:["Tray semai atau pot kecil","Polybag, pot, atau bedengan (berlubang drainase)","Sekop tangan atau cangkul kecil","Ember untuk mencampur media dan merendam benih","Gembor atau semprotan air halus","Gunting atau pisau tajam untuk panen","Saringan/tiris untuk mencuci hasil panen"],
+   bahan:[{n:"Benih selada keriting",u:"g",q:5,h:3000},{n:"Tanah gembur",u:"kg",q:10,h:1000},{n:"Kompos atau pupuk kandang matang",u:"kg",q:5,h:2000},{n:"Sekam padi",u:"kg",q:3,h:3000},{n:"Pupuk cair organik (POC)",u:"ml",q:250,h:100},{n:"Pestisida nabati (opsional)",u:"ml",q:250,h:80},{n:"Air bersih",u:"secukupnya",q:1,h:0}],
+   stages:[
+    {n:"Semai benih",day:0,d:"Semai di tray dengan media halus. Benih butuh cahaya, jangan ditimbun tebal. Tumbuh dalam 3–7 hari.",t:["Tabur benih tipis di tray","Letakkan di tempat teduh terang","Jaga media tetap lembap"]},
+    {n:"Perawatan bibit",day:7,d:"Bibit mulai berdaun. Jaga kelembapan dan beri cahaya pagi.",t:["Siram halus pagi dan sore","Siapkan media tanam: tanah + kompos + sekam"]},
+    {n:"Pindah tanam",day:14,d:"Bibit 3–4 daun. Tanam dengan jarak 20–25 cm.",t:["Pindahkan bibit sore hari","Siram setelah tanam","Naungi 2–3 hari jika cuaca panas"]},
+    {n:"Pertumbuhan daun",day:22,d:"Daun tumbuh cepat. Naungi saat siang yang terik agar daun tidak pahit.",t:["Beri POC 1x seminggu","Cabut gulma","Cek ulat daun dan kutu daun"]},
+    {n:"Siap panen",day:38,d:"Daun sudah lebar dan segar. Cabut seluruh tanaman atau petik daun luar secara bertahap.",t:["Panen pagi hari","Cuci pangkal dari sisa tanah","Catat hasil panen"],type:"harvest"},
+    {n:"Pengolahan",day:39,d:"Sayur daun cepat layu, olah segera.",t:["Cuci bersih dan tiriskan","Simpan di kulkas dibungkus kertas lembap (3–5 hari)","Sajikan sebagai salad, isian burger, atau lalapan"],type:"process"}
+   ]},
+ { id:"kelor", cat:"tanaman", icon:"🌳", iconKey:"kelor", name:"Kelor", level:"Pemula", days:120,
+   desc:"Pohon yang daunnya kaya gizi. Tahan kering, suka matahari penuh, dan bisa dipanen berulang dengan dipangkas.",
+   unit:"gram",
+   tools:["Polybag dan pot besar (≥ 40 L) atau lahan terbuka","Sekop tangan","Ember untuk merendam benih","Gembor atau selang air","Gunting pangkas atau pisau","Nampan atau saringan untuk menjemur daun","Timbangan dapur digital"],
+   bahan:[{n:"Biji atau stek kelor",u:"butir",q:20,h:500},{n:"Tanah gembur",u:"kg",q:20,h:1000},{n:"Kompos atau pupuk kandang matang",u:"kg",q:8,h:2000},{n:"Sekam padi",u:"kg",q:3,h:3000},{n:"Pupuk cair organik (POC)",u:"ml",q:250,h:100},{n:"Air bersih",u:"secukupnya",q:1,h:0}],
+   stages:[
+    {n:"Siapkan media dan benih",day:0,d:"Kelor tidak tahan genangan. Gunakan media gembur dengan drainase baik.",t:["Campur tanah, kompos, dan sekam","Rendam biji 24 jam","Siapkan polybag berlubang drainase"]},
+    {n:"Tanam biji",day:1,d:"Tanam 1–2 biji per polybag sedalam 2–3 cm.",t:["Buat lubang tanam","Tutup tanah, siram halus","Letakkan di tempat terang"]},
+    {n:"Perkecambahan",day:8,d:"Biji tumbuh dalam 7–14 hari. Jaga media lembap, bukan tergenang.",t:["Siram pagi hari","Sisakan satu bibit terkuat"]},
+    {n:"Pindah tanam",day:35,d:"Bibit setinggi 30–40 cm. Pindahkan ke pot besar atau lahan dengan matahari penuh, jarak ≥ 1 m.",t:["Siapkan lubang tanam dan beri kompos","Pindahkan bibit sore hari","Siram setelah tanam"]},
+    {n:"Pangkas pertama",day:65,d:"Pangkas pucuk pada tinggi 60–80 cm agar bercabang dan tidak terlalu tinggi.",t:["Potong pucuk dengan gunting bersih","Beri kompos di sekitar pangkal","Siram saat tanah kering"]},
+    {n:"Panen daun",day:100,d:"Petik tangkai daun majemuk, sisakan cabang agar tumbuh lagi. Panen tiap 2–3 minggu.",t:["Petik tangkai daun beserta anak daunnya","Cuci bersih dan tiriskan","Catat berat hasil panen"],type:"harvest"},
+    {n:"Pengolahan",day:101,d:"Daun kelor bisa dimasak segar atau dikeringkan.",t:["Masak segera jadi sayur bening atau tumis","Jemur teduh tanpa terik sampai kering renyah","Giling jadi bubuk atau seduh jadi teh"],type:"process"}
+   ]},
+ { id:"labu-kuning", cat:"tanaman", icon:"🎃", iconKey:"labu", name:"Labu kuning", level:"Menengah", days:110,
+   desc:"Tanaman merambat dengan buah besar yang tahan simpan. Butuh ruang luas, matahari penuh, dan air cukup.",
+   unit:"gram",
+   tools:["Pot besar (≥ 40 L), karung tanam, atau bedengan luas","Cangkul atau sekop","Ember untuk merendam benih","Gembor atau selang air","Para-para kokoh atau lahan untuk menjalar","Papan atau jerami sebagai alas buah","Pisau atau gunting pangkas","Timbangan"],
+   bahan:[{n:"Benih labu kuning",u:"butir",q:10,h:800},{n:"Tanah gembur",u:"kg",q:30,h:1000},{n:"Kompos atau pupuk kandang matang",u:"kg",q:15,h:2000},{n:"Sekam padi",u:"kg",q:3,h:3000},{n:"Pupuk kaya kalium (misalnya abu sekam atau pupuk kalium)",u:"kg",q:1,h:25000},{n:"Pupuk cair organik (POC)",u:"ml",q:250,h:100},{n:"Pestisida nabati (opsional)",u:"ml",q:250,h:80},{n:"Mulsa (jerami atau kompos)",u:"kg",q:1,h:5000},{n:"Air bersih",u:"secukupnya",q:1,h:0}],
+   stages:[
+    {n:"Siapkan media dan ruang",day:0,d:"Labu butuh jarak 1–1,5 m per tanaman. Campur tanah, kompos, dan sekam, buat gundukan tanam.",t:["Siapkan lubang atau gundukan 40 × 40 cm","Campur tanah, kompos, dan sekam","Rendam benih 6–8 jam"]},
+    {n:"Tanam benih langsung",day:1,d:"Tanam 2–3 benih per lubang sedalam 2–3 cm.",t:["Tutup tanah, siram halus","Pasang mulsa di sekitar lubang","Jaga media tetap lembap"]},
+    {n:"Perkecambahan",day:7,d:"Benih tumbuh dalam 5–8 hari. Sisakan satu tanaman terkuat per lubang.",t:["Siram pagi hari","Cabut atau potong bibit yang lemah"]},
+    {n:"Mulai menjalar",day:25,d:"Sulur memanjang. Arahkan ke para-para atau lahan terbuka.",t:["Beri kompos atau POC","Arahkan sulur dan cabut gulma","Pangkas ujung sulur yang terlalu panjang"]},
+    {n:"Berbunga",day:40,d:"Bunga kuning jantan dan betina muncul. Penyerbukan oleh lebah, bisa dibantu dengan tangan.",t:["Beri pupuk kaya kalium","Serbuki bunga betina dengan bunga jantan di pagi hari","Cek kutu daun dan embun tepung"]},
+    {n:"Berbuah",day:55,d:"Buah muda mulai membesar. Alasi dengan papan atau jerami agar tidak busuk.",t:["Alasi buah dengan papan atau jerami","Sisakan 1–2 buah per tanaman","Siram teratur di pangkal"]},
+    {n:"Siap panen",day:100,d:"Panen saat kulit keras, warna pekat, dan tangkai mengering. Potong dengan sisa tangkai 5 cm.",t:["Ketuk buah, bunyi kosong menandakan matang","Potong dengan pisau tajam","Timbang dan catat hasil panen"],type:"harvest"},
+    {n:"Pengolahan",day:101,d:"Labu utuh tahan berbulan-bulan di tempat sejuk, kering, dan teduh.",t:["Simpan utuh di tempat sejuk dan kering","Kukus jadi bubur, kolak, atau sup","Beku potongan matang untuk stok"],type:"process"}
+   ]},
+ { id:"jagung-manis", cat:"tanaman", icon:"🌽", iconKey:"jagung", name:"Jagung manis", level:"Menengah", days:75,
+   desc:"Jagung dengan biji manis untuk direbus atau dibakar. Ditanam berkelompok agar penyerbukan berhasil.",
+   unit:"gram",
+   tools:["Pot besar atau bedengan (tanam berkelompok ≥ 4 baris)","Cangkul atau sekop","Tugal atau tongkat penanam","Gembor atau selang air","Pisau untuk panen","Timbangan dapur digital"],
+   bahan:[{n:"Benih jagung manis",u:"butir",q:50,h:300},{n:"Tanah gembur",u:"kg",q:25,h:1000},{n:"Kompos atau pupuk kandang matang",u:"kg",q:10,h:2000},{n:"Sekam padi",u:"kg",q:3,h:3000},{n:"Pupuk cair organik (POC)",u:"ml",q:250,h:100},{n:"Pestisida nabati (opsional)",u:"ml",q:250,h:80},{n:"Air bersih",u:"secukupnya",q:1,h:0}],
+   stages:[
+    {n:"Siapkan lahan",day:0,d:"Jagung butuh matahari penuh dan tanah gembur. Tanam dalam beberapa baris agar penyerbukan merata.",t:["Gemburkan tanah dan beri kompos","Buat lubang tanam jarak 30 × 60 cm","Rendam benih 4–6 jam"]},
+    {n:"Tanam benih langsung",day:1,d:"Tanam 2 benih per lubang sedalam 3–4 cm.",t:["Tutup tanah, siram halus","Jaga media tetap lembap"]},
+    {n:"Perkecambahan",day:6,d:"Benih tumbuh dalam 4–7 hari. Sisakan satu tanaman terkuat per lubang.",t:["Siram pagi hari","Jarangkan tanaman yang lemah"]},
+    {n:"Pertumbuhan cepat",day:20,d:"Jagung tumbuh cepat dan butuh nitrogen.",t:["Beri kompos atau POC","Naikkan tanah ke pangkal batang","Cabut gulma"]},
+    {n:"Berbunga",day:45,d:"Malai muncul di pucuk dan rambut di tongkol. Siram cukup agar penyerbukan baik.",t:["Siram teratur","Goyang tanaman pelan di pagi hari untuk membantu penyerbukan","Cek ulat tongkol"]},
+    {n:"Siap panen",day:68,d:"Panen saat rambut tongkol cokelat dan biji penuh berair susu bila ditekan. Putar dan patahkan tongkol.",t:["Tekan biji dengan kuku, cairan harus seperti susu","Panen pagi hari","Timbang dan catat hasil panen"],type:"harvest"},
+    {n:"Pengolahan",day:69,d:"Gula jagung cepat berubah jadi pati, olah segera.",t:["Rebus atau bakar segera setelah panen","Pipil dan beku untuk stok","Buat sup jagung atau perkedel"],type:"process"}
+   ]},
+ { id:"jagung-ketan-ungu", cat:"tanaman", icon:"🌽", iconKey:"jagung", name:"Jagung ketan ungu", level:"Menengah", days:85,
+   desc:"Jagung pulen berbiji ungu yang cocok direbus. Ditanam berkelompok dan dipanen muda.",
+   unit:"gram",
+   tools:["Pot besar atau bedengan (tanam berkelompok ≥ 4 baris)","Cangkul atau sekop","Tugal atau tongkat penanam","Gembor atau selang air","Pisau untuk panen","Timbangan dapur digital"],
+   bahan:[{n:"Benih jagung ketan ungu",u:"butir",q:50,h:400},{n:"Tanah gembur",u:"kg",q:25,h:1000},{n:"Kompos atau pupuk kandang matang",u:"kg",q:10,h:2000},{n:"Sekam padi",u:"kg",q:3,h:3000},{n:"Pupuk cair organik (POC)",u:"ml",q:250,h:100},{n:"Pestisida nabati (opsional)",u:"ml",q:250,h:80},{n:"Air bersih",u:"secukupnya",q:1,h:0}],
+   stages:[
+    {n:"Siapkan lahan",day:0,d:"Jagung butuh matahari penuh dan tanah gembur. Tanam dalam beberapa baris agar penyerbukan merata.",t:["Gemburkan tanah dan beri kompos","Buat lubang tanam jarak 30 × 60 cm","Rendam benih 4–6 jam"]},
+    {n:"Tanam benih langsung",day:1,d:"Tanam 2 benih per lubang sedalam 3–4 cm.",t:["Tutup tanah, siram halus","Jaga media tetap lembap"]},
+    {n:"Perkecambahan",day:6,d:"Benih tumbuh dalam 4–7 hari. Sisakan satu tanaman terkuat per lubang.",t:["Siram pagi hari","Jarangkan tanaman yang lemah"]},
+    {n:"Pertumbuhan cepat",day:20,d:"Jagung tumbuh cepat dan butuh nitrogen.",t:["Beri kompos atau POC","Naikkan tanah ke pangkal batang","Cabut gulma"]},
+    {n:"Berbunga",day:48,d:"Malai muncul di pucuk dan rambut di tongkol. Siram cukup agar penyerbukan baik.",t:["Siram teratur","Goyang tanaman pelan di pagi hari untuk membantu penyerbukan","Cek ulat tongkol"]},
+    {n:"Siap panen muda",day:72,d:"Panen tongkol muda untuk direbus saat rambut cokelat dan biji penuh berair susu. Warna ungu pekat bertambah saat tua.",t:["Tekan biji dengan kuku, cairan harus seperti susu","Putar dan patahkan tongkol","Timbang dan catat hasil panen"],type:"harvest"},
+    {n:"Pengolahan",day:73,d:"Jagung ketan paling enak segar.",t:["Rebus atau kukus dengan kulitnya","Pipil dan beku untuk stok","Buat bubur atau jagung rebus bumbu"],type:"process"}
+   ]},
+ { id:"kacang-roay", cat:"tanaman", icon:"🫛", iconKey:"polong", name:"Kacang roay", level:"Menengah", days:120,
+   desc:"Kacang merambat dari keluarga kratok (Phaseolus lunatus). Polong pipih berisi biji, tumbuh baik di dataran rendah.",
+   unit:"gram",
+   tools:["Polybag besar, pot ≥ 20 L, atau bedengan","Sekop tangan","Ember untuk merendam benih","Gembor atau selang air","Ajir bambu setinggi 2 m, tali rafia, atau para-para (rambatan)","Gunting pangkas","Timbangan dapur digital","Hand sprayer untuk pupuk cair dan pengendali hama","Panci untuk merebus biji sampai benar-benar matang"],
+   bahan:[{n:"Benih kacang roay",u:"butir",q:40,h:250},{n:"Tanah gembur",u:"kg",q:20,h:1000},{n:"Kompos atau pupuk kandang matang",u:"kg",q:8,h:2000},{n:"Sekam padi",u:"kg",q:3,h:3000},{n:"Pupuk kaya kalium (misalnya abu sekam atau pupuk kalium)",u:"kg",q:1,h:25000},{n:"Pupuk cair organik (POC)",u:"ml",q:250,h:100},{n:"Ajir bambu",u:"batang",q:6,h:1500},{n:"Tali rafia",u:"gulung",q:1,h:5000},{n:"Air bersih",u:"secukupnya",q:1,h:0}],
+   stages:[
+    {n:"Siapkan media dan rambatan",day:0,d:"Siapkan wadah atau bedengan dan pasang ajir atau para-para setinggi 2 m.",t:["Campur tanah, kompos, dan sekam","Pasang ajir/para-para sebelum tanam","Rendam benih 4–6 jam (jangan terlalu lama)"]},
+    {n:"Tanam benih langsung",day:1,d:"Tanam 2 benih per lubang sedalam 2–3 cm, jarak 50–60 cm.",t:["Buat lubang tanam","Tutup tanah, siram halus","Jaga media tetap lembap"]},
+    {n:"Perkecambahan",day:8,d:"Benih tumbuh dalam 5–10 hari. Sisakan dua tanaman terkuat per lubang.",t:["Siram pagi hari","Jarangkan bila terlalu rapat"]},
+    {n:"Mulai merambat",day:25,d:"Sulur mulai tumbuh. Arahkan agar naik pada ajir.",t:["Ikat batang pada ajir dengan tali rafia","Beri kompos atau POC","Cabut gulma"]},
+    {n:"Berbunga",day:45,d:"Bunga muncul. Kurangi nitrogen, tambah kalium.",t:["Beri pupuk kaya kalium","Siram teratur, hindari kekeringan","Cek kutu daun dan penggerek polong"]},
+    {n:"Berpolong",day:62,d:"Polong muda mulai terbentuk.",t:["Siram teratur","Buang polong cacat atau terserang hama"]},
+    {n:"Mulai panen",day:78,d:"Panen polong muda tiap 2–3 hari agar terus berbuah.",t:["Petik polong beserta tangkainya","Catat berat hasil panen","Beri POC setelah panen"],type:"harvest"},
+    {n:"Pengolahan",day:79,d:"Olah segera setelah panen.",t:["Kupas polong dan ambil biji","Rebus biji sampai benar-benar matang dan buang air rebusannya, jangan dimakan mentah","Olah jadi sayur, tumis, atau campuran sup"],type:"process"}
+   ]},
+ { id:"pakchoy-putih", cat:"tanaman", icon:"🥬", iconKey:"kangkung", name:"Pakchoy putih", level:"Pemula", days:35,
+   desc:"Pakchoy bertangkai putih tebal dan renyah. Cepat panen dan cocok untuk pot kecil.",
+   unit:"ikat",
+   tools:["Tray semai atau pot kecil","Polybag, pot, atau bedengan (berlubang drainase)","Sekop tangan atau cangkul kecil","Ember untuk mencampur media dan merendam benih","Gembor atau semprotan air halus","Gunting atau pisau tajam untuk panen","Saringan/tiris untuk mencuci hasil panen"],
+   bahan:[{n:"Benih pakchoy putih",u:"g",q:10,h:1500},{n:"Tanah gembur",u:"kg",q:10,h:1000},{n:"Kompos atau pupuk kandang matang",u:"kg",q:5,h:2000},{n:"Sekam padi",u:"kg",q:3,h:3000},{n:"Pupuk cair organik (POC)",u:"ml",q:250,h:100},{n:"Pestisida nabati (opsional)",u:"ml",q:250,h:80},{n:"Air bersih",u:"secukupnya",q:1,h:0}],
+   stages:[
+    {n:"Semai benih",day:0,d:"Semai di tray dengan media halus. Benih tumbuh dalam 2–5 hari.",t:["Tabur benih tipis di tray","Letakkan di tempat teduh terang","Jaga media tetap lembap"]},
+    {n:"Perawatan bibit",day:7,d:"Bibit mulai berdaun. Jaga kelembapan dan beri cahaya pagi.",t:["Siram halus pagi dan sore","Siapkan media tanam: tanah + kompos + sekam"]},
+    {n:"Pindah tanam",day:10,d:"Bibit 3–4 daun. Tanam dengan jarak 15–20 cm.",t:["Pindahkan bibit sore hari","Siram setelah tanam","Naungi 2–3 hari jika cuaca panas"]},
+    {n:"Pertumbuhan daun",day:18,d:"Daun tumbuh cepat. Tangkai menebal dan memutih.",t:["Beri POC 1x seminggu","Cabut gulma","Cek ulat daun dan kutu daun"]},
+    {n:"Siap panen",day:30,d:"Daun sudah lebar dan segar. Cabut seluruh tanaman atau petik daun luar secara bertahap.",t:["Panen pagi hari","Cuci pangkal dari sisa tanah","Catat hasil panen"],type:"harvest"},
+    {n:"Pengolahan",day:31,d:"Sayur daun cepat layu, olah segera.",t:["Cuci bersih dan tiriskan","Simpan di kulkas dibungkus kertas lembap (4–5 hari)","Olah jadi tumis bawang putih, sup, atau tim"],type:"process"}
+   ]},
+ { id:"parsley", cat:"tanaman", icon:"🌿", iconKey:"kangkung", name:"Daun parsley", level:"Menengah", days:90,
+   desc:"Daun hias dan bumbu dapur. Benih lambat tumbuh, tetapi tanaman dewasa bisa dipanen berulang.",
+   unit:"ikat",
+   tools:["Tray semai atau pot kecil","Polybag, pot, atau bedengan (berlubang drainase)","Sekop tangan atau cangkul kecil","Ember untuk mencampur media dan merendam benih","Gembor atau semprotan air halus","Gunting atau pisau tajam untuk panen","Saringan/tiris untuk mencuci hasil panen"],
+   bahan:[{n:"Benih parsley",u:"g",q:5,h:5000},{n:"Tanah gembur",u:"kg",q:10,h:1000},{n:"Kompos atau pupuk kandang matang",u:"kg",q:5,h:2000},{n:"Sekam padi",u:"kg",q:3,h:3000},{n:"Pupuk cair organik (POC)",u:"ml",q:250,h:100},{n:"Air bersih",u:"secukupnya",q:1,h:0}],
+   stages:[
+    {n:"Semai benih",day:0,d:"Benih lambat tumbuh. Rendam semalam agar lebih cepat berkecambah, lalu tabur di media halus.",t:["Rendam benih 12–24 jam","Tabur benih tipis di tray","Tutup tanah setipis mungkin"]},
+    {n:"Perkecambahan",day:14,d:"Benih tumbuh dalam 14–28 hari. Jaga media lembap dan jangan sampai kering.",t:["Semprot air halus tiap hari","Letakkan di tempat teduh terang"]},
+    {n:"Perawatan bibit",day:30,d:"Bibit mulai berdaun. Kenalkan cahaya pagi bertahap.",t:["Siram halus pagi hari","Siapkan media tanam: tanah + kompos + sekam"]},
+    {n:"Pindah tanam",day:42,d:"Bibit 4–5 daun. Tanam dengan jarak 20–25 cm di tempat dengan matahari pagi.",t:["Pindahkan bibit sore hari","Siram setelah tanam"]},
+    {n:"Pertumbuhan rumpun",day:58,d:"Rumpun daun tumbuh. Jaga air dan beri pupuk ringan.",t:["Beri POC 1x dua minggu","Cabut gulma","Cek kutu daun dan ulat"]},
+    {n:"Panen",day:75,d:"Petik batang luar, sisakan batang tengah agar tumbuh terus. Panen tiap 2 minggu.",t:["Potong batang luar dekat pangkal","Ikat per ikat","Catat jumlah ikat hasil panen"],type:"harvest"},
+    {n:"Pengolahan",day:76,d:"Parsley paling harum saat segar.",t:["Cuci bersih dan tiriskan","Simpan di kulkas dalam wadah kedap","Iris dan beku, atau keringkan untuk bumbu"],type:"process"}
+   ]},
+ { id:"paprika-merah", cat:"tanaman", icon:"🫑", iconKey:"paprika", name:"Paprika merah", level:"Lanjut", days:150,
+   desc:"Buah besar berdaging tebal. Butuh perawatan teliti, suhu tidak terlalu panas, dan waktu lebih lama sampai buah memerah.",
+   unit:"gram",
+   tools:["Tray semai atau pot kecil","Polybag atau pot besar (≥ 30 L) atau bedengan","Sekop tangan","Gembor atau selang air","Ajir bambu dan tali rafia","Gunting pangkas","Timbangan dapur digital","Hand sprayer untuk pupuk cair dan pengendali hama","Pot besar ≥ 30 L","Pisau pangkas bersih"],
+   bahan:[{n:"Benih paprika merah",u:"butir",q:10,h:3500},{n:"Tanah gembur",u:"kg",q:25,h:1000},{n:"Kompos atau pupuk kandang matang",u:"kg",q:12,h:2000},{n:"Sekam padi",u:"kg",q:4,h:3000},{n:"Pupuk kaya kalium (misalnya abu sekam atau pupuk kalium)",u:"kg",q:1,h:25000},{n:"Pupuk cair organik (POC)",u:"ml",q:250,h:100},{n:"Pestisida nabati (opsional)",u:"ml",q:250,h:80},{n:"Ajir bambu",u:"batang",q:10,h:1500},{n:"Tali rafia",u:"gulung",q:1,h:5000},{n:"Air bersih",u:"secukupnya",q:1,h:0}],
+   stages:[
+    {n:"Semai benih",day:0,d:"Semai di tray dengan media halus dan hangat. Benih tumbuh dalam 8–14 hari.",t:["Rendam benih 6 jam dalam air hangat","Tabur 1–2 benih per lubang","Letakkan di tempat terang dan hangat"]},
+    {n:"Perawatan bibit",day:14,d:"Bibit tumbuh pelan. Jaga kelembapan dan cahaya pagi.",t:["Siram halus pagi hari","Kenalkan cahaya matahari bertahap"]},
+    {n:"Pindah tanam",day:35,d:"Bibit 5–6 daun. Tanam di pot ≥ 30 L dengan jarak 50 cm. Naungi bila cuaca sangat panas.",t:["Siapkan media: tanah + kompos + sekam","Pindahkan bibit sore hari","Pasang ajir dan siram setelah tanam"]},
+    {n:"Pertumbuhan vegetatif",day:50,d:"Buang bunga pertama agar tanaman kuat dulu.",t:["Beri kompos atau POC tiap 10 hari","Pangkas tunas air dan sisakan 2–3 cabang utama","Cek kutu daun dan thrips"]},
+    {n:"Berbunga",day:75,d:"Bunga putih muncul. Tambah kalium dan jaga air stabil.",t:["Beri pupuk kaya kalium","Siram teratur, hindari kekeringan","Ikat cabang pada ajir"]},
+    {n:"Berbuah hijau",day:95,d:"Buah hijau membesar dan menebal. Sokong cabang agar tidak patah.",t:["Siram teratur","Pantau lalat buah dan ulat","Buang buah cacat"]},
+    {n:"Panen merah",day:130,d:"Biarkan buah memerah penuh di pohon. Potong dengan gunting beserta tangkainya.",t:["Potong tangkai dengan gunting","Catat berat hasil panen","Beri pupuk setelah panen"],type:"harvest"},
+    {n:"Pengolahan",day:131,d:"Paprika tahan beberapa hari di kulkas.",t:["Simpan di kulkas (1–2 minggu)","Olah jadi tumis, panggang, atau salad","Iris dan beku untuk stok masakan"],type:"process"}
+   ]},
+ { id:"tomat-rampai", cat:"tanaman", icon:"🍅", iconKey:"tomat", name:"Tomat rampai", level:"Menengah", days:95,
+   desc:"Tomat berbuah kecil bergerombol dalam satu tandan. Berbuah banyak, perlu penyangga.",
+   unit:"gram",
+   tools:["Tray semai","Pot ≥ 20 L atau bedengan","Ajir bambu setinggi 1,5–2 m dan tali rafia","Sekop tangan","Gembor atau selang air","Gunting pangkas","Timbangan dapur digital"],
+   bahan:[{n:"Benih tomat rampai",u:"butir",q:20,h:700},{n:"Tanah gembur",u:"kg",q:20,h:1000},{n:"Kompos atau pupuk kandang matang",u:"kg",q:8,h:2000},{n:"Sekam padi",u:"kg",q:3,h:3000},{n:"Mulsa (jerami atau kompos)",u:"kg",q:1,h:5000},{n:"Pupuk kaya kalium (misalnya abu sekam atau pupuk kalium)",u:"kg",q:1,h:25000},{n:"Pupuk cair organik (POC)",u:"ml",q:250,h:100},{n:"Ajir bambu",u:"batang",q:6,h:1500},{n:"Tali rafia",u:"gulung",q:1,h:5000},{n:"Air bersih",u:"secukupnya",q:1,h:0}],
+   stages:[
+    {n:"Semai benih",day:0,d:"Semai di media halus, tutup tipis. Benih tumbuh dalam 5–8 hari.",t:["Rendam benih semalam","Semai di tray","Jaga tetap lembap"]},
+    {n:"Pindah tanam",day:21,d:"Bibit 4–5 daun. Tanam dalam, sampai daun bawah.",t:["Siapkan pot ≥ 20 L atau bedengan","Pasang ajir setinggi 1,5–2 m","Siram setelah tanam"]},
+    {n:"Pertumbuhan",day:35,d:"Ikat batang pada ajir tiap minggu.",t:["Buang tunas air","Beri kompos sebagai mulsa","Siram dekat akar, bukan daun"]},
+    {n:"Berbunga",day:50,d:"Goyang tandan bunga pelan untuk membantu penyerbukan.",t:["Beri pupuk kalium/fosfor","Pantau hama ulat buah dan kutu kebul"]},
+    {n:"Berbuah",day:62,d:"Buah hijau membesar bergerombol. Jaga kelembapan stabil agar tidak pecah.",t:["Siram teratur","Pangkas daun yang menutupi buah"]},
+    {n:"Panen",day:80,d:"Petik saat merah merata. Tandan matang bertahap, petik yang sudah merah saja.",t:["Petik dengan tangkai","Catat berat hasil"],type:"harvest"},
+    {n:"Pengolahan",day:81,d:"Jangan buang buah berlebih.",t:["Buat sambal atau saus tomat","Jemur setengah belahan jadi tomat kering","Simpan buah matang di suhu ruang"],type:"process"}
+   ]},
+ { id:"terong-pokak", cat:"tanaman", icon:"🍆", iconKey:"terong", name:"Terong pokak", level:"Pemula", days:130,
+   desc:"Terong berbuah kecil bulat bergerombol (takokak), berduri dan kuat. Tumbuh mudah dan bisa dipanen berulang.",
+   unit:"gram",
+   tools:["Pot besar atau bedengan","Sarung tangan tebal (batang berduri)","Sekop tangan","Gembor atau selang air","Gunting pangkas","Timbangan dapur digital"],
+   bahan:[{n:"Benih terong pokak",u:"g",q:5,h:1500},{n:"Tanah gembur",u:"kg",q:20,h:1000},{n:"Kompos atau pupuk kandang matang",u:"kg",q:8,h:2000},{n:"Sekam padi",u:"kg",q:3,h:3000},{n:"Pupuk cair organik (POC)",u:"ml",q:250,h:100},{n:"Ajir bambu",u:"batang",q:4,h:1500},{n:"Tali rafia",u:"gulung",q:1,h:5000},{n:"Air bersih",u:"secukupnya",q:1,h:0}],
+   stages:[
+    {n:"Semai benih",day:0,d:"Semai di tray atau pot kecil dengan media halus. Benih tumbuh dalam 7–14 hari.",t:["Rendam benih 6–8 jam dalam air hangat","Tabur 1–2 benih per lubang, tutup tipis","Letakkan di tempat teduh terang dan jaga tetap lembap"]},
+    {n:"Perawatan bibit",day:10,d:"Bibit mulai berdaun sejati. Kenalkan cahaya pagi secara bertahap.",t:["Siram halus pagi hari","Jemur pagi 1–2 jam, tambah bertahap"]},
+    {n:"Pindah tanam",day:28,d:"Bibit 4–5 daun, tinggi 12–15 cm. Tanam di pot besar atau bedengan dengan jarak 60 × 70 cm.",t:["Siapkan media: tanah + kompos + sekam","Pindahkan bibit sore hari","Pasang ajir dan siram setelah tanam"]},
+    {n:"Pertumbuhan vegetatif",day:45,d:"Fokus pada daun dan batang. Terong butuh air teratur dan pupuk berkala.",t:["Beri kompos atau POC tiap 10 hari","Ikat batang pada ajir","Cek kutu kebul, ulat, dan tungau"]},
+    {n:"Berbunga dan berbuah",day:70,d:"Bunga mulai muncul dan buah muda terbentuk. Kurangi nitrogen, tambah kalium.",t:["Beri pupuk kaya kalium","Siram teratur, hindari kekeringan","Buang bunga atau buah muda yang rusak"]},
+    {n:"Mulai panen",day:100,d:"Petik saat kulit buah mengilap dan belum keriput. Gunakan gunting, tiap 3–4 hari.",t:["Potong tangkai dengan gunting, jangan ditarik","Catat berat hasil panen","Beri pupuk setelah panen agar berbuah lagi"],type:"harvest"},
+    {n:"Pengolahan",day:101,d:"Terong tidak tahan lama, olah segera.",t:["Cuci bersih dan petik buah dari tandan","Olah jadi sayur lodeh, sambal, atau tumis","Rebus sebentar untuk mengurangi pahit"],type:"process"}
+   ]},
+ { id:"terong-lalap-ungu", cat:"tanaman", icon:"🍆", iconKey:"terong", name:"Terong lalap ungu", level:"Menengah", days:120,
+   desc:"Terong bulat kecil berkulit ungu yang dimakan segar sebagai lalap. Berbuah banyak dan bisa dipanen berulang.",
+   unit:"gram",
+   tools:["Tray semai atau pot kecil","Polybag atau pot besar (≥ 30 L) atau bedengan","Sekop tangan","Gembor atau selang air","Ajir bambu dan tali rafia","Gunting pangkas","Timbangan dapur digital","Hand sprayer untuk pupuk cair dan pengendali hama"],
+   bahan:[{n:"Benih terong lalap ungu",u:"g",q:5,h:3500},{n:"Tanah gembur",u:"kg",q:20,h:1000},{n:"Kompos atau pupuk kandang matang",u:"kg",q:10,h:2000},{n:"Sekam padi",u:"kg",q:3,h:3000},{n:"Pupuk kaya kalium (misalnya abu sekam atau pupuk kalium)",u:"kg",q:1,h:25000},{n:"Pupuk cair organik (POC)",u:"ml",q:250,h:100},{n:"Pestisida nabati (opsional)",u:"ml",q:250,h:80},{n:"Ajir bambu",u:"batang",q:10,h:1500},{n:"Tali rafia",u:"gulung",q:1,h:5000},{n:"Air bersih",u:"secukupnya",q:1,h:0}],
+   stages:[
+    {n:"Semai benih",day:0,d:"Semai di tray dengan media halus. Benih tumbuh dalam 5–10 hari.",t:["Rendam benih 6–8 jam dalam air hangat","Tabur 1–2 benih per lubang, tutup tipis","Letakkan di tempat teduh terang dan jaga tetap lembap"]},
+    {n:"Perawatan bibit",day:10,d:"Bibit mulai berdaun sejati. Kenalkan cahaya pagi secara bertahap.",t:["Siram halus pagi hari","Jemur pagi 1–2 jam, tambah bertahap"]},
+    {n:"Pindah tanam",day:25,d:"Bibit 4–5 daun, tinggi 12–15 cm. Tanam di pot besar atau bedengan dengan jarak 60 × 70 cm.",t:["Siapkan media: tanah + kompos + sekam","Pindahkan bibit sore hari","Pasang ajir dan siram setelah tanam"]},
+    {n:"Pertumbuhan vegetatif",day:40,d:"Fokus pada daun dan batang. Terong butuh air teratur dan pupuk berkala.",t:["Beri kompos atau POC tiap 10 hari","Ikat batang pada ajir","Cek kutu kebul, ulat, dan tungau"]},
+    {n:"Berbunga dan berbuah",day:58,d:"Bunga mulai muncul dan buah muda terbentuk. Kurangi nitrogen, tambah kalium.",t:["Beri pupuk kaya kalium","Siram teratur, hindari kekeringan","Buang bunga atau buah muda yang rusak"]},
+    {n:"Mulai panen",day:80,d:"Petik saat kulit buah mengilap dan belum keriput. Gunakan gunting, tiap 3–4 hari.",t:["Potong tangkai dengan gunting, jangan ditarik","Catat berat hasil panen","Beri pupuk setelah panen agar berbuah lagi"],type:"harvest"},
+    {n:"Pengolahan",day:81,d:"Terong tidak tahan lama, olah segera.",t:["Simpan di suhu ruang sejuk, 3–4 hari","Sajikan mentah dengan sambal terasi","Olah jadi tumis atau terong bakar"],type:"process"}
+   ]},
+ { id:"cabai-merah-besar", cat:"tanaman", icon:"🌶️", iconKey:"cabai", name:"Cabai merah besar", level:"Menengah", days:150,
+   desc:"Cabai besar berdaging tebal untuk bumbu harian. Butuh matahari penuh dan dipanen bertahap selama berbulan-bulan.",
+   unit:"gram",
+   tools:["Tray semai atau pot kecil","Polybag atau pot besar (≥ 30 L) atau bedengan","Sekop tangan","Gembor atau selang air","Ajir bambu dan tali rafia","Gunting pangkas","Timbangan dapur digital","Hand sprayer untuk pupuk cair dan pengendali hama","Alat jemur atau oven, dan blender untuk pengolahan"],
+   bahan:[{n:"Benih cabai merah besar",u:"g",q:10,h:2500},{n:"Tanah gembur",u:"kg",q:20,h:1000},{n:"Kompos atau pupuk kandang matang",u:"kg",q:10,h:2000},{n:"Sekam padi",u:"kg",q:3,h:3000},{n:"Pupuk kaya kalium (misalnya abu sekam atau pupuk kalium)",u:"kg",q:1,h:25000},{n:"Pupuk cair organik (POC)",u:"ml",q:250,h:100},{n:"Pestisida nabati (opsional)",u:"ml",q:250,h:80},{n:"Ajir bambu",u:"batang",q:10,h:1500},{n:"Tali rafia",u:"gulung",q:1,h:5000},{n:"Air bersih",u:"secukupnya",q:1,h:0}],
+   stages:[
+    {n:"Semai benih",day:0,d:"Semai di tray atau pot kecil dengan media halus dan kompos. Benih tumbuh dalam 7–14 hari.",t:["Rendam benih 6 jam dalam air hangat","Tabur 1–2 benih per lubang","Letakkan di tempat teduh terang dan jaga tetap lembap"]},
+    {n:"Perawatan bibit",day:12,d:"Bibit tumbuh 2–4 daun sejati. Jaga kelembapan dan beri cahaya pagi.",t:["Siram pagi hari","Pindahkan ke cahaya matahari bertahap"]},
+    {n:"Pindah tanam",day:30,d:"Bibit 4–6 daun. Tanam di pot ≥ 30 L atau bedengan jarak 60 cm.",t:["Siapkan media: tanah + kompos + sekam","Pindahkan bibit sore hari","Pasang ajir dan siram setelah tanam"]},
+    {n:"Pertumbuhan vegetatif",day:45,d:"Fokus pada daun dan batang.",t:["Beri kompos atau POC tiap 10 hari","Pangkas tunas air di bawah cabang pertama","Cek kutu daun, thrips, dan tungau"]},
+    {n:"Berbunga dan berbuah",day:75,d:"Kurangi nitrogen, tambah kalium (abu sekam, kulit pisang).",t:["Beri pupuk kaya kalium","Siram teratur, hindari kekeringan","Buang bunga atau buah rusak"]},
+    {n:"Mulai panen",day:105,d:"Panen buah sesuai tingkat kematangan yang diinginkan. Petik beserta tangkainya tiap 3–5 hari.",t:["Petik dengan tangkainya","Catat berat hasil panen","Beri pupuk setelah panen agar berbuah lagi"],type:"harvest"},
+    {n:"Pengolahan",day:106,d:"Awetkan atau olah segera agar tidak terbuang.",t:["Jemur atau oven jadi cabai kering","Buat sambal atau pasta cabai","Simpan beku dalam wadah kedap"],type:"process"}
+   ]},
+ { id:"cabai-gendot", cat:"tanaman", icon:"🌶️", iconKey:"cabai", name:"Cabai gendot", level:"Menengah", days:140,
+   desc:"Cabai berbuah pendek dan gemuk. Pedasnya ringan sampai sedang, cocok untuk tumisan dan sambal.",
+   unit:"gram",
+   tools:["Tray semai atau pot kecil","Polybag atau pot besar (≥ 30 L) atau bedengan","Sekop tangan","Gembor atau selang air","Ajir bambu dan tali rafia","Gunting pangkas","Timbangan dapur digital","Hand sprayer untuk pupuk cair dan pengendali hama","Alat jemur atau oven, dan blender untuk pengolahan"],
+   bahan:[{n:"Benih cabai gendot",u:"g",q:10,h:3000},{n:"Tanah gembur",u:"kg",q:20,h:1000},{n:"Kompos atau pupuk kandang matang",u:"kg",q:10,h:2000},{n:"Sekam padi",u:"kg",q:3,h:3000},{n:"Pupuk kaya kalium (misalnya abu sekam atau pupuk kalium)",u:"kg",q:1,h:25000},{n:"Pupuk cair organik (POC)",u:"ml",q:250,h:100},{n:"Pestisida nabati (opsional)",u:"ml",q:250,h:80},{n:"Ajir bambu",u:"batang",q:10,h:1500},{n:"Tali rafia",u:"gulung",q:1,h:5000},{n:"Air bersih",u:"secukupnya",q:1,h:0}],
+   stages:[
+    {n:"Semai benih",day:0,d:"Semai di tray atau pot kecil dengan media halus dan kompos. Benih tumbuh dalam 7–14 hari.",t:["Rendam benih 6 jam dalam air hangat","Tabur 1–2 benih per lubang","Letakkan di tempat teduh terang dan jaga tetap lembap"]},
+    {n:"Perawatan bibit",day:12,d:"Bibit tumbuh 2–4 daun sejati. Jaga kelembapan dan beri cahaya pagi.",t:["Siram pagi hari","Pindahkan ke cahaya matahari bertahap"]},
+    {n:"Pindah tanam",day:30,d:"Bibit 4–6 daun. Tanam di pot ≥ 30 L atau bedengan jarak 50 cm.",t:["Siapkan media: tanah + kompos + sekam","Pindahkan bibit sore hari","Pasang ajir dan siram setelah tanam"]},
+    {n:"Pertumbuhan vegetatif",day:45,d:"Fokus pada daun dan batang.",t:["Beri kompos atau POC tiap 10 hari","Pangkas tunas air di bawah cabang pertama","Cek kutu daun, thrips, dan tungau"]},
+    {n:"Berbunga dan berbuah",day:75,d:"Kurangi nitrogen, tambah kalium (abu sekam, kulit pisang).",t:["Beri pupuk kaya kalium","Siram teratur, hindari kekeringan","Buang bunga atau buah rusak"]},
+    {n:"Mulai panen",day:100,d:"Panen buah sesuai tingkat kematangan yang diinginkan. Petik beserta tangkainya tiap 3–5 hari.",t:["Petik dengan tangkainya","Catat berat hasil panen","Beri pupuk setelah panen agar berbuah lagi"],type:"harvest"},
+    {n:"Pengolahan",day:101,d:"Awetkan atau olah segera agar tidak terbuang.",t:["Olah jadi tumisan, sambal, atau isian","Jemur atau oven jadi cabai kering","Simpan beku dalam wadah kedap"],type:"process"}
+   ]},
+ { id:"cabai-212", cat:"tanaman", icon:"🌶️", iconKey:"cabai", name:"Cabai 212", level:"Menengah", days:150,
+   desc:"Cabai rawit hibrida (ORI 212) yang populer. Produktif, tahan beberapa penyakit, dan dipanen berulang.",
+   unit:"gram",
+   tools:["Tray semai atau pot kecil","Polybag atau pot besar (≥ 30 L) atau bedengan","Sekop tangan","Gembor atau selang air","Ajir bambu dan tali rafia","Gunting pangkas","Timbangan dapur digital","Hand sprayer untuk pupuk cair dan pengendali hama","Alat jemur atau oven, dan blender untuk pengolahan"],
+   bahan:[{n:"Benih cabai rawit 212",u:"g",q:10,h:2500},{n:"Tanah gembur",u:"kg",q:20,h:1000},{n:"Kompos atau pupuk kandang matang",u:"kg",q:10,h:2000},{n:"Sekam padi",u:"kg",q:3,h:3000},{n:"Pupuk kaya kalium (misalnya abu sekam atau pupuk kalium)",u:"kg",q:1,h:25000},{n:"Pupuk cair organik (POC)",u:"ml",q:250,h:100},{n:"Pestisida nabati (opsional)",u:"ml",q:250,h:80},{n:"Ajir bambu",u:"batang",q:10,h:1500},{n:"Tali rafia",u:"gulung",q:1,h:5000},{n:"Air bersih",u:"secukupnya",q:1,h:0}],
+   stages:[
+    {n:"Semai benih",day:0,d:"Semai di tray atau pot kecil dengan media halus dan kompos. Benih tumbuh dalam 7–14 hari.",t:["Rendam benih 6 jam dalam air hangat","Tabur 1–2 benih per lubang","Letakkan di tempat teduh terang dan jaga tetap lembap"]},
+    {n:"Perawatan bibit",day:12,d:"Bibit tumbuh 2–4 daun sejati. Jaga kelembapan dan beri cahaya pagi.",t:["Siram pagi hari","Pindahkan ke cahaya matahari bertahap"]},
+    {n:"Pindah tanam",day:30,d:"Bibit 4–6 daun. Tanam di pot ≥ 30 L atau bedengan jarak 50–60 cm.",t:["Siapkan media: tanah + kompos + sekam","Pindahkan bibit sore hari","Pasang ajir dan siram setelah tanam"]},
+    {n:"Pertumbuhan vegetatif",day:45,d:"Fokus pada daun dan batang. Cek umur panen dan jarak tanam di kemasan benih.",t:["Beri kompos atau POC tiap 10 hari","Pangkas tunas air di bawah cabang pertama","Cek kutu daun, thrips, dan tungau"]},
+    {n:"Berbunga dan berbuah",day:75,d:"Kurangi nitrogen, tambah kalium (abu sekam, kulit pisang).",t:["Beri pupuk kaya kalium","Siram teratur, hindari kekeringan","Buang bunga atau buah rusak"]},
+    {n:"Mulai panen",day:100,d:"Panen buah sesuai tingkat kematangan yang diinginkan. Petik beserta tangkainya tiap 3–5 hari.",t:["Petik dengan tangkainya","Catat berat hasil panen","Beri pupuk setelah panen agar berbuah lagi"],type:"harvest"},
+    {n:"Pengolahan",day:101,d:"Awetkan atau olah segera agar tidak terbuang.",t:["Jemur atau oven jadi cabai kering","Buat sambal atau pasta cabai","Simpan beku dalam wadah kedap"],type:"process"}
+   ]},
+ { id:"tomat-cherry", cat:"tanaman", icon:"🍅", iconKey:"tomat", name:"Tomat cherry", level:"Menengah", days:90,
+   desc:"Tomat kecil manis yang berbuah banyak dalam tandan. Mudah dipanen dan enak langsung dimakan.",
+   unit:"gram",
+   tools:["Tray semai","Pot ≥ 20 L atau bedengan","Ajir bambu setinggi 1,5–2 m dan tali rafia","Sekop tangan","Gembor atau selang air","Gunting pangkas","Timbangan dapur digital"],
+   bahan:[{n:"Benih tomat cherry",u:"butir",q:20,h:700},{n:"Tanah gembur",u:"kg",q:20,h:1000},{n:"Kompos atau pupuk kandang matang",u:"kg",q:8,h:2000},{n:"Sekam padi",u:"kg",q:3,h:3000},{n:"Mulsa (jerami atau kompos)",u:"kg",q:1,h:5000},{n:"Pupuk kaya kalium (misalnya abu sekam atau pupuk kalium)",u:"kg",q:1,h:25000},{n:"Pupuk cair organik (POC)",u:"ml",q:250,h:100},{n:"Ajir bambu",u:"batang",q:6,h:1500},{n:"Tali rafia",u:"gulung",q:1,h:5000},{n:"Air bersih",u:"secukupnya",q:1,h:0}],
+   stages:[
+    {n:"Semai benih",day:0,d:"Semai di media halus, tutup tipis. Benih tumbuh dalam 5–8 hari.",t:["Rendam benih semalam","Semai di tray","Jaga tetap lembap"]},
+    {n:"Pindah tanam",day:21,d:"Bibit 4–5 daun. Tanam dalam, sampai daun bawah.",t:["Siapkan pot ≥ 20 L atau bedengan","Pasang ajir setinggi 1,5–2 m","Siram setelah tanam"]},
+    {n:"Pertumbuhan",day:35,d:"Ikat batang pada ajir tiap minggu.",t:["Buang tunas air","Beri kompos sebagai mulsa","Siram dekat akar, bukan daun"]},
+    {n:"Berbunga",day:48,d:"Goyang tandan bunga pelan untuk membantu penyerbukan.",t:["Beri pupuk kalium/fosfor","Pantau hama ulat buah dan kutu kebul"]},
+    {n:"Berbuah",day:58,d:"Buah hijau membesar bergerombol. Jaga kelembapan stabil agar tidak pecah.",t:["Siram teratur","Pangkas daun yang menutupi buah"]},
+    {n:"Panen",day:75,d:"Petik saat merah merata. Tandan matang bertahap, petik yang sudah merah saja.",t:["Petik dengan tangkai","Catat berat hasil"],type:"harvest"},
+    {n:"Pengolahan",day:76,d:"Jangan buang buah berlebih.",t:["Sajikan segar sebagai salad atau camilan","Panggang atau buat saus cepat","Jemur belahan jadi tomat kering"],type:"process"}
+   ]},
+ { id:"selasih", cat:"tanaman", icon:"🌿", iconKey:"kangkung", name:"Selasih", level:"Pemula", days:65,
+   desc:"Tanaman herba beraroma. Daunnya untuk lalap dan masakan, bijinya untuk minuman. Mudah tumbuh di pot.",
+   unit:"ikat",
+   tools:["Tray semai atau pot kecil","Polybag, pot, atau bedengan (berlubang drainase)","Sekop tangan atau cangkul kecil","Ember untuk mencampur media dan merendam benih","Gembor atau semprotan air halus","Gunting atau pisau tajam untuk panen","Saringan/tiris untuk mencuci hasil panen"],
+   bahan:[{n:"Benih selasih",u:"g",q:5,h:1000},{n:"Tanah gembur",u:"kg",q:8,h:1000},{n:"Kompos atau pupuk kandang matang",u:"kg",q:4,h:2000},{n:"Sekam padi",u:"kg",q:2,h:3000},{n:"Pupuk cair organik (POC)",u:"ml",q:250,h:100},{n:"Air bersih",u:"secukupnya",q:1,h:0}],
+   stages:[
+    {n:"Semai benih",day:0,d:"Taburkan benih tipis di media halus lembap. Benih butuh sedikit cahaya.",t:["Tabur benih tipis dan tekan pelan","Tutup tanah setipis mungkin","Jaga media tetap lembap"]},
+    {n:"Perkecambahan",day:4,d:"Benih tumbuh dalam 4–7 hari.",t:["Siram halus pagi hari","Letakkan di tempat terang"]},
+    {n:"Pindah tanam",day:18,d:"Bibit 4 daun. Tanam dengan jarak 20–25 cm di tempat dengan matahari penuh.",t:["Pindahkan bibit sore hari","Siram setelah tanam"]},
+    {n:"Pertumbuhan dan pemangkasan",day:30,d:"Pangkas pucuk agar bercabang dan daun lebih lebat.",t:["Pangkas pucuk di atas pasangan daun","Beri POC 1x dua minggu","Cabut gulma"]},
+    {n:"Panen daun",day:42,d:"Petik pucuk dan daun muda tiap 1–2 minggu. Segera buang kuncup bunga untuk memperpanjang panen daun.",t:["Petik pucuk dengan gunting","Catat jumlah ikat hasil panen","Buang kuncup bunga bila ingin daun"],type:"harvest"},
+    {n:"Pengolahan",day:43,d:"Daun selasih paling wangi saat segar. Untuk biji, biarkan satu tanaman berbunga.",t:["Pakai segar untuk lalap atau masakan","Keringkan di tempat teduh untuk bumbu","Biarkan bunga mengering untuk memanen biji, rendam bila ingin dijadikan minuman"],type:"process"}
+   ]},
+ { id:"ciplukan", cat:"tanaman", icon:"🫐", iconKey:"ciplukan", name:"Ciplukan", level:"Pemula", days:100,
+   desc:"Buah kecil dalam kelopak seperti lampion. Tumbuh mudah, rasa manis asam, dan buah matang jatuh sendiri.",
+   unit:"gram",
+   tools:["Tray semai atau pot kecil","Pot ≥ 20 L atau bedengan","Sekop tangan","Gembor atau semprotan air","Ajir pendek (opsional)","Timbangan dapur digital"],
+   bahan:[{n:"Benih ciplukan",u:"g",q:5,h:1500},{n:"Tanah gembur",u:"kg",q:15,h:1000},{n:"Kompos atau pupuk kandang matang",u:"kg",q:6,h:2000},{n:"Sekam padi",u:"kg",q:3,h:3000},{n:"Pupuk cair organik (POC)",u:"ml",q:250,h:100},{n:"Air bersih",u:"secukupnya",q:1,h:0}],
+   stages:[
+    {n:"Semai benih",day:0,d:"Benih sangat kecil. Taburkan tipis di media halus lembap.",t:["Tabur benih tipis dan tekan pelan","Letakkan di tempat teduh terang","Jaga media tetap lembap"]},
+    {n:"Perkecambahan",day:8,d:"Benih tumbuh dalam 7–14 hari.",t:["Semprot air halus tiap hari","Jaga media tidak kering"]},
+    {n:"Pindah tanam",day:25,d:"Bibit 4–5 daun. Tanam di pot atau bedengan dengan jarak 50 cm.",t:["Siapkan media: tanah + kompos + sekam","Pindahkan bibit sore hari","Siram setelah tanam"]},
+    {n:"Pertumbuhan",day:42,d:"Tanaman bercabang dan melebar. Beri ajir bila batang condong.",t:["Beri kompos atau POC tiap 10 hari","Cabut gulma","Cek kutu daun"]},
+    {n:"Berbunga",day:58,d:"Bunga kuning kecil muncul di ketiak daun.",t:["Siram teratur","Kurangi nitrogen, tambah kalium"]},
+    {n:"Berbuah",day:72,d:"Buah terbungkus kelopak hijau seperti lampion.",t:["Siram teratur","Jangan petik sebelum kelopak mengering"]},
+    {n:"Panen",day:88,d:"Panen buah saat kelopak menguning kecokelatan. Buah matang jatuh sendiri, kumpulkan tiap 2–3 hari.",t:["Kumpulkan buah yang jatuh atau petik","Kupas kelopak sebelum dimakan","Catat berat hasil panen"],type:"harvest"},
+    {n:"Pengolahan",day:89,d:"Buah mentah hijau tidak dimakan.",t:["Cuci bersih dan makan segar","Buat selai atau jus","Keringkan sebagai camilan"],type:"process"}
+   ]},
+ { id:"kembang-kol", cat:"tanaman", icon:"🥦", iconKey:"brokoli", name:"Kembang kol", level:"Lanjut", days:100,
+   desc:"Kepala bunga putih yang butuh suhu sejuk dan perawatan teliti. Di dataran rendah pilih varietas tahan panas.",
+   unit:"gram",
+   tools:["Tray semai atau pot kecil","Polybag atau pot besar (≥ 30 L) atau bedengan","Sekop tangan","Gembor atau selang air","Ajir bambu dan tali rafia","Gunting pangkas","Timbangan dapur digital","Hand sprayer untuk pupuk cair dan pengendali hama"],
+   bahan:[{n:"Benih kembang kol",u:"butir",q:50,h:400},{n:"Tanah gembur",u:"kg",q:20,h:1000},{n:"Kompos atau pupuk kandang matang",u:"kg",q:10,h:2000},{n:"Sekam padi",u:"kg",q:3,h:3000},{n:"Pupuk kaya kalium (misalnya abu sekam atau pupuk kalium)",u:"kg",q:1,h:25000},{n:"Pupuk cair organik (POC)",u:"ml",q:250,h:100},{n:"Pestisida nabati (opsional)",u:"ml",q:250,h:80},{n:"Mulsa (jerami atau kompos)",u:"kg",q:1,h:5000},{n:"Air bersih",u:"secukupnya",q:1,h:0}],
+   stages:[
+    {n:"Semai benih",day:0,d:"Semai di tray dengan media halus. Benih tumbuh dalam 3–6 hari.",t:["Tabur 1–2 benih per lubang","Letakkan di tempat teduh terang","Jaga media tetap lembap"]},
+    {n:"Perawatan bibit",day:10,d:"Bibit mulai berdaun. Kenalkan cahaya pagi secara bertahap.",t:["Siram halus pagi hari","Siapkan media tanam: tanah + kompos + sekam"]},
+    {n:"Pindah tanam",day:25,d:"Bibit 4–5 daun. Tanam dengan jarak 50 cm. Naungi bila cuaca panas.",t:["Pindahkan bibit sore hari","Siram setelah tanam","Pasang mulsa di sekitar pangkal"]},
+    {n:"Pertumbuhan daun",day:40,d:"Daun melebar dan tanaman menguat. Butuh air dan pupuk teratur.",t:["Beri kompos atau POC tiap 10 hari","Naikkan tanah ke pangkal batang","Cek ulat daun dan kutu daun"]},
+    {n:"Pembentukan kepala",day:62,d:"Kepala putih mulai terlihat. Ikat atau lipat daun luar menutup kepala agar tetap putih bersih.",t:["Ikat atau lipat daun luar menutup kepala","Beri pupuk kaya kalium","Pantau ulat yang bersembunyi di kepala"]},
+    {n:"Siap panen",day:82,d:"Panen saat kepala sudah padat dan sebelum membuka atau berbunga.",t:["Potong dengan pisau tajam di pagi hari","Buang daun luar yang rusak","Timbang dan catat hasil panen"],type:"harvest"},
+    {n:"Pengolahan",day:83,d:"Sayur kepala tahan lebih lama jika disimpan benar.",t:["Olah jadi tumis, kukus, atau sup","Blansir 2 menit lalu beku untuk stok","Simpan di kulkas (1 minggu)"],type:"process"}
+   ]},
+ { id:"cabai-hijau-besar", cat:"tanaman", icon:"🌶️", iconKey:"cabai", name:"Cabai hijau besar", level:"Menengah", days:140,
+   desc:"Cabai besar yang dipanen saat hijau tua. Panen lebih cepat dibanding cabai merah dan bisa dipanen berulang.",
+   unit:"gram",
+   tools:["Tray semai atau pot kecil","Polybag atau pot besar (≥ 30 L) atau bedengan","Sekop tangan","Gembor atau selang air","Ajir bambu dan tali rafia","Gunting pangkas","Timbangan dapur digital","Hand sprayer untuk pupuk cair dan pengendali hama","Alat jemur atau oven, dan blender untuk pengolahan"],
+   bahan:[{n:"Benih cabai hijau besar",u:"g",q:10,h:2500},{n:"Tanah gembur",u:"kg",q:20,h:1000},{n:"Kompos atau pupuk kandang matang",u:"kg",q:10,h:2000},{n:"Sekam padi",u:"kg",q:3,h:3000},{n:"Pupuk kaya kalium (misalnya abu sekam atau pupuk kalium)",u:"kg",q:1,h:25000},{n:"Pupuk cair organik (POC)",u:"ml",q:250,h:100},{n:"Pestisida nabati (opsional)",u:"ml",q:250,h:80},{n:"Ajir bambu",u:"batang",q:10,h:1500},{n:"Tali rafia",u:"gulung",q:1,h:5000},{n:"Air bersih",u:"secukupnya",q:1,h:0}],
+   stages:[
+    {n:"Semai benih",day:0,d:"Semai di tray atau pot kecil dengan media halus dan kompos. Benih tumbuh dalam 7–14 hari.",t:["Rendam benih 6 jam dalam air hangat","Tabur 1–2 benih per lubang","Letakkan di tempat teduh terang dan jaga tetap lembap"]},
+    {n:"Perawatan bibit",day:12,d:"Bibit tumbuh 2–4 daun sejati. Jaga kelembapan dan beri cahaya pagi.",t:["Siram pagi hari","Pindahkan ke cahaya matahari bertahap"]},
+    {n:"Pindah tanam",day:30,d:"Bibit 4–6 daun. Tanam di pot ≥ 30 L atau bedengan jarak 60 cm.",t:["Siapkan media: tanah + kompos + sekam","Pindahkan bibit sore hari","Pasang ajir dan siram setelah tanam"]},
+    {n:"Pertumbuhan vegetatif",day:45,d:"Fokus pada daun dan batang.",t:["Beri kompos atau POC tiap 10 hari","Pangkas tunas air di bawah cabang pertama","Cek kutu daun, thrips, dan tungau"]},
+    {n:"Berbunga dan berbuah",day:75,d:"Kurangi nitrogen, tambah kalium (abu sekam, kulit pisang).",t:["Beri pupuk kaya kalium","Siram teratur, hindari kekeringan","Buang bunga atau buah rusak"]},
+    {n:"Mulai panen",day:90,d:"Panen buah sesuai tingkat kematangan yang diinginkan. Petik beserta tangkainya tiap 3–5 hari.",t:["Petik dengan tangkainya","Catat berat hasil panen","Beri pupuk setelah panen agar berbuah lagi"],type:"harvest"},
+    {n:"Pengolahan",day:91,d:"Awetkan atau olah segera agar tidak terbuang.",t:["Olah jadi sambal hijau, tumisan, atau cabai isi","Simpan di kulkas (1 minggu)","Simpan beku dalam wadah kedap"],type:"process"}
    ]}
 ];
 const CATS = { all:"Semua", tanaman:"Tanaman", ternak:"Ternak", energi:"Energi", air:"Air", kompos:"Kompos & Limbah", obat:"Tanaman obat", pangan:"Pangan pokok", ikan:"Perikanan", pupuk:"Pupuk & hama", benih:"Benih & bibit", olahan:"Pengolahan", hidro:"Hidroponik" };
@@ -543,7 +1076,16 @@ const VARIANTS = {
 const byId = id => CATALOG.find(c => c.id === id);
 const clone = o => JSON.parse(JSON.stringify(o));
 const rp = n => "Rp " + Math.round(Number(n) || 0).toLocaleString("id-ID");
-const normBahan = b => typeof b === "string" ? { n: b, g: "", q: 1, h: 0 } : { n: String(b?.n || ""), g: String(b?.g || ""), q: Math.max(0, Number(b?.q) || 0), h: Math.max(0, Number(b?.h) || 0) };
+/* Bahan: n = nama, q = Qty (jumlah), u = Satuan (g, kg, ml, ...), h = harga per satuan. Total = q x h.
+   Data lama (g = "50 g", q = jumlah beli, h = harga per kemasan) diubah otomatis dengan total tetap sama. */
+const normBahan = b => {
+  if (typeof b === "string") return { n: b, u: "", q: 1, h: 0 };
+  const n = String(b?.n || ""), q = Math.max(0, Number(b?.q) || 0), h = Math.max(0, Number(b?.h) || 0);
+  if (typeof b?.u === "string") return { n, u: b.u, q, h };
+  const g = String(b?.g || "").trim(), m = g.match(/^(\d+(?:[.,]\d+)?)\s*(.*)$/), a = m ? parseFloat(m[1].replace(",", ".")) : 0;
+  if (a > 0) return { n, u: m[2], q: Math.round(q * a * 100) / 100, h: Math.round(h / a * 100) / 100 };
+  return { n, u: g.replace(/^per\s+/i, ""), q, h };
+};
 const bahanTotal = l => l.reduce((a, b) => a + b.q * b.h, 0);
 let catMedia = {}; try { catMedia = JSON.parse(localStorage.getItem("essentera-media")) || {}; } catch(e) { catMedia = {}; }   /* media tanam yang dipilih per panduan */
 const CATALOG_BASE = clone(CATALOG);   /* salinan bawaan, untuk "Kembalikan bawaan" */
@@ -561,6 +1103,7 @@ function applyEdits(){
     const base = CATALOG_BASE.find(b => b.id === c.id), e = guideEdits[c.id] || {};
     ["tools", "bahan", "stages"].forEach(k => { c[k] = clone(Array.isArray(e[k]) ? e[k] : (base[k] || [])); });
     c.bahan = c.bahan.map(normBahan);
+    c.name = (typeof e.name === "string" && e.name.trim()) ? e.name.trim() : (base.name || c.name);   /* nama hasil edit (ketuk 2x judul) */
     c.cat = validCat(e.cat) ? e.cat : (validCat(base.cat) ? base.cat : "");
     /* varian media tanam: bawaan dari VARIANTS, ditimpa hasil edit pengguna (e.media) */
     const vb = VARIANTS[c.id] || {}; c.variants = {};
@@ -608,6 +1151,18 @@ const ICONS = {
   ayam:'<path d="M12 3c-3.5 0-6.5 5.5-6.5 10a6.5 6.5 0 0 0 13 0C18.5 8.5 15.5 3 12 3z"/><path d="M9 14a3 3 0 0 0 3 3"/>',
   maggot:'<rect x="3" y="9" width="18" height="6" rx="3"/><path d="M9 9v6M15 9v6"/>',
   biogas:'<path d="M12 3c1 4 5 5.5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 .3 1.5 1 2.2 2 2.5C11 9 11.5 6 12 3z"/>',
+  terong:'<path d="M16 8c1 4-2 10-7.5 11.5C5.5 20 4 17.5 5 14.5 6.5 10.5 11 8 16 8z"/><path d="M16 8c1-1.5 2.5-2.5 4-2.5M14.5 5.5l3 2.5"/>',
+  lobak:'<path d="M12 8c3.5 0 5 2.5 5 5 0 3-3 7-5 8-2-1-5-5-5-8 0-2.5 1.5-5 5-5z"/><path d="M12 8V3M12 8L8.5 4.5M12 8l3.5-3.5"/>',
+  polong:'<path d="M4 20c-1-9 5-16 16-16 0 10-6 17-16 16z"/><path d="M4 20L14 10"/>',
+  daunbawang:'<path d="M8 21V10M12 21V4M16 21V10"/><path d="M6.5 21h11"/>',
+  brokoli:'<circle cx="8" cy="9" r="3.2"/><circle cx="16" cy="9" r="3.2"/><circle cx="12" cy="6" r="3.2"/><path d="M12 11v10M12 15l-3-2M12 16l3-2"/>',
+  timun:'<path d="M5 17c-2-2-1-5 2-8s7-5 10-4c2 2 1 5-2 8s-7 5-10 4z"/><path d="M9 11l1 1M12 8l1 1M12 13l1 1"/>',
+  kubis:'<circle cx="12" cy="13" r="8"/><path d="M12 5c-3 3-3 11 0 16M12 5c3 3 3 11 0 16M5 11c4 1 10 1 14 0"/>',
+  labu:'<path d="M12 6c-5 0-9 3-9 7s4 7 9 7 9-3 9-7-4-7-9-7z"/><path d="M12 6c-2 3-2 11 0 14M12 6c2 3 2 11 0 14M12 6V3c1 0 2 0 3 1"/>',
+  jagung:'<path d="M12 3c3 2 4 6 4 10 0 4-2 7-4 8-2-1-4-4-4-8 0-4 1-8 4-10z"/><path d="M10 9h4M9.5 13h5M10 17h4M12 3v18"/>',
+  kelor:'<path d="M12 21V4"/><path d="M12 7l-4-2M12 7l4-2M12 11l-5-2M12 11l5-2M12 15l-4-2M12 15l4-2"/>',
+  paprika:'<path d="M8 8c-3 2-3 9 0 11 1.5 1 6.5 1 8 0 3-2 3-9 0-11-2-1-3 .5-4 .5S10 7 8 8z"/><path d="M12 8V4c1 0 2 .5 3 1.5"/>',
+  ciplukan:'<path d="M12 3c4 2 6 5 6 9s-2 8-6 9c-4-1-6-5-6-9s2-7 6-9z"/><circle cx="12" cy="13" r="3"/>',
   custom:'<path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 9v6M9 12h6"/>'
 };
 const icon = id => { const k = ICONS[id] ? id : (byId(id)?.iconKey || "custom"); return `<svg class="ic" viewBox="0 0 24 24" aria-hidden="true">${ICONS[k] || ICONS.custom}</svg>`; };
@@ -849,14 +1404,14 @@ function renderCatalog(){
     <div class="searchbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><input id="catSearch" type="search" enterkeyhint="search" autocomplete="off" placeholder="Cari panduan, bahan, atau alat" aria-label="Cari panduan" value="${esc(catQuery)}"><button class="sclear hidden" id="catClear" aria-label="Hapus pencarian" title="Hapus pencarian">${IC_X}</button></div>
     </div>
     ${list.map(c0 => { const c = withMedia(c0); return `<div class="cat" data-id="${c.id}" data-q="${esc([c.name, allCats().find(k => k.id === c.cat)?.name || "tanpa kategori", c.level, ...(c.medias || []).map(m => MEDIA[m]), ...c.tools, ...c.bahan.map(b => b.n)].join(" ").toLowerCase())}"><h3><button class="ctitle" aria-expanded="false"><span class="ico sm">${icon(c.id)}</span><span>${esc(c.name)}</span></button><button class="btn small alt icon dupbtn" data-dup aria-label="Duplikat panduan" title="Duplikat panduan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg></button><button class="chevbtn" aria-label="Buka atau tutup panduan" title="Buka atau tutup"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button></h3>
-      ${c.medias && c.medias.length ? `<div class="media" role="group" aria-label="Media tanam"><span class="mlabel">Media tanam</span>${c.medias.map(m => `<button data-media="${m}" class="${c.mediaKey === m ? "on" : ""}" aria-pressed="${c.mediaKey === m}">${MEDIA[m]}</button>`).join("")}</div>` : ""}
+      ${c.medias && c.medias.length ? `<div class="media" role="group" aria-label="Media tanam">${c.medias.map(m => `<button data-media="${m}" class="${c.mediaKey === m ? "on" : ""}" aria-pressed="${c.mediaKey === m}">${MEDIA[m]}</button>`).join("")}</div>` : ""}
       <div class="meta"><button class="catchip" data-tag aria-label="Ubah kategori" title="Ketuk untuk ubah kategori">${esc(allCats().find(k => k.id === c.cat)?.name || "Tanpa kategori")}</button><span>${c.level}</span><span>±${Math.max(1, Math.round(c.days / 30))} bulan</span><span>${c.stages.length} tahap</span>${c.custom ? "<span>Salinan</span>" : ""}</div>
       <div class="cat-actions"><button class="btn small icon" data-start="${c.id}" aria-label="Mulai proyek ini" title="Mulai proyek ini"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg></button>
         ${`<button class="btn small alt icon" data-panel-btn="gbahan" data-label="bahan" aria-expanded="false" aria-label="Bahan" title="Bahan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6l-1 3h-4z"/><path d="M10 6C6 8 5 12 5 15.5 5 19 7.5 21 12 21s7-2 7-5.5C19 12 18 8 14 6"/><path d="M12 11v6M9.5 13.5h5"/></svg></button>`}
         ${`<button class="btn small alt icon" data-panel-btn="gtools" data-label="alat" aria-expanded="false" aria-label="Alat" title="Alat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></button>`}
         <button class="btn small alt icon" data-steps-btn aria-expanded="false" aria-label="Step by Step" title="Step by Step"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/></svg></button><button class="btn small alt icon" data-tag aria-label="Pindah kategori" title="Pindah kategori"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><path d="M7 7h.01"/></svg></button>${c.custom ? `<button class="btn small alt icon" data-delguide aria-label="Hapus panduan salinan" title="Hapus panduan salinan" style="margin-left:auto;color:var(--danger)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg></button>` : ""}</div>
-      <div class="gtools gbahan hidden"><div class="phead"><h4>Bahan yang dibutuhkan</h4><button class="pedit" data-edit="bahan" aria-label="Edit bahan" title="Edit bahan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></button></div>${c.bahan.length ? `<div class="btable-wrap"><table class="btable"><thead><tr><th>Bahan</th><th>Gramasi</th><th class="num">Qty</th><th class="num">Harga</th><th class="num">Total</th></tr></thead>
-        <tbody>${c.bahan.map(b => `<tr><td>${esc(b.n)}</td><td>${esc(b.g) || "–"}</td><td class="num">${b.q}</td><td class="num">${rp(b.h)}</td><td class="num">${rp(b.q * b.h)}</td></tr>`).join("")}</tbody>
+      <div class="gtools gbahan hidden"><div class="phead"><h4>Bahan yang dibutuhkan</h4><button class="pedit" data-edit="bahan" aria-label="Edit bahan" title="Edit bahan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></button></div>${c.bahan.length ? `<div class="btable-wrap"><table class="btable"><thead><tr><th>Bahan</th><th class="num">Qty</th><th>Satuan</th><th class="num">Harga</th><th class="num">Total</th></tr></thead>
+        <tbody>${c.bahan.map(b => `<tr><td>${esc(b.n)}</td><td class="num">${b.q}</td><td>${esc(b.u) || "–"}</td><td class="num">${rp(b.h)}</td><td class="num">${rp(b.q * b.h)}</td></tr>`).join("")}</tbody>
         <tfoot><tr><td colspan="4">Total harga bahan</td><td class="num">${rp(bahanTotal(c.bahan))}</td></tr></tfoot></table></div>` : `<p class="empty">Belum ada bahan. Ketuk pensil untuk menambah.</p>`}</div>
       <div class="gtools gtoolsbox hidden"><div class="phead"><h4>Alat yang dibutuhkan</h4><button class="pedit" data-edit="tools" aria-label="Edit alat" title="Edit alat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></button></div>${c.tools.length ? `<ul>${c.tools.map(t => `<li>${esc(t)}</li>`).join("")}</ul>` : `<p class="empty">Belum ada alat. Ketuk pensil untuk menambah.</p>`}</div>
       <div class="gsteps hidden"><div class="phead"><h4>Tahapan</h4><button class="pedit" data-edit="steps" aria-label="Edit tahapan" title="Edit tahapan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></button></div>${c.stages.length ? "" : `<p class="empty">Belum ada tahap. Ketuk pensil untuk menambah.</p>`}${c.stages.map((s, i) => `<div class="gstep"><div class="gnum${s.type === "harvest" ? " h" : ""}">${i + 1}</div>
@@ -905,7 +1460,18 @@ function renderCatalog(){
     if (name === "all") return setPanels(card, open.length === PNAMES.length ? [] : PNAMES);
     setPanels(card, open.length === 1 && open[0] === name ? [] : [name]);
   }
-  view.querySelectorAll(".ctitle, .chevbtn").forEach(b => b.onclick = () => showPanel(b.closest(".cat"), "all"));
+  let nameTap = { id: "", t: 0, prev: null };   /* ketuk 2x judul panduan = ubah nama langsung */
+  view.querySelectorAll(".ctitle, .chevbtn").forEach(b => b.onclick = () => {
+    const card = b.closest(".cat"), id = card.dataset.id;
+    if (b.classList.contains("ctitle")) {
+      if (nameTap.id === id && Date.now() - nameTap.t < 400) {
+        const prev = nameTap.prev; nameTap = { id: "", t: 0, prev: null };
+        setPanels(card, prev || []); editGuideName(card); return;   /* ketukan pertama sempat membuka/menutup panel: dikembalikan */
+      }
+      nameTap = { id, t: Date.now(), prev: catOpen[id] || [] };
+    }
+    showPanel(card, "all");
+  });
   const qIn = view.querySelector("#catSearch"), qClr = view.querySelector("#catClear"), qNone = view.querySelector("#catNone");
   const applyQ = () => {
     const toks = catQuery.trim().toLowerCase().split(/\s+/).filter(Boolean); let n = 0;
@@ -932,6 +1498,24 @@ function renderCatalog(){
 
 /* ---------------- EDIT PANDUAN (alat, bahan, tahapan): langsung di tempat, tanpa pop up ---------------- */
 const lines = v => String(v || "").split("\n").map(x => x.trim()).filter(Boolean);
+function editGuideName(card){
+  const id = card.dataset.id, c = byId(id), h = card.querySelector("h3"), ct = h && h.querySelector(".ctitle");
+  if (!c || !ct || h.querySelector(".gnameedit")) return;
+  const inp = document.createElement("input");
+  inp.className = "gnameedit"; inp.value = c.name; inp.maxLength = 60; inp.autocomplete = "off"; inp.setAttribute("aria-label", "Nama panduan");
+  let done = false;
+  const nm = ct.lastElementChild;   /* hanya teks nama yang diganti; ikon tetap di tempatnya */
+  const cancel = () => { if (done) return; done = true; inp.remove(); nm.style.display = ""; ct.style.flex = ""; };
+  const commit = () => {
+    if (done) return;
+    const name = inp.value.trim().replace(/\s+/g, " ");
+    if (!name || name === c.name) return cancel();
+    done = true; saveGuide(id, { name });
+  };
+  inp.onkeydown = e => { if (e.key === "Enter") { e.preventDefault(); commit(); } else if (e.key === "Escape") { e.preventDefault(); cancel(); } };
+  inp.onblur = commit;
+  nm.style.display = "none"; ct.style.flex = "none"; ct.after(inp); inp.focus(); inp.select();
+}
 function saveGuide(id, patch, mk){
   if (mk && mk !== "tanah") {   /* edit untuk media non-tanah disimpan di bawah media.<nama media> */
     const old = guideEdits[id] || {}, om = old.media || {};
@@ -985,21 +1569,21 @@ function editTools(c){
 }
 function editBahan(c){
   let work = clone(c.bahan);
-  const s = inlineShell(c.id, "bahan", "Gramasi = ukuran per satuan, harga = harga per satuan. Total dihitung otomatis. Harga awal hanya perkiraan.",
-    `<div class="btable-wrap"><table class="btable edit"><colgroup><col style="width:30%"><col style="width:17%"><col style="width:10%"><col style="width:19%"><col style="width:17%"><col style="width:7%"></colgroup>
-      <thead><tr><th>Bahan</th><th>Gramasi</th><th class="num">Qty</th><th class="num">Harga</th><th class="num">Total</th><th></th></tr></thead>
+  const s = inlineShell(c.id, "bahan", "Qty = jumlah, satuan = g, kg, ml, dan sebagainya. Harga = harga per satuan. Total = Qty x Harga, dihitung otomatis. Harga awal hanya perkiraan.",
+    `<div class="btable-wrap"><table class="btable edit"><colgroup><col style="width:30%"><col style="width:12%"><col style="width:15%"><col style="width:19%"><col style="width:17%"><col style="width:7%"></colgroup>
+      <thead><tr><th>Bahan</th><th class="num">Qty</th><th>Satuan</th><th class="num">Harga</th><th class="num">Total</th><th></th></tr></thead>
       <tbody id="edBahan"></tbody>
       <tfoot><tr><td colspan="4">Total harga bahan</td><td class="num" id="edGrand"></td><td></td></tr></tfoot></table></div>
     <button class="btn alt small" id="edAdd" style="margin-top:.6rem">+ Tambah bahan</button>`);
   const box = s.querySelector("#edBahan");
   const collect = () => { work = [...box.querySelectorAll("tr")].map(tr => normBahan({
-    n: tr.querySelector(".b-n").value.trim(), g: tr.querySelector(".b-g").value.trim(), q: tr.querySelector(".b-q").value, h: tr.querySelector(".b-h").value })); };
+    n: tr.querySelector(".b-n").value.trim(), u: tr.querySelector(".b-u").value.trim(), q: tr.querySelector(".b-q").value, h: tr.querySelector(".b-h").value })); };
   const totals = () => { collect(); box.querySelectorAll("tr").forEach((tr, i) => { tr.querySelector(".rt").textContent = rp(work[i].q * work[i].h); });
     s.querySelector("#edGrand").textContent = rp(bahanTotal(work)); };
   const draw = () => {
     box.innerHTML = work.map(b => `<tr><td><input class="b-n" value="${esc(b.n)}" placeholder="Nama bahan"></td>
-      <td><input class="b-g" value="${esc(b.g)}" placeholder="50 g"></td>
       <td><input class="b-q" type="number" min="0" step="any" inputmode="decimal" value="${b.q}"></td>
+      <td><input class="b-u" value="${esc(b.u)}" placeholder="g"></td>
       <td><input class="b-h" type="number" min="0" step="any" inputmode="numeric" value="${b.h}"></td>
       <td class="num rt">${rp(b.q * b.h)}</td>
       <td><button class="pedit x" data-rm aria-label="Hapus bahan" title="Hapus bahan">${IC_X}</button></td></tr>`).join("");
@@ -1008,7 +1592,7 @@ function editBahan(c){
   };
   box.addEventListener("input", totals);
   draw();
-  s.querySelector("#edAdd").onclick = () => { collect(); work.push({ n: "", g: "", q: 1, h: 0 }); draw(); box.lastElementChild?.querySelector(".b-n").focus(); };
+  s.querySelector("#edAdd").onclick = () => { collect(); work.push({ n: "", u: "", q: 1, h: 0 }); draw(); box.lastElementChild?.querySelector(".b-n").focus(); };
   s.querySelector("#edOk").onclick = () => { collect(); saveGuide(c.id, { bahan: work.filter(b => b.n) }, c.mediaKey); };
   s.querySelector("#edReset")?.addEventListener("click", () => { if (confirm("Kembalikan bahan ke daftar bawaan?")) saveGuide(c.id, { bahan: null }, c.mediaKey); });
 }
