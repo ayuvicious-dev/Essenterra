@@ -207,6 +207,8 @@ nav.tabs button.fab span{position:absolute;width:1px;height:1px;overflow:hidden;
 .grip svg{width:18px;height:18px}
 .grip:active{background:var(--mist)}
 .inrow input{flex:1;min-width:0;padding:.45rem .6rem;font-size:.88rem;border-radius:9px}
+.btable.pred td:first-child{color:var(--ink2)}
+.predsum{font-size:.85rem;margin-top:.7rem;color:var(--ink2)}.predsum b{color:var(--moss)}
 .btable.edit{min-width:560px;table-layout:fixed}
 .btable.edit td{vertical-align:middle;padding:.3rem .25rem}
 .btable.edit input{width:100%;min-width:0;padding:.4rem .45rem;font-size:.8rem;border-radius:8px}
@@ -312,6 +314,13 @@ nav.tabs button.fab span{position:absolute;width:1px;height:1px;overflow:hidden;
 .cat[data-id]{scroll-margin-top:150px}
 .pinrow .proj{border-left:4px solid var(--sun)}
 .pinrow .btn{flex:none;margin-left:.5rem}
+.pinpanel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:.8rem 1rem 1rem;margin:-.3rem 0 .8rem}
+.pinpanel .media{margin:0 0 .75rem}
+.pinpanel .cat-actions{margin-top:0;gap:.5rem;padding:.1rem 0 .15rem}
+.pinpanel .cat-actions .btn.icon:first-child:not([aria-expanded="true"]){color:var(--ink2)}
+.pinpanel .cat-actions .btn.icon:first-child{margin-right:0}
+.pinpanel .cat-actions .btn.icon:first-child::before{display:none}
+.pinpanel .gtools,.pinpanel .gsteps{margin-top:.9rem;padding-top:.9rem}
 .pinoff{flex:none;width:38px;height:38px;display:grid;place-items:center;color:var(--sun);margin-left:.2rem;border-radius:50%}
 .pinoff svg{width:20px;height:20px;fill:currentColor}.pinoff:active{background:var(--mist)}
 </style>
@@ -1120,6 +1129,38 @@ const normBahan = b => {
   return { n, u: g.replace(/^per\s+/i, ""), q, h };
 };
 const bahanTotal = l => l.reduce((a, b) => a + b.q * b.h, 0);
+/* Prediksi hasil: g = qty panen (gram), p = estimasi harga pasar (Rp per kg), n = catatan dasar perkiraan.
+   Nilai bawaan hanya perkiraan kasar per siklus untuk skala bahan di daftar; pengguna bisa mengubahnya lewat panel Prediksi. */
+const PRED_BASE = {
+  "kangkung":[1500,10000],"bayam-hijau":[1200,10000],"sawi-keriting":[1500,10000],"pakchoy":[1500,15000],"pakchoy-putih":[1500,15000],
+  "sawi-pagoda":[1200,20000],"selada-air":[1000,15000],"selada-keriting":[1200,25000],"selasih":[400,30000],"parsley":[400,60000],
+  "seledri":[1000,30000],"daun-bawang":[1500,30000],"lobak":[3000,10000],"sawi-putih":[3000,10000],"kubis":[3000,8000],
+  "brokoli":[1500,30000],"kembang-kol":[1500,25000],"kelor":[1000,20000],"kecipir":[2000,15000],"buncis":[3000,15000],
+  "kacang-panjang":[4000,15000],"kacang-panjang-merah":[3500,18000],"kacang-roay":[2500,15000],"timun-baby":[4000,15000],
+  "terong-ungu":[5000,12000],"terong-lalap":[4000,12000],"terong-pokak":[3000,15000],"terong-lalap-ungu":[4000,12000],
+  "cabai":[2000,50000],"cabai-merah-besar":[3000,40000],"cabai-gendot":[3000,35000],"cabai-212":[2500,50000],"cabai-hijau-besar":[3000,30000],
+  "tomat":[5000,12000],"tomat-rampai":[4000,15000],"tomat-cherry":[3000,30000],"paprika-merah":[3000,50000],
+  "labu-kuning":[6000,8000],"jagung-manis":[3000,8000],"jagung-ketan-ungu":[3000,10000],"ciplukan":[1000,40000],
+  "lele":[16000,25000],"ayam":[6750,55000],"maggot":[3000,15000]
+};
+const PRED_REPEAT = ["cabai","cabai-merah-besar","cabai-gendot","cabai-212","cabai-hijau-besar","tomat","tomat-rampai","tomat-cherry","paprika-merah","terong-ungu","terong-lalap","terong-pokak","terong-lalap-ungu","timun-baby","buncis","kacang-panjang","kacang-panjang-merah","kacang-roay","kecipir","ciplukan","kelor","seledri","selasih","parsley","daun-bawang"];
+const PRED_NOTE = { lele:"Total panen, dengan perkiraan tingkat hidup ±80%.", ayam:"Telur per bulan sejak mulai bertelur (±45 g per butir).", maggot:"Maggot segar per siklus." };
+const predBase = id => { const a = PRED_BASE[id]; return a ? { g: a[0], p: a[1], n: PRED_NOTE[id] || (PRED_REPEAT.includes(id) ? "Total panen berulang selama satu siklus, skala bahan di daftar." : "Per siklus, skala bahan di daftar.") } : null; };
+const normPred = x => ({ g: Math.max(0, Number(x?.g) || 0), p: Math.max(0, Number(x?.p) || 0), n: String(x?.n || "").slice(0, 200) });
+const fmtG = g => { const t = Math.round(g).toLocaleString("id-ID") + " g"; return g >= 1000 ? t + " (" + (Math.round(g / 10) / 100).toLocaleString("id-ID") + " kg)" : t; };
+const predSum = (pr, bahan) => { const nilai = pr.g / 1000 * pr.p, biaya = bahanTotal(bahan), sel = nilai - biaya; return { nilai, biaya, sel, selTxt: (sel < 0 ? "–" : "") + rp(Math.abs(sel)) }; };
+function predView(c){
+  const pr = c.pred;
+  if (!(pr.g > 0 || pr.p > 0)) return `<p class="empty">Belum ada prediksi. Ketuk pensil untuk mengisi.</p>`;
+  const x = predSum(pr, c.bahan);
+  return `<div class="btable-wrap"><table class="btable pred"><tbody>
+    <tr><td>Prediksi qty panen</td><td class="num">${fmtG(pr.g)}</td></tr>
+    <tr><td>Estimasi harga pasar</td><td class="num">${rp(pr.p)} / kg</td></tr>
+    <tr><td>Estimasi nilai panen</td><td class="num"><b>${rp(x.nilai)}</b></td></tr>
+    <tr><td>Biaya bahan</td><td class="num">${rp(x.biaya)}</td></tr></tbody>
+    <tfoot><tr><td>Estimasi selisih</td><td class="num" style="color:${x.sel < 0 ? "var(--danger)" : "var(--moss)"}">${x.selTxt}</td></tr></tfoot></table></div>
+    ${pr.n ? `<p class="muted hint" style="margin-top:.5rem">${esc(pr.n)}</p>` : ""}<p class="muted hint">Perkiraan kasar, bukan jaminan hasil. Harga pasar berubah-ubah.</p>`;
+}
 let catMedia = {}; try { catMedia = JSON.parse(localStorage.getItem("essentera-media")) || {}; } catch(e) { catMedia = {}; }   /* media tanam yang dipilih per panduan */
 const CATALOG_BASE = clone(CATALOG);   /* salinan bawaan, untuk "Kembalikan bawaan" */
 let guideEdits = {}, catOpen = {}, editing = null, customCats = [], catRename = {}, catHidden = [], catOrder = [];   /* kategori: buatan pengguna [{id,name}], nama bawaan yang diganti, bawaan yang dihapus */
@@ -1136,6 +1177,7 @@ function applyEdits(){
     const base = CATALOG_BASE.find(b => b.id === c.id), e = guideEdits[c.id] || {};
     ["tools", "bahan", "stages"].forEach(k => { c[k] = clone(Array.isArray(e[k]) ? e[k] : (base[k] || [])); });
     c.bahan = c.bahan.map(normBahan);
+    c.pred = normPred(e.pred && typeof e.pred === "object" ? e.pred : predBase(c.id));
     c.name = (typeof e.name === "string" && e.name.trim()) ? e.name.trim() : (base.name || c.name);   /* nama hasil edit (ketuk 2x judul) */
     c.cat = validCat(e.cat) ? e.cat : (validCat(base.cat) ? base.cat : "");
     /* varian media tanam: bawaan dari VARIANTS, ditimpa hasil edit pengguna (e.media) */
@@ -1143,7 +1185,8 @@ function applyEdits(){
     Object.keys(MEDIA).filter(m => vb[m]).forEach(m => {
       const bv = vb[m], ev = (e.media && e.media[m]) || {};
       c.variants[m] = { days: Number(ev.days) || bv.days, tools: clone(Array.isArray(ev.tools) ? ev.tools : bv.tools),
-        bahan: clone(Array.isArray(ev.bahan) ? ev.bahan : bv.bahan).map(normBahan), stages: clone(Array.isArray(ev.stages) ? ev.stages : bv.stages) };
+        bahan: clone(Array.isArray(ev.bahan) ? ev.bahan : bv.bahan).map(normBahan), stages: clone(Array.isArray(ev.stages) ? ev.stages : bv.stages),
+        pred: ev.pred && typeof ev.pred === "object" ? normPred(ev.pred) : null };
     });
     c.medias = Object.keys(c.variants).length ? ["tanah", ...Object.keys(c.variants)] : [];
   });
@@ -1153,10 +1196,10 @@ function applyEdits(){
       const g = { id, custom: true, root: e.root || "", cat: validCat(e.cat) ? e.cat : (validCat(CATALOG_BASE.find(b => b.id === e.root)?.cat) ? CATALOG_BASE.find(b => b.id === e.root).cat : ""), iconKey: e.iconKey || "custom", icon: e.icon || "🌱",
         name: e.name || "Tanpa nama", level: e.level || "", days: Number(e.days) || 0, desc: e.desc || "", unit: e.unit || "kg",
         tools: clone(Array.isArray(e.tools) ? e.tools : []), bahan: clone(Array.isArray(e.bahan) ? e.bahan : []).map(normBahan),
-        stages: clone(Array.isArray(e.stages) ? e.stages : []), variants: {} };
+        stages: clone(Array.isArray(e.stages) ? e.stages : []), pred: normPred(e.pred && typeof e.pred === "object" ? e.pred : predBase(e.root)), variants: {} };
       Object.keys(MEDIA).filter(m => m !== "tanah" && e.media && e.media[m] && Array.isArray(e.media[m].stages)).forEach(m => {
         const ev = e.media[m];
-        g.variants[m] = { days: Number(ev.days) || 0, tools: clone(Array.isArray(ev.tools) ? ev.tools : []), bahan: clone(Array.isArray(ev.bahan) ? ev.bahan : []).map(normBahan), stages: clone(ev.stages) };
+        g.variants[m] = { days: Number(ev.days) || 0, tools: clone(Array.isArray(ev.tools) ? ev.tools : []), bahan: clone(Array.isArray(ev.bahan) ? ev.bahan : []).map(normBahan), stages: clone(ev.stages), pred: ev.pred && typeof ev.pred === "object" ? normPred(ev.pred) : null };
       });
       g.medias = Object.keys(g.variants).length ? ["tanah", ...Object.keys(g.variants)] : [];
       let at = -1; CATALOG.forEach((x, i) => { if (g.root && (x.id === g.root || x.root === g.root)) at = i; });
@@ -1167,7 +1210,7 @@ function applyEdits(){
 
 /* Media tanam yang sedang dipilih untuk satu panduan, dan salinan panduan dengan isi (hari, alat, bahan, tahap) sesuai media itu. */
 const curMedia = id => { const c = byId(id), m = catMedia[id]; return c && c.medias && c.medias.includes(m) ? m : "tanah"; };
-const withMedia = (c, mk = curMedia(c.id)) => { const v = mk !== "tanah" && c.variants && c.variants[mk]; return v ? { ...c, days: v.days, tools: v.tools, bahan: v.bahan, stages: v.stages, mediaKey: mk } : { ...c, mediaKey: "tanah" }; };
+const withMedia = (c, mk = curMedia(c.id)) => { const v = mk !== "tanah" && c.variants && c.variants[mk]; return v ? { ...c, days: v.days, tools: v.tools, bahan: v.bahan, stages: v.stages, pred: v.pred || c.pred, mediaKey: mk } : { ...c, mediaKey: "tanah" }; };
 function rerenderKeep(){   /* render ulang tanpa kehilangan posisi gulir halaman dan deretan kategori */
   const y = window.scrollY, sl = view.querySelector(".filters")?.scrollLeft || 0;
   render();
@@ -1272,7 +1315,7 @@ onAuthStateChanged(auth, u => {
   }, () => {}));
   unsubs.push(onSnapshot(collection(db, "users", u.uid, "guides"), snap => {
     guideEdits = {}; snap.docs.forEach(d => { guideEdits[d.id] = d.data(); }); applyEdits();
-    if (tab === "catalog" && !openId && !editing) render();
+    if ((tab === "catalog" || tab === "home") && !openId && !editing) render();
   }, () => {}));
   unsubs.push(onSnapshot(doc(db, "users", u.uid, "meta", "categories"), snap => {
     const d = snap.exists() ? snap.data() : {};
@@ -1337,7 +1380,7 @@ function renderHome(){
       <p>Tiap panen kecil adalah satu langkah menuju kemandirian.</p>
       <div class="stats"><div><b>${active.length}</b><span>sedang berjalan</span></div>
       <div><b>${finished.length}</b><span>selesai</span></div><div><b>${harvestTotal}</b><span>catatan panen</span></div></div></div>
-    ${(() => { const pc = pins.map(byId).filter(Boolean); return pc.length ? `<div class="section-title" style="margin-top:0"><h3>Rencana tanam berikutnya</h3><span class="muted">${pc.length} dipin</span></div>${pc.map(pinCard).join("")}` : ""; })()}
+    ${(() => { const pc = pins.map(byId).filter(Boolean); return pc.length ? `<div class="section-title" style="margin-top:0"><h3>Rencana tanam berikutnya</h3></div>${pc.map(pinCard).join("")}` : ""; })()}
     <div class="section-title"><h3>Proyek saya</h3><button class="btn small" id="btnNew">+ Mulai baru</button></div>
     ${projects.length ? projects.map(projCard).join("") :
       `<div class="empty">Belum ada proyek. Pilih satu panduan dan mulai tanam atau ternak pertama Anda.<br><br><button class="btn" id="btnNew2">Lihat panduan</button></div>`}`;
@@ -1346,11 +1389,21 @@ function renderHome(){
   view.querySelectorAll("[data-open]").forEach(b => b.onclick = () => { openId = b.dataset.open; watchLogs(openId); render(); window.scrollTo(0, 0); });
   view.querySelectorAll("[data-del]").forEach(b => b.onclick = () => deleteProject(projects.find(x => x.id === b.dataset.del)));
   view.querySelectorAll("[data-pinstart]").forEach(b => b.onclick = () => startSheet(b.dataset.pinstart));
-  view.querySelectorAll("[data-unpin]").forEach(b => b.onclick = () => { togglePin(b.dataset.unpin); renderHome(); });
+  /* Ketuk kartu putih = buka/tutup rincian (Bahan, Alat, Tahapan, Prediksi) yang bisa diedit langsung di Dashboard. */
   view.querySelectorAll("[data-pinopen]").forEach(b => b.onclick = () => {
-    const id = b.dataset.pinopen; catFilter = "all"; catQuery = ""; catOpen[id] = ["steps"]; tab = "catalog"; render();
-    requestAnimationFrame(() => document.querySelector(`.cat[data-id="${id}"]`)?.scrollIntoView({ block:"start" }));
+    const w = b.closest(".pinwrap"); setPinPanels(w, (pinOpen[w.dataset.id] || []).length ? [] : PIN_NAMES);
   });
+  view.querySelectorAll(".pinwrap [data-panel-btn]").forEach(b => b.onclick = () => {
+    const w = b.closest(".pinwrap"), cur = pinOpen[w.dataset.id] || [], n = b.dataset.panelBtn;
+    setPinPanels(w, cur.length === 1 && cur[0] === n ? [] : [n]);
+  });
+  view.querySelectorAll(".pinwrap [data-edit]").forEach(b => b.onclick = () => editGuide(b.closest(".pinwrap").dataset.id, b.dataset.edit));
+  view.querySelectorAll(".pinwrap [data-media]").forEach(b => b.onclick = () => {
+    catMedia[b.closest(".pinwrap").dataset.id] = b.dataset.media;
+    try { localStorage.setItem("essentera-media", JSON.stringify(catMedia)); } catch(e) {}
+    rerenderKeep();
+  });
+  view.querySelectorAll(".pinwrap").forEach(w => { const o = pinOpen[w.dataset.id]; if (o) setPinPanels(w, o); });
 }
 
 /* Hapus proyek beserta jurnal dan foto (dipakai di Dashboard dan halaman detail). */
@@ -1449,12 +1502,23 @@ function togglePin(id){
   toast(on ? "Dipin ke Dashboard." : "Pin dilepas.");
   return on;
 }
-function pinCard(c){
-  const running = projects.some(p => p.tplId === c.id && !p.completed);
-  return `<div class="projrow pinrow"><button class="proj" data-pinopen="${c.id}"><div class="ico">${icon(c.id)}</div>
+const PIN_PANELS = { gbahan:".gbahan", gtools:".gtoolsbox", steps:".gsteps", gpred:".gpred" }, PIN_NAMES = Object.keys(PIN_PANELS);
+let pinOpen = {};   /* panel yang sedang terbuka per kartu pin di Dashboard */
+function pinCard(c0){
+  const c = withMedia(c0), running = projects.some(p => p.tplId === c.id && !p.completed);
+  return `<div class="pinwrap" data-id="${c.id}"><div class="projrow pinrow"><button class="proj" data-pinopen="${c.id}" aria-expanded="false" aria-label="Buka rincian ${esc(c.name)}"><div class="ico">${icon(c.id)}</div>
     <div class="body"><div class="name">${esc(c.name)}</div><div class="sub">${esc(c.level)} · ±${Math.max(1, Math.round(c.days / 30))} bulan${running ? " · sedang berjalan" : " · belum dimulai"}</div></div></button>
     <button class="btn small" data-pinstart="${c.id}">Mulai</button>
-    <button class="pinoff" data-unpin="${c.id}" aria-label="Lepas pin ${esc(c.name)}" title="Lepas pin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 17v5M9 3h6l-1 6 3 3H7l3-3-1-6z"/></svg></button></div>`;
+</div>
+    <div class="pinpanel hidden">${c.medias && c.medias.length ? `<div class="media" role="group" aria-label="Media tanam">${c.medias.map(m => `<button data-media="${m}" class="${c.mediaKey === m ? "on" : ""}" aria-pressed="${c.mediaKey === m}">${MEDIA[m]}</button>`).join("")}</div>` : ""}
+      <div class="cat-actions"><button class="btn small alt icon" data-panel-btn="gbahan" aria-expanded="false" aria-label="Bahan" title="Bahan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6l-1 3h-4z"/><path d="M10 6C6 8 5 12 5 15.5 5 19 7.5 21 12 21s7-2 7-5.5C19 12 18 8 14 6"/><path d="M12 11v6M9.5 13.5h5"/></svg></button><button class="btn small alt icon" data-panel-btn="gtools" aria-expanded="false" aria-label="Alat" title="Alat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></button><button class="btn small alt icon" data-panel-btn="steps" aria-expanded="false" aria-label="Step by Step" title="Step by Step"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/></svg></button><button class="btn small alt icon" data-panel-btn="gpred" aria-expanded="false" aria-label="Prediksi hasil" title="Prediksi hasil"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg></button></div>${guidePanels(c)}</div></div>`;
+}
+function setPinPanels(wrap, next){
+  PIN_NAMES.forEach(n => wrap.querySelector(PIN_PANELS[n]).classList.toggle("hidden", !next.includes(n)));
+  wrap.querySelector(".pinpanel").classList.toggle("hidden", !next.length);
+  wrap.querySelector("[data-pinopen]").setAttribute("aria-expanded", next.length > 0);
+  wrap.querySelectorAll("[data-panel-btn]").forEach(x => x.setAttribute("aria-expanded", next.includes(x.dataset.panelBtn)));
+  pinOpen[wrap.dataset.id] = next.length ? next : null;
 }
 
 /* ---------------- ANALISIS (perencanaan, SWOT, desain lokasi) ----------------
@@ -1765,6 +1829,16 @@ function paintSaved(){
 }
 
 /* ---------------- PANDUAN ---------------- */
+/* Keempat panel rincian panduan (Bahan, Alat, Tahapan, Prediksi); dipakai di halaman Panduan dan di kartu pin Dashboard. */
+function guidePanels(c){ return `<div class="gtools gbahan hidden"><div class="phead"><h4>Bahan yang dibutuhkan</h4><button class="pedit" data-edit="bahan" aria-label="Edit bahan" title="Edit bahan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></button></div>${c.bahan.length ? `<div class="btable-wrap"><table class="btable"><thead><tr><th>Bahan</th><th class="num">Qty</th><th>Satuan</th><th class="num">Harga</th><th class="num">Total</th></tr></thead>
+        <tbody>${c.bahan.map(b => `<tr><td>${esc(b.n)}</td><td class="num">${b.q}</td><td>${esc(b.u) || "–"}</td><td class="num">${rp(b.h)}</td><td class="num">${rp(b.q * b.h)}</td></tr>`).join("")}</tbody>
+        <tfoot><tr><td colspan="4">Total harga bahan</td><td class="num">${rp(bahanTotal(c.bahan))}</td></tr></tfoot></table></div>` : `<p class="empty">Belum ada bahan. Ketuk pensil untuk menambah.</p>`}</div>
+      <div class="gtools gtoolsbox hidden"><div class="phead"><h4>Alat yang dibutuhkan</h4><button class="pedit" data-edit="tools" aria-label="Edit alat" title="Edit alat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></button></div>${c.tools.length ? `<ul>${c.tools.map(t => `<li>${esc(t)}</li>`).join("")}</ul>` : `<p class="empty">Belum ada alat. Ketuk pensil untuk menambah.</p>`}</div>
+      <div class="gsteps hidden"><div class="phead"><h4>Tahapan</h4><button class="pedit" data-edit="steps" aria-label="Edit tahapan" title="Edit tahapan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></button></div>${c.stages.length ? "" : `<p class="empty">Belum ada tahap. Ketuk pensil untuk menambah.</p>`}${c.stages.map((s, i) => `<div class="gstep"><div class="gnum${s.type === "harvest" ? " h" : ""}">${i + 1}</div>
+        <div class="gbody"><h4>${esc(s.n)}${s.type === "harvest" ? '<span class="chip done">Panen</span>' : s.type === "process" ? '<span class="chip">Olah</span>' : ""}</h4>
+          <div class="when">Hari ke-${s.day + 1}</div>${s.d ? `<p>${esc(s.d)}</p>` : ""}
+          <ul>${s.t.map(t => `<li>${esc(t)}</li>`).join("")}</ul></div></div>`).join("")}</div>
+      <div class="gtools gpred hidden"><div class="phead"><h4>Prediksi hasil panen</h4><button class="pedit" data-edit="pred" aria-label="Edit prediksi" title="Edit prediksi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></button></div>${predView(c)}</div>`; }
 function renderCatalog(){
   editing = null;
   const list = CATALOG.filter(c => catFilter === "all" || (catFilter === "none" ? !c.cat : c.cat === catFilter));
@@ -1779,15 +1853,8 @@ function renderCatalog(){
       <div class="cat-actions"><button class="btn small icon" data-start="${c.id}" aria-label="Mulai proyek ini" title="Mulai proyek ini"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg></button>
         ${`<button class="btn small alt icon" data-panel-btn="gbahan" data-label="bahan" aria-expanded="false" aria-label="Bahan" title="Bahan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6l-1 3h-4z"/><path d="M10 6C6 8 5 12 5 15.5 5 19 7.5 21 12 21s7-2 7-5.5C19 12 18 8 14 6"/><path d="M12 11v6M9.5 13.5h5"/></svg></button>`}
         ${`<button class="btn small alt icon" data-panel-btn="gtools" data-label="alat" aria-expanded="false" aria-label="Alat" title="Alat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></button>`}
-        <button class="btn small alt icon" data-steps-btn aria-expanded="false" aria-label="Step by Step" title="Step by Step"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/></svg></button><button class="btn small alt icon" data-tag aria-label="Pindah kategori" title="Pindah kategori"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><path d="M7 7h.01"/></svg></button>${c.custom ? `<button class="btn small alt icon" data-delguide aria-label="Hapus panduan salinan" title="Hapus panduan salinan" style="margin-left:auto;color:var(--danger)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg></button>` : ""}</div>
-      <div class="gtools gbahan hidden"><div class="phead"><h4>Bahan yang dibutuhkan</h4><button class="pedit" data-edit="bahan" aria-label="Edit bahan" title="Edit bahan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></button></div>${c.bahan.length ? `<div class="btable-wrap"><table class="btable"><thead><tr><th>Bahan</th><th class="num">Qty</th><th>Satuan</th><th class="num">Harga</th><th class="num">Total</th></tr></thead>
-        <tbody>${c.bahan.map(b => `<tr><td>${esc(b.n)}</td><td class="num">${b.q}</td><td>${esc(b.u) || "–"}</td><td class="num">${rp(b.h)}</td><td class="num">${rp(b.q * b.h)}</td></tr>`).join("")}</tbody>
-        <tfoot><tr><td colspan="4">Total harga bahan</td><td class="num">${rp(bahanTotal(c.bahan))}</td></tr></tfoot></table></div>` : `<p class="empty">Belum ada bahan. Ketuk pensil untuk menambah.</p>`}</div>
-      <div class="gtools gtoolsbox hidden"><div class="phead"><h4>Alat yang dibutuhkan</h4><button class="pedit" data-edit="tools" aria-label="Edit alat" title="Edit alat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></button></div>${c.tools.length ? `<ul>${c.tools.map(t => `<li>${esc(t)}</li>`).join("")}</ul>` : `<p class="empty">Belum ada alat. Ketuk pensil untuk menambah.</p>`}</div>
-      <div class="gsteps hidden"><div class="phead"><h4>Tahapan</h4><button class="pedit" data-edit="steps" aria-label="Edit tahapan" title="Edit tahapan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></button></div>${c.stages.length ? "" : `<p class="empty">Belum ada tahap. Ketuk pensil untuk menambah.</p>`}${c.stages.map((s, i) => `<div class="gstep"><div class="gnum${s.type === "harvest" ? " h" : ""}">${i + 1}</div>
-        <div class="gbody"><h4>${esc(s.n)}${s.type === "harvest" ? '<span class="chip done">Panen</span>' : s.type === "process" ? '<span class="chip">Olah</span>' : ""}</h4>
-          <div class="when">Hari ke-${s.day + 1}</div>${s.d ? `<p>${esc(s.d)}</p>` : ""}
-          <ul>${s.t.map(t => `<li>${esc(t)}</li>`).join("")}</ul></div></div>`).join("")}</div></div>`; }).join("")}
+        <button class="btn small alt icon" data-steps-btn aria-expanded="false" aria-label="Step by Step" title="Step by Step"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/></svg></button><button class="btn small alt icon" data-panel-btn="gpred" data-label="prediksi" aria-expanded="false" aria-label="Prediksi hasil" title="Prediksi hasil"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg></button><button class="btn small alt icon" data-tag aria-label="Pindah kategori" title="Pindah kategori"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><path d="M7 7h.01"/></svg></button>${c.custom ? `<button class="btn small alt icon" data-delguide aria-label="Hapus panduan salinan" title="Hapus panduan salinan" style="margin-left:auto;color:var(--danger)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg></button>` : ""}</div>
+      ${guidePanels(c)}</div>`; }).join("")}
     ${list.length ? "" : `<div class="empty">Belum ada panduan di kategori ini. Pindahkan panduan lewat ikon tag, atau duplikat panduan lalu ubah kategorinya.</div>`}
     <div class="empty hidden" id="catNone">Tidak ada panduan yang cocok.</div>`;
   /* Ketuk dua kali pada chip kategori: lepas tanpa geser = ganti nama langsung di chip;
@@ -1815,7 +1882,7 @@ function renderCatalog(){
   });
   view.querySelectorAll("[data-start]").forEach(b => b.onclick = () => startSheet(b.dataset.start));
   /* Ikon Step by Step / Alat / Bahan: satu panel per kartu. Panah di judul: buka semuanya, ketuk lagi untuk menutup semuanya. */
-  const PANELS = { steps:".gsteps", gtools:".gtoolsbox", gbahan:".gbahan" }, PNAMES = Object.keys(PANELS);
+  const PANELS = { steps:".gsteps", gtools:".gtoolsbox", gbahan:".gbahan", gpred:".gpred" }, PNAMES = Object.keys(PANELS);
   function setPanels(card, next){
     PNAMES.forEach(n => card.querySelector(PANELS[n]).classList.toggle("hidden", !next.includes(n)));
     const all = next.length === PNAMES.length;
@@ -1908,13 +1975,13 @@ function freezeRunning(id){   /* proyek berjalan yang belum punya salinan tahap 
 }
 const IC = d => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
 const IC_X = IC('<path d="M6 6l12 12M18 6L6 18"/>'), IC_OK = IC('<path d="M5 12.5l4.5 4.5L19 7.5"/>'), IC_UNDO = IC('<path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/>');
-const PANEL_SEL = { steps:".gsteps", tools:".gtoolsbox", bahan:".gbahan" };
-const PANEL_TITLE = { steps:"Tahapan", tools:"Alat yang dibutuhkan", bahan:"Bahan yang dibutuhkan" };
+const PANEL_SEL = { steps:".gsteps", tools:".gtoolsbox", bahan:".gbahan", pred:".gpred" };
+const PANEL_TITLE = { steps:"Tahapan", tools:"Alat yang dibutuhkan", bahan:"Bahan yang dibutuhkan", pred:"Prediksi hasil panen" };
 /* Mengubah panel yang sedang dibuka menjadi mode edit. Tombol: Kembalikan bawaan (jika pernah diedit), Batal, Simpan. */
 function inlineShell(id, kind, hint, body){
   const mk = curMedia(id), src = mk === "tanah" ? guideEdits[id] : guideEdits[id]?.media?.[mk];
-  const edited = !byId(id)?.custom && Array.isArray(src?.[kind === "steps" ? "stages" : kind]);
-  const panel = view.querySelector(`.cat[data-id="${id}"] ${PANEL_SEL[kind]}`);
+  const sv = src?.[kind === "steps" ? "stages" : kind], edited = !byId(id)?.custom && (kind === "pred" ? !!sv && typeof sv === "object" : Array.isArray(sv));
+  const panel = view.querySelector(`.cat[data-id="${id}"] ${PANEL_SEL[kind]}, .pinwrap[data-id="${id}"] ${PANEL_SEL[kind]}`);
   editing = { id, kind };
   panel.innerHTML = `<div class="phead"><h4>${PANEL_TITLE[kind]}${mk !== "tanah" ? " · " + MEDIA[mk] : ""}</h4><span class="pacts">${edited ? `<button class="pedit" id="edReset" aria-label="Kembalikan bawaan" title="Kembalikan bawaan">${IC_UNDO}</button>` : ""}<button class="pedit" id="edX" aria-label="Batal" title="Batal">${IC_X}</button><button class="pedit ok" id="edOk" aria-label="Simpan" title="Simpan">${IC_OK}</button></span></div>
     <p class="muted hint">${hint}</p>${body}`;
@@ -1926,7 +1993,21 @@ function editGuide(id, kind){
   const c = withMedia(c0);
   if (kind === "steps") return editSteps(c);
   if (kind === "bahan") return editBahan(c);
+  if (kind === "pred") return editPred(c);
   editTools(c);
+}
+function editPred(c){
+  const s = inlineShell(c.id, "pred", "Isi perkiraan hasil panen dalam gram dan harga pasar per kg. Nilai panen dan selisih dihitung otomatis. Angka awal hanya perkiraan.",
+    `<label for="pG">Qty panen (gram)</label><input id="pG" type="number" min="0" step="any" inputmode="decimal" value="${c.pred.g}">
+    <label for="pP">Estimasi harga pasar (Rp per kg)</label><input id="pP" type="number" min="0" step="any" inputmode="numeric" value="${c.pred.p}">
+    <label for="pN">Catatan dasar perkiraan (opsional)</label><input id="pN" maxlength="200" value="${esc(c.pred.n)}" placeholder="Misal: per siklus, 2 polybag">
+    <p class="predsum" id="pSum"></p>`);
+  const g = s.querySelector("#pG"), p = s.querySelector("#pP"), n = s.querySelector("#pN");
+  const cur = () => normPred({ g: g.value, p: p.value, n: n.value });
+  const upd = () => { const x = predSum(cur(), c.bahan); s.querySelector("#pSum").innerHTML = `Estimasi nilai panen <b>${rp(x.nilai)}</b> · biaya bahan ${rp(x.biaya)} · selisih <b>${x.selTxt}</b>`; };
+  g.oninput = p.oninput = upd; upd();
+  s.querySelector("#edOk").onclick = () => saveGuide(c.id, { pred: cur() }, c.mediaKey);
+  s.querySelector("#edReset")?.addEventListener("click", () => { if (confirm("Kembalikan prediksi ke nilai bawaan?")) saveGuide(c.id, { pred: null }, c.mediaKey); });
 }
 function editTools(c){
   let work = [...c.tools];
@@ -2203,8 +2284,8 @@ function duplicateSheet(id){
     const nid = "c_" + Date.now().toString(36);
     const rec = { custom: true, root: c.root || c.id, cat: s.querySelector("#dCat").value, iconKey: c.iconKey || c.id, icon: c.icon, name,
       level: c.level, days: c.days, unit: c.unit, desc: c.desc,
-      tools: clone(c.tools), bahan: clone(c.bahan), stages: clone(c.stages), created: Date.now() };
-    if (c.medias && c.medias.length) { rec.media = {}; c.medias.filter(m => m !== "tanah").forEach(m => { const v = c.variants[m]; rec.media[m] = { days: v.days, tools: clone(v.tools), bahan: clone(v.bahan), stages: clone(v.stages) }; }); }
+      tools: clone(c.tools), bahan: clone(c.bahan), stages: clone(c.stages), pred: clone(c.pred), created: Date.now() };
+    if (c.medias && c.medias.length) { rec.media = {}; c.medias.filter(m => m !== "tanah").forEach(m => { const v = c.variants[m]; rec.media[m] = { days: v.days, tools: clone(v.tools), bahan: clone(v.bahan), stages: clone(v.stages), ...(v.pred ? { pred: clone(v.pred) } : {}) }; }); }
     guideEdits[nid] = rec; applyEdits(); closeSheet(); toast("Panduan diduplikasi."); render();
     view.querySelector(`.cat[data-id="${nid}"]`)?.scrollIntoView({ block: "center" });
     setDoc(doc(db, "users", user.uid, "guides", nid), { ...rec, updatedAt: serverTimestamp() }).catch(e => toast(errMsg(e)));
@@ -2213,7 +2294,7 @@ function duplicateSheet(id){
 function deleteGuide(id){
   const c = byId(id); if (!c || !c.custom) return;
   if (!confirm(`Hapus panduan "${c.name}"? Proyek yang sudah dibuat dari panduan ini tidak ikut terhapus.`)) return;
-  delete guideEdits[id]; delete catOpen[id]; applyEdits(); render(); toast("Panduan dihapus.");
+  delete guideEdits[id]; delete catOpen[id]; delete pinOpen[id]; applyEdits(); render(); toast("Panduan dihapus.");
   deleteDoc(doc(db, "users", user.uid, "guides", id)).catch(e => toast(errMsg(e)));
 }
 
