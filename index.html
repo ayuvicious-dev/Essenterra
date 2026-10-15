@@ -319,6 +319,7 @@ nav.tabs button.fab span{position:absolute;width:1px;height:1px;overflow:hidden;
 .pinpanel .cat-actions{margin-top:0;gap:.5rem;padding:.1rem 0 .15rem}
 .pinpanel .cat-actions .btn.icon:first-child:not([aria-expanded="true"]){color:var(--ink2)}
 .pinpanel .cat-actions .btn.icon:first-child{margin-right:0}
+.pinpanel .cat-actions .btn.icon.pinplay:first-child:not([aria-expanded="true"]){color:var(--moss)}
 .pinpanel .cat-actions .btn.icon:first-child::before{display:none}
 .pinpanel .gtools,.pinpanel .gsteps{margin-top:.9rem;padding-top:.9rem}
 .pinoff{flex:none;width:38px;height:38px;display:grid;place-items:center;color:var(--sun);margin-left:.2rem;border-radius:50%}
@@ -326,7 +327,10 @@ nav.tabs button.fab span{position:absolute;width:1px;height:1px;overflow:hidden;
 
 /* Foto panduan */
 .gphoto{border-top:1px solid var(--line);margin-top:1rem;padding-top:1rem}
-.gphoto img{display:block;width:100%;max-height:340px;object-fit:cover;border-radius:12px;border:1px solid var(--line);margin-bottom:.6rem;background:var(--mist)}
+.proj .ico{overflow:hidden}
+.proj .ico img{width:100%;height:100%;object-fit:cover;display:block}
+.gphoto{text-align:center}
+.gphoto img{display:block;width:33.333%;min-width:110px;height:auto;margin:0 auto .6rem;border-radius:12px;border:1px solid var(--line);background:var(--mist)}
 .gphoto .empty{font-size:.88rem}
 </style>
 </head>
@@ -1410,7 +1414,7 @@ function renderHome(){
       <p>Tiap panen kecil adalah satu langkah menuju kemandirian.</p>
       <div class="stats"><div><b>${active.length}</b><span>sedang berjalan</span></div>
       <div><b>${finished.length}</b><span>selesai</span></div><div><b>${harvestTotal}</b><span>catatan panen</span></div></div></div>
-    ${(() => { const pc = pins.map(byId).filter(c => c && !c.hidden); return pc.length ? `<div class="section-title" style="margin-top:0"><h3>Rencana tanam berikutnya</h3></div>${pc.map(pinCard).join("")}` : ""; })()}
+    ${(() => { const pc = pins.map(byId).filter(c => c && !c.hidden); return pc.length ? `<div class="section-title" style="margin-top:0"><h3>Rencana tanam berikutnya</h3></div>${pc.map(guideCard).join("")}` : ""; })()}
     <div class="section-title"><h3>Proyek saya</h3><button class="btn small" id="btnNew">+ Mulai baru</button></div>
     ${projects.length ? projects.map(projCard).join("") :
       `<div class="empty">Belum ada proyek. Pilih satu panduan dan mulai tanam atau ternak pertama Anda.<br><br><button class="btn" id="btnNew2">Lihat panduan</button></div>`}`;
@@ -1418,22 +1422,7 @@ function renderHome(){
   $("#btnNew2")?.addEventListener("click", () => { tab = "catalog"; render(); });
   view.querySelectorAll("[data-open]").forEach(b => b.onclick = () => { openId = b.dataset.open; watchLogs(openId); render(); window.scrollTo(0, 0); });
   view.querySelectorAll("[data-del]").forEach(b => b.onclick = () => deleteProject(projects.find(x => x.id === b.dataset.del)));
-  view.querySelectorAll("[data-pinstart]").forEach(b => b.onclick = () => startSheet(b.dataset.pinstart));
-  /* Ketuk kartu putih = buka/tutup rincian (Bahan, Alat, Tahapan, Prediksi) yang bisa diedit langsung di Dashboard. */
-  view.querySelectorAll("[data-pinopen]").forEach(b => b.onclick = () => {
-    const w = b.closest(".pinwrap"); setPinPanels(w, (pinOpen[w.dataset.id] || []).length ? [] : PIN_NAMES);
-  });
-  view.querySelectorAll(".pinwrap [data-panel-btn]").forEach(b => b.onclick = () => {
-    const w = b.closest(".pinwrap"), cur = pinOpen[w.dataset.id] || [], n = b.dataset.panelBtn;
-    setPinPanels(w, cur.length === 1 && cur[0] === n ? [] : [n]);
-  });
-  view.querySelectorAll(".pinwrap [data-edit]").forEach(b => b.onclick = () => editGuide(b.closest(".pinwrap").dataset.id, b.dataset.edit));
-  view.querySelectorAll(".pinwrap [data-media]").forEach(b => b.onclick = () => {
-    catMedia[b.closest(".pinwrap").dataset.id] = b.dataset.media;
-    try { localStorage.setItem("essentera-media", JSON.stringify(catMedia)); } catch(e) {}
-    rerenderKeep();
-  });
-  view.querySelectorAll(".pinwrap").forEach(w => { const o = pinOpen[w.dataset.id]; if (o) setPinPanels(w, o); });
+  wireGuideCards(view);
 }
 
 /* Hapus proyek beserta jurnal dan foto (dipakai di Dashboard dan halaman detail). */
@@ -1532,24 +1521,7 @@ function togglePin(id){
   toast(on ? "Dipin ke Dashboard." : "Pin dilepas.");
   return on;
 }
-const PIN_PANELS = { gbahan:".gbahan", gtools:".gtoolsbox", steps:".gsteps", gpred:".gpred" }, PIN_NAMES = Object.keys(PIN_PANELS);
-let pinOpen = {};   /* panel yang sedang terbuka per kartu pin di Dashboard */
-function pinCard(c0){
-  const c = withMedia(c0), running = projects.some(p => p.tplId === c.id && !p.completed);
-  return `<div class="pinwrap" data-id="${c.id}"><div class="projrow pinrow"><button class="proj" data-pinopen="${c.id}" aria-expanded="false" aria-label="Buka rincian ${esc(c.name)}"><div class="ico">${icon(c.id)}</div>
-    <div class="body"><div class="name">${esc(c.name)}</div><div class="sub">${esc(c.level)} · ±${Math.max(1, Math.round(c.days / 30))} bulan${running ? " · sedang berjalan" : " · belum dimulai"}</div></div></button>
-    <button class="btn small" data-pinstart="${c.id}">Mulai</button>
-</div>
-    <div class="pinpanel hidden">${c.medias && c.medias.length ? `<div class="media" role="group" aria-label="Media tanam">${c.medias.map(m => `<button data-media="${m}" class="${c.mediaKey === m ? "on" : ""}" aria-pressed="${c.mediaKey === m}">${MEDIA[m]}</button>`).join("")}</div>` : ""}
-      <div class="cat-actions"><button class="btn small alt icon" data-panel-btn="gbahan" aria-expanded="false" aria-label="Bahan" title="Bahan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6l-1 3h-4z"/><path d="M10 6C6 8 5 12 5 15.5 5 19 7.5 21 12 21s7-2 7-5.5C19 12 18 8 14 6"/><path d="M12 11v6M9.5 13.5h5"/></svg></button><button class="btn small alt icon" data-panel-btn="gtools" aria-expanded="false" aria-label="Alat" title="Alat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></button><button class="btn small alt icon" data-panel-btn="steps" aria-expanded="false" aria-label="Step by Step" title="Step by Step"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/></svg></button><button class="btn small alt icon" data-panel-btn="gpred" aria-expanded="false" aria-label="Prediksi hasil" title="Prediksi hasil"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg></button></div>${guidePanels(c)}</div></div>`;
-}
-function setPinPanels(wrap, next){
-  PIN_NAMES.forEach(n => wrap.querySelector(PIN_PANELS[n]).classList.toggle("hidden", !next.includes(n)));
-  wrap.querySelector(".pinpanel").classList.toggle("hidden", !next.length);
-  wrap.querySelector("[data-pinopen]").setAttribute("aria-expanded", next.length > 0);
-  wrap.querySelectorAll("[data-panel-btn]").forEach(x => x.setAttribute("aria-expanded", next.includes(x.dataset.panelBtn)));
-  pinOpen[wrap.dataset.id] = next.length ? next : null;
-}
+let pinOpen = {};
 
 /* ---------------- ANALISIS (perencanaan, SWOT, desain lokasi) ----------------
    Data tersimpan di users/{uid}/analysis: dokumen "plan", dokumen "swot", dan satu dokumen per desain lokasi (kind:"layout"). */
@@ -1869,6 +1841,67 @@ function guidePanels(c){ return `<div class="gtools gbahan hidden"><div class="p
           <div class="when">Hari ke-${s.day + 1}</div>${s.d ? `<p>${esc(s.d)}</p>` : ""}
           <ul>${s.t.map(t => `<li>${esc(t)}</li>`).join("")}</ul></div></div>`).join("")}</div>
       <div class="gtools gpred hidden"><div class="phead"><h4>Prediksi hasil panen</h4><button class="pedit" data-edit="pred" aria-label="Edit prediksi" title="Edit prediksi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></button></div>${predView(c)}</div>`; }
+/* Kartu panduan yang sama dipakai di tab Panduan dan di Dashboard (Rencana tanam berikutnya). */
+function guideCard(c0){
+  const c = withMedia(c0); return `<div class="cat" data-id="${c.id}" data-q="${esc([c.name, allCats().find(k => k.id === c.cat)?.name || "tanpa kategori", c.level, ...(c.medias || []).map(m => MEDIA[m]), ...c.tools, ...c.bahan.map(b => b.n)].join(" ").toLowerCase())}"><h3><button class="ctitle" aria-expanded="false"><span class="ico sm">${icon(c.id)}</span><span>${esc(c.name)}</span></button><button class="btn small alt icon pinbtn${pins.includes(c.id) ? " on" : ""}" data-pin aria-pressed="${pins.includes(c.id)}" aria-label="${pins.includes(c.id) ? "Lepas pin dari Dashboard" : "Pin ke Dashboard"}" title="${pins.includes(c.id) ? "Lepas pin dari Dashboard" : "Pin ke Dashboard"}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 17v5M9 3h6l-1 6 3 3H7l3-3-1-6z"/></svg></button><button class="btn small alt icon dupbtn" data-dup aria-label="Duplikat panduan" title="Duplikat panduan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg></button><button class="chevbtn" aria-label="Buka atau tutup panduan" title="Buka atau tutup"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button></h3>
+      ${c.medias && c.medias.length ? `<div class="media" role="group" aria-label="Media tanam">${c.medias.map(m => `<button data-media="${m}" class="${c.mediaKey === m ? "on" : ""}" aria-pressed="${c.mediaKey === m}">${MEDIA[m]}</button>`).join("")}</div>` : ""}
+      <div class="meta"><button class="catchip" data-tag aria-label="Ubah kategori" title="Ketuk untuk ubah kategori">${esc(allCats().find(k => k.id === c.cat)?.name || "Tanpa kategori")}</button><span>${c.level}</span><span>±${Math.max(1, Math.round(c.days / 30))} bulan</span><span>${c.stages.length} tahap</span>${POT_PLAN[c.root || c.id] ? `<span>${POT_PLAN[c.root || c.id].pots} pot · 1 biji/pot</span>` : ""}${c.custom ? "<span>Salinan</span>" : ""}</div>
+      <div class="cat-actions"><button class="btn small icon" data-start="${c.id}" aria-label="Mulai proyek ini" title="Mulai proyek ini"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg></button>
+        ${`<button class="btn small alt icon" data-panel-btn="gbahan" data-label="bahan" aria-expanded="false" aria-label="Bahan" title="Bahan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6l-1 3h-4z"/><path d="M10 6C6 8 5 12 5 15.5 5 19 7.5 21 12 21s7-2 7-5.5C19 12 18 8 14 6"/><path d="M12 11v6M9.5 13.5h5"/></svg></button>`}
+        ${`<button class="btn small alt icon" data-panel-btn="gtools" data-label="alat" aria-expanded="false" aria-label="Alat" title="Alat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></button>`}
+        <button class="btn small alt icon" data-steps-btn aria-expanded="false" aria-label="Step by Step" title="Step by Step"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/></svg></button><button class="btn small alt icon" data-panel-btn="gpred" data-label="prediksi" aria-expanded="false" aria-label="Prediksi hasil" title="Prediksi hasil"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg></button><button class="btn small alt icon" data-tag aria-label="Pindah kategori" title="Pindah kategori"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><path d="M7 7h.01"/></svg></button><button class="btn small alt icon" data-photo-up aria-label="${c.photo ? "Ganti foto" : "Unggah foto"}" title="${c.photo ? "Ganti foto" : "Unggah foto"}"${c.photo ? ' style="color:var(--moss)"' : ""}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></button>${`<button class="btn small alt icon" data-delguide aria-label="Hapus panduan" title="Hapus panduan" style="margin-left:auto;color:var(--danger)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg></button>`}</div>
+      ${photoPanel(c)}${guidePanels(c)}</div>`;
+}
+function wireGuideCards(root){
+  root.querySelectorAll("[data-start]").forEach(b => b.onclick = () => startSheet(b.dataset.start));
+  /* Ikon Step by Step / Alat / Bahan: satu panel per kartu. Panah di judul: buka semuanya, ketuk lagi untuk menutup semuanya. */
+  const PANELS = { photo:".gphoto", steps:".gsteps", gtools:".gtoolsbox", gbahan:".gbahan", gpred:".gpred" }, PNAMES = Object.keys(PANELS);
+  function setPanels(card, next){
+    PNAMES.forEach(n => card.querySelector(PANELS[n]).classList.toggle("hidden", !next.includes(n)));
+    const all = next.length === PNAMES.length;
+    card.classList.toggle("open", all);
+    card.querySelector(".ctitle").setAttribute("aria-expanded", all);
+    card.querySelector("[data-steps-btn]").setAttribute("aria-expanded", next.includes("steps"));
+    card.querySelectorAll("[data-panel-btn]").forEach(x => x.setAttribute("aria-expanded", next.includes(x.dataset.panelBtn)));
+    catOpen[card.dataset.id] = next.length ? next : null;
+  }
+  function showPanel(card, name){
+    const open = PNAMES.filter(n => !card.querySelector(PANELS[n]).classList.contains("hidden"));
+    if (name === "all") return setPanels(card, open.length === PNAMES.length ? [] : PNAMES);
+    setPanels(card, open.length === 1 && open[0] === name ? [] : [name]);
+  }
+  let nameTap = { id: "", t: 0, prev: null };   /* ketuk 2x judul panduan = ubah nama langsung */
+  root.querySelectorAll(".ctitle, .chevbtn").forEach(b => b.onclick = () => {
+    const card = b.closest(".cat"), id = card.dataset.id;
+    if (b.classList.contains("ctitle")) {
+      if (nameTap.id === id && Date.now() - nameTap.t < 400) {
+        const prev = nameTap.prev; nameTap = { id: "", t: 0, prev: null };
+        setPanels(card, prev || []); editGuideName(card); return;   /* ketukan pertama sempat membuka/menutup panel: dikembalikan */
+      }
+      nameTap = { id, t: Date.now(), prev: catOpen[id] || [] };
+    }
+    showPanel(card, "all");
+  });
+  root.querySelectorAll("[data-media]").forEach(b => b.onclick = () => {
+    catMedia[b.closest(".cat").dataset.id] = b.dataset.media;
+    try { localStorage.setItem("essentera-media", JSON.stringify(catMedia)); } catch(e) {}
+    rerenderKeep();
+  });
+  root.querySelectorAll("[data-tag]").forEach(b => b.onclick = () => categorySheet(b.closest(".cat").dataset.id));
+  root.querySelectorAll("[data-dup]").forEach(b => b.onclick = () => duplicateSheet(b.closest(".cat").dataset.id));
+  root.querySelectorAll("[data-pin]").forEach(b => b.onclick = () => {
+    const id = b.closest(".cat").dataset.id, on = togglePin(id);
+    b.classList.toggle("on", on); b.setAttribute("aria-pressed", on);
+    const t = on ? "Lepas pin dari Dashboard" : "Pin ke Dashboard"; b.title = t; b.setAttribute("aria-label", t);
+  });
+  root.querySelectorAll("[data-delguide]").forEach(b => b.onclick = () => deleteGuide(b.closest(".cat").dataset.id));
+  root.querySelectorAll("[data-photo-up]").forEach(b => b.onclick = () => pickGuidePhoto(b.closest(".cat").dataset.id));
+  root.querySelectorAll("[data-photo-del]").forEach(b => b.onclick = () => deleteGuidePhoto(b.closest(".cat").dataset.id));
+  root.querySelectorAll("[data-steps-btn]").forEach(b => b.onclick = () => showPanel(b.closest(".cat"), "steps"));
+  root.querySelectorAll("[data-panel-btn]").forEach(b => b.onclick = () => showPanel(b.closest(".cat"), b.dataset.panelBtn));
+  root.querySelectorAll("[data-edit]").forEach(b => b.onclick = () => editGuide(b.closest(".cat").dataset.id, b.dataset.edit));
+  root.querySelectorAll(".cat").forEach(card => { const o = catOpen[card.dataset.id]; if (o) setPanels(card, o); });
+}
 function renderCatalog(){
   editing = null;
   const list = CATALOG.filter(c => !c.hidden && (catFilter === "all" || (catFilter === "none" ? !c.cat : c.cat === catFilter)));
@@ -1877,14 +1910,7 @@ function renderCatalog(){
     <div class="filterbar"><div class="fixgrp"><button data-f="all" class="${catFilter === "all" ? "on" : ""}" aria-label="${esc(CATS.all)}" title="${esc(CATS.all)} (ketuk 2x untuk tambah kategori)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/></svg></button></div><div class="filters">${[...allCats().map(k => [k.id, k.name]), ...(CATALOG.some(c => !c.hidden && !c.cat) ? [["none", "Tanpa kategori"]] : [])].map(([k, v]) => `<button data-f="${k}" class="${catFilter === k ? "on" : ""}">${esc(v)}</button>`).join("")}</div></div>
     <div class="searchbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><input id="catSearch" type="search" enterkeyhint="search" autocomplete="off" placeholder="Cari panduan, bahan, atau alat" aria-label="Cari panduan" value="${esc(catQuery)}"><button class="sclear hidden" id="catClear" aria-label="Hapus pencarian" title="Hapus pencarian">${IC_X}</button></div>
     </div>
-    ${list.map(c0 => { const c = withMedia(c0); return `<div class="cat" data-id="${c.id}" data-q="${esc([c.name, allCats().find(k => k.id === c.cat)?.name || "tanpa kategori", c.level, ...(c.medias || []).map(m => MEDIA[m]), ...c.tools, ...c.bahan.map(b => b.n)].join(" ").toLowerCase())}"><h3><button class="ctitle" aria-expanded="false"><span class="ico sm">${icon(c.id)}</span><span>${esc(c.name)}</span></button><button class="btn small alt icon pinbtn${pins.includes(c.id) ? " on" : ""}" data-pin aria-pressed="${pins.includes(c.id)}" aria-label="${pins.includes(c.id) ? "Lepas pin dari Dashboard" : "Pin ke Dashboard"}" title="${pins.includes(c.id) ? "Lepas pin dari Dashboard" : "Pin ke Dashboard"}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 17v5M9 3h6l-1 6 3 3H7l3-3-1-6z"/></svg></button><button class="btn small alt icon dupbtn" data-dup aria-label="Duplikat panduan" title="Duplikat panduan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg></button><button class="chevbtn" aria-label="Buka atau tutup panduan" title="Buka atau tutup"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button></h3>
-      ${c.medias && c.medias.length ? `<div class="media" role="group" aria-label="Media tanam">${c.medias.map(m => `<button data-media="${m}" class="${c.mediaKey === m ? "on" : ""}" aria-pressed="${c.mediaKey === m}">${MEDIA[m]}</button>`).join("")}</div>` : ""}
-      <div class="meta"><button class="catchip" data-tag aria-label="Ubah kategori" title="Ketuk untuk ubah kategori">${esc(allCats().find(k => k.id === c.cat)?.name || "Tanpa kategori")}</button><span>${c.level}</span><span>±${Math.max(1, Math.round(c.days / 30))} bulan</span><span>${c.stages.length} tahap</span>${POT_PLAN[c.root || c.id] ? `<span>${POT_PLAN[c.root || c.id].pots} pot · 1 biji/pot</span>` : ""}${c.custom ? "<span>Salinan</span>" : ""}</div>
-      <div class="cat-actions"><button class="btn small icon" data-start="${c.id}" aria-label="Mulai proyek ini" title="Mulai proyek ini"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg></button>
-        ${`<button class="btn small alt icon" data-panel-btn="gbahan" data-label="bahan" aria-expanded="false" aria-label="Bahan" title="Bahan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6l-1 3h-4z"/><path d="M10 6C6 8 5 12 5 15.5 5 19 7.5 21 12 21s7-2 7-5.5C19 12 18 8 14 6"/><path d="M12 11v6M9.5 13.5h5"/></svg></button>`}
-        ${`<button class="btn small alt icon" data-panel-btn="gtools" data-label="alat" aria-expanded="false" aria-label="Alat" title="Alat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></button>`}
-        <button class="btn small alt icon" data-steps-btn aria-expanded="false" aria-label="Step by Step" title="Step by Step"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/></svg></button><button class="btn small alt icon" data-panel-btn="gpred" data-label="prediksi" aria-expanded="false" aria-label="Prediksi hasil" title="Prediksi hasil"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg></button><button class="btn small alt icon" data-tag aria-label="Pindah kategori" title="Pindah kategori"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><path d="M7 7h.01"/></svg></button><button class="btn small alt icon" data-photo-up aria-label="${c.photo ? "Ganti foto" : "Unggah foto"}" title="${c.photo ? "Ganti foto" : "Unggah foto"}"${c.photo ? ' style="color:var(--moss)"' : ""}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></button>${`<button class="btn small alt icon" data-delguide aria-label="Hapus panduan" title="Hapus panduan" style="margin-left:auto;color:var(--danger)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg></button>`}</div>
-      ${photoPanel(c)}${guidePanels(c)}</div>`; }).join("")}
+    ${list.map(guideCard).join("")}
     ${list.length ? "" : `<div class="empty">Belum ada panduan di kategori ini. Pindahkan panduan lewat ikon tag, atau duplikat panduan lalu ubah kategorinya.</div>`}
     <div class="empty hidden" id="catNone">Tidak ada panduan yang cocok.</div>
     ${CATALOG.some(c => c.hidden) ? `<button class="btn alt small" id="catRestore" style="margin-top:.6rem">Panduan yang dihapus (${CATALOG.filter(c => c.hidden).length})</button>` : ""}`;
@@ -1911,35 +1937,7 @@ function renderCatalog(){
       dragChip(b, e, fbar);
     });
   });
-  view.querySelectorAll("[data-start]").forEach(b => b.onclick = () => startSheet(b.dataset.start));
-  /* Ikon Step by Step / Alat / Bahan: satu panel per kartu. Panah di judul: buka semuanya, ketuk lagi untuk menutup semuanya. */
-  const PANELS = { photo:".gphoto", steps:".gsteps", gtools:".gtoolsbox", gbahan:".gbahan", gpred:".gpred" }, PNAMES = Object.keys(PANELS);
-  function setPanels(card, next){
-    PNAMES.forEach(n => card.querySelector(PANELS[n]).classList.toggle("hidden", !next.includes(n)));
-    const all = next.length === PNAMES.length;
-    card.classList.toggle("open", all);
-    card.querySelector(".ctitle").setAttribute("aria-expanded", all);
-    card.querySelector("[data-steps-btn]").setAttribute("aria-expanded", next.includes("steps"));
-    card.querySelectorAll("[data-panel-btn]").forEach(x => x.setAttribute("aria-expanded", next.includes(x.dataset.panelBtn)));
-    catOpen[card.dataset.id] = next.length ? next : null;
-  }
-  function showPanel(card, name){
-    const open = PNAMES.filter(n => !card.querySelector(PANELS[n]).classList.contains("hidden"));
-    if (name === "all") return setPanels(card, open.length === PNAMES.length ? [] : PNAMES);
-    setPanels(card, open.length === 1 && open[0] === name ? [] : [name]);
-  }
-  let nameTap = { id: "", t: 0, prev: null };   /* ketuk 2x judul panduan = ubah nama langsung */
-  view.querySelectorAll(".ctitle, .chevbtn").forEach(b => b.onclick = () => {
-    const card = b.closest(".cat"), id = card.dataset.id;
-    if (b.classList.contains("ctitle")) {
-      if (nameTap.id === id && Date.now() - nameTap.t < 400) {
-        const prev = nameTap.prev; nameTap = { id: "", t: 0, prev: null };
-        setPanels(card, prev || []); editGuideName(card); return;   /* ketukan pertama sempat membuka/menutup panel: dikembalikan */
-      }
-      nameTap = { id, t: Date.now(), prev: catOpen[id] || [] };
-    }
-    showPanel(card, "all");
-  });
+  wireGuideCards(view);
   const qIn = view.querySelector("#catSearch"), qClr = view.querySelector("#catClear"), qNone = view.querySelector("#catNone");
   const applyQ = () => {
     const toks = catQuery.trim().toLowerCase().split(/\s+/).filter(Boolean); let n = 0;
@@ -1950,26 +1948,7 @@ function renderCatalog(){
   qIn.onkeydown = e => { if (e.key === "Enter") qIn.blur(); };
   qClr.onclick = () => { catQuery = ""; qIn.value = ""; applyQ(); qIn.focus(); };
   applyQ();
-  view.querySelectorAll("[data-media]").forEach(b => b.onclick = () => {
-    catMedia[b.closest(".cat").dataset.id] = b.dataset.media;
-    try { localStorage.setItem("essentera-media", JSON.stringify(catMedia)); } catch(e) {}
-    rerenderKeep();
-  });
-  view.querySelectorAll("[data-tag]").forEach(b => b.onclick = () => categorySheet(b.closest(".cat").dataset.id));
-  view.querySelectorAll("[data-dup]").forEach(b => b.onclick = () => duplicateSheet(b.closest(".cat").dataset.id));
-  view.querySelectorAll("[data-pin]").forEach(b => b.onclick = () => {
-    const id = b.closest(".cat").dataset.id, on = togglePin(id);
-    b.classList.toggle("on", on); b.setAttribute("aria-pressed", on);
-    const t = on ? "Lepas pin dari Dashboard" : "Pin ke Dashboard"; b.title = t; b.setAttribute("aria-label", t);
-  });
-  view.querySelectorAll("[data-delguide]").forEach(b => b.onclick = () => deleteGuide(b.closest(".cat").dataset.id));
   view.querySelector("#catRestore")?.addEventListener("click", restoreGuidesSheet);
-  view.querySelectorAll("[data-photo-up]").forEach(b => b.onclick = () => pickGuidePhoto(b.closest(".cat").dataset.id));
-  view.querySelectorAll("[data-photo-del]").forEach(b => b.onclick = () => deleteGuidePhoto(b.closest(".cat").dataset.id));
-  view.querySelectorAll("[data-steps-btn]").forEach(b => b.onclick = () => showPanel(b.closest(".cat"), "steps"));
-  view.querySelectorAll("[data-panel-btn]").forEach(b => b.onclick = () => showPanel(b.closest(".cat"), b.dataset.panelBtn));
-  view.querySelectorAll("[data-edit]").forEach(b => b.onclick = () => editGuide(b.closest(".cat").dataset.id, b.dataset.edit));
-  view.querySelectorAll(".cat").forEach(card => { const o = catOpen[card.dataset.id]; if (o) setPanels(card, o); });
 }
 
 /* ---------------- EDIT PANDUAN (alat, bahan, tahapan): langsung di tempat, tanpa pop up ---------------- */
@@ -2328,7 +2307,7 @@ function duplicateSheet(id){
 /* ---------------- FOTO PANDUAN ----------------
    Tombol kamera di baris tombol kartu. Foto tampil di kartu saat panah ke bawah dibuka.
    Disimpan di Storage (users/{uid}/guides/{id}/...) dan alamatnya di dokumen guides/{id}; bila Storage belum aktif, versi kecil disimpan di Firestore. */
-const photoPanel = c => `<div class="gphoto hidden">${c.photo
+const photoPanel = c =>`<div class="gphoto hidden">${c.photo
   ? `<img src="${esc(c.photo)}" alt="Foto ${esc(c.name)}" loading="lazy"><button class="btn small alt" data-photo-del>Hapus foto</button>`
   : `<p class="empty">Belum ada foto. Ketuk ikon kamera untuk menambahkan.</p>`}</div>`;
 function pickGuidePhoto(id){
@@ -2340,20 +2319,12 @@ async function uploadGuidePhoto(id, file){
   if (!file.type.startsWith("image/")) { toast("Pilih file gambar."); return; }
   toast("Mengunggah foto…");
   try {
-    const blob = await compress(file, 1280, 0.78);
-    const path = `users/${user.uid}/guides/${id}/${Date.now()}.jpg`;
-    let data;
-    try {
-      await uploadBytes(sRef(storage, path), blob, { contentType: "image/jpeg" });
-      data = { photo: await getDownloadURL(sRef(storage, path)), photoPath: path };
-    } catch (se) {
-      if (!navigator.onLine) throw new Error("Foto butuh koneksi internet untuk diunggah.");
-      data = { photo: await blobToDataUrl(await compress(file, 640, 0.6)), photoPath: null };
-    }
+    const res = await storePhoto(file, `users/${user.uid}/guides/${id}/${Date.now()}.jpg`);
+    const data = { photo: res.photo, photoPath: res.photoPath };
     const old = guideEdits[id]?.photoPath;
     saveGuide(id, data);
-    if (old && old !== data.photoPath) deleteObject(sRef(storage, old)).catch(() => {});
-    toast("Foto tersimpan. Buka panah ke bawah untuk melihatnya.");
+    if (old && old !== data.photoPath && navigator.onLine) deleteObject(sRef(storage, old)).catch(() => {});
+    toast(res.local ? "Foto tersimpan di perangkat, akan tersinkron saat online." : "Foto tersimpan. Buka panah ke bawah untuk melihatnya.");
   } catch (e) { toast(errMsg(e)); }
 }
 function deleteGuidePhoto(id){
@@ -2510,6 +2481,20 @@ function compress(file, max, quality){
   });
 }
 const blobToDataUrl = b => new Promise(r => { const f = new FileReader(); f.onload = () => r(f.result); f.readAsDataURL(b); });
+const withTimeout = (p, ms) => Promise.race([p, new Promise((_, rej) => setTimeout(() => rej(new Error("timeout")), ms))]);
+/* Simpan foto dengan urutan: (1) Firebase Storage bila online, dibatasi waktu agar tidak menggantung;
+   (2) bila offline, Storage belum aktif, atau lambat: versi kecil (data URL) yang disimpan langsung di browser
+   lewat cache Firestore dan otomatis tersinkron saat online. Foto selalu bisa diunggah dan langsung tampil. */
+async function storePhoto(file, path){
+  if (navigator.onLine) {
+    try {
+      const blob = await compress(file, 1280, 0.78), r = sRef(storage, path);
+      await withTimeout(uploadBytes(r, blob, { contentType: "image/jpeg" }), 15000);
+      return { photo: await withTimeout(getDownloadURL(r), 10000), photoPath: path, local: false };
+    } catch (e) { /* lanjut ke penyimpanan lokal */ }
+  }
+  return { photo: await blobToDataUrl(await compress(file, 640, 0.6)), photoPath: null, local: true };
+}
 
 function logSheet(p){
   const s = sheet(`<h3>Catatan baru</h3>
@@ -2524,20 +2509,14 @@ function logSheet(p){
     ev.target.disabled = true; ev.target.textContent = "Menyimpan…";
     const data = { date: s.querySelector("#lD").value || today(), text, createdAt: serverTimestamp() };
     try {
+      let local = false;
       if (file) {
-        const blob = await compress(file, 1280, 0.78);
-        const path = `users/${user.uid}/${p.id}/${Date.now()}.jpg`;
-        try {
-          await uploadBytes(sRef(storage, path), blob, { contentType: "image/jpeg" });
-          data.photo = await getDownloadURL(sRef(storage, path)); data.photoPath = path;
-        } catch (se) {
-          if (!navigator.onLine) throw new Error("Foto butuh koneksi internet untuk diunggah.");
-          const small = await compress(file, 640, 0.6); data.photo = await blobToDataUrl(small);
-          toast("Storage belum aktif, foto disimpan dalam ukuran kecil.");
-        }
+        const res = await storePhoto(file, `users/${user.uid}/${p.id}/${Date.now()}.jpg`);
+        data.photo = res.photo; data.photoPath = res.photoPath; local = res.local;
       }
-      await addDoc(collection(db, "users", user.uid, "projects", p.id, "logs"), data);
-      closeSheet(); toast("Catatan disimpan.");
+      /* tidak ditunggu: saat offline, Firestore menyimpan di cache lokal dan menyinkronkan nanti */
+      addDoc(collection(db, "users", user.uid, "projects", p.id, "logs"), data).catch(e => toast(errMsg(e)));
+      closeSheet(); toast(local ? "Catatan dan foto tersimpan di perangkat, akan tersinkron saat online." : "Catatan disimpan.");
     } catch(e){ toast(errMsg(e)); ev.target.disabled = false; ev.target.textContent = "Simpan"; }
   };
 }
