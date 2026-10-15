@@ -281,6 +281,39 @@ nav.tabs button.fab span{position:absolute;width:1px;height:1px;overflow:hidden;
 #toast{position:fixed;left:50%;bottom:6.8rem;transform:translateX(-50%);background:var(--moss);color:var(--btntext);padding:.6rem 1rem;border-radius:12px;font-size:.9rem;z-index:30;max-width:90%}
 .net{font-size:.75rem;padding:.15rem .55rem;border-radius:99px;background:var(--sun);color:#2b2208}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* Analisis */
+.ana-sub{margin-bottom:1rem}
+.ana-sub button{min-width:0;flex:1 1 auto;font-size:.82rem;padding:.55rem .4rem}
+.ana-q{margin-bottom:.9rem}.ana-q>b{display:block;font-size:.9rem;margin-bottom:.35rem}
+.ana-q .seg button{min-width:0;flex:1 1 auto;font-size:.82rem;padding:.5rem .6rem}
+.ana-tips{padding-left:1.1rem;font-size:.9rem}.ana-tips li{margin:.35rem 0}
+.swot{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
+@media (max-width:520px){.swot{grid-template-columns:1fr}}
+.swot .q{background:var(--card);border:1px solid var(--line);border-top-width:4px;border-radius:16px;padding:.85rem;min-width:0}
+.swot .q.s{border-top-color:var(--leaf)}.swot .q.w{border-top-color:var(--sun)}.swot .q.o{border-top-color:var(--water)}.swot .q.t{border-top-color:var(--danger)}
+.swot h4{font-family:var(--serif);font-size:1.02rem}
+.swot ul{margin-top:.4rem}.swot li{list-style:none;display:flex;gap:.4rem;align-items:flex-start;font-size:.88rem;padding:.3rem 0;border-bottom:1px dashed var(--line)}
+.swot li button{margin-left:auto;color:var(--danger);flex:none;padding:0 .35rem;font-size:1.1rem;line-height:1}
+.swot .add{display:flex;gap:.4rem;margin-top:.5rem}.swot .add input{padding:.5rem .6rem;font-size:.88rem}
+.sug{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.5rem}
+.sug button{font-size:.75rem;padding:.25rem .6rem;border-radius:99px;border:1px dashed var(--sage);color:var(--ink2);text-align:left}
+.lay-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 .7rem}.lay-grid.c3{grid-template-columns:repeat(3,1fr)}
+.lay-res{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin:.2rem 0 .8rem}
+.lay-res div{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:.65rem .3rem;text-align:center}
+.lay-res b{display:block;font-family:var(--serif);font-size:1.6rem;line-height:1.1}
+.lay-res span{font-size:.72rem;color:var(--ink2)}
+.lay-svg{display:block;width:100%;height:auto;background:var(--paper);border:1px solid var(--line);border-radius:12px}
+.warn{background:rgba(212,167,44,.15);border-left:4px solid var(--sun);padding:.55rem .75rem;border-radius:8px;font-size:.86rem;margin:.4rem 0}
+
+/* Pin rencana tanam */
+.cat h3 .pinbtn{margin-left:auto}.cat h3 .pinbtn + .dupbtn{margin-left:0}
+.btn.icon.pinbtn.on{color:var(--sun)}.btn.icon.pinbtn.on svg{fill:currentColor}
+.cat[data-id]{scroll-margin-top:150px}
+.pinrow .proj{border-left:4px solid var(--sun)}
+.pinrow .btn{flex:none;margin-left:.5rem}
+.pinoff{flex:none;width:38px;height:38px;display:grid;place-items:center;color:var(--sun);margin-left:.2rem;border-radius:50%}
+.pinoff svg{width:20px;height:20px;fill:currentColor}.pinoff:active{background:var(--mist)}
 </style>
 </head>
 <body>
@@ -318,7 +351,7 @@ nav.tabs button.fab span{position:absolute;width:1px;height:1px;overflow:hidden;
     <button data-tab="home" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7.5" height="9" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="5" rx="1.5"/><rect x="13.5" y="11" width="7.5" height="10" rx="1.5"/><rect x="3" y="15" width="7.5" height="6" rx="1.5"/></svg><span>Dashboard</span></button>
     <button data-tab="catalog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V11M12 11C12 6 8 4 4 4c0 5 3 7 8 7zM12 14c0-4 3-6 8-6 0 5-3 7-8 6z"/></svg><span>Panduan</span></button>
     <button data-action="custom" class="fab" aria-label="Tambah proyek"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg><span>Tambah</span></button>
-    <button data-tab="harvest"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 10h17l-1.6 9.5H5.1z"/><path d="M8 10l3-6M16 10l-3-6"/></svg><span>Panen</span></button>
+    <button data-tab="analysis"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><rect x="5" y="12" width="3.5" height="9" rx="1"/><rect x="10.25" y="6" width="3.5" height="15" rx="1"/><rect x="15.5" y="9" width="3.5" height="12" rx="1"/></svg><span>Analisis</span></button>
     <button data-tab="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Setting</span></button>
   </div></nav>
 </div>
@@ -1225,12 +1258,18 @@ $("#btnReset").onclick = async () => {
 onAuthStateChanged(auth, u => {
   user = u;
   unsubs.forEach(f => f()); unsubs = []; projects = []; logs = {}; guideEdits = {}; customCats = []; catRename = {}; catHidden = []; catOrder = []; applyEdits();
+  anaDocs = []; planAns = {}; swotData = { s:[], w:[], o:[], t:[] }; layDraft = null; layId = null; pins = [];
   if (!u) { $("#app").classList.add("hidden"); $("#login").classList.remove("hidden"); return; }
   $("#login").classList.add("hidden"); $("#app").classList.remove("hidden");
   setDoc(doc(db, "users", u.uid), { email: u.email || null, name: u.displayName || null, lastSeen: serverTimestamp() }, { merge: true }).catch(() => {});
   const q = query(collection(db, "users", u.uid, "projects"), orderBy("createdAt", "desc"));
   unsubs.push(onSnapshot(q, snap => { projects = snap.docs.map(d => ({ id: d.id, ...d.data() })); if (!editing) render(); },
     e => { toast(errMsg(e)); }));
+  unsubs.push(onSnapshot(collection(db, "users", u.uid, "analysis"), anaSync, () => {}));
+  unsubs.push(onSnapshot(doc(db, "users", u.uid, "meta", "pins"), snap => {
+    const d = snap.exists() ? snap.data() : {}; pins = Array.isArray(d.ids) ? d.ids.filter(x => typeof x === "string") : [];
+    if (tab === "home" && !openId && !editing) render();
+  }, () => {}));
   unsubs.push(onSnapshot(collection(db, "users", u.uid, "guides"), snap => {
     guideEdits = {}; snap.docs.forEach(d => { guideEdits[d.id] = d.data(); }); applyEdits();
     if (tab === "catalog" && !openId && !editing) render();
@@ -1275,8 +1314,8 @@ function render(){
     return renderDetail(p);
   }
   back.classList.add("hidden"); logo.classList.remove("hidden");
-  title.textContent = { home:"Dashboard", catalog:"Panduan", harvest:"Hasil panen", settings:"Setting" }[tab];
-  if (tab === "home") renderHome(); else if (tab === "catalog") renderCatalog(); else if (tab === "harvest") renderHarvest(); else renderSettings();
+  title.textContent = { home:"Dashboard", catalog:"Panduan", analysis:"Analisis", settings:"Setting" }[tab];
+  if (tab === "home") renderHome(); else if (tab === "catalog") renderCatalog(); else if (tab === "analysis") renderAnalysis(); else renderSettings();
 }
 
 /* ---------------- BERANDA ---------------- */
@@ -1293,12 +1332,12 @@ function projCard(p){
 function renderHome(){
   const active = projects.filter(p => !p.completed), finished = projects.filter(p => p.completed);
   const harvestTotal = projects.reduce((n, p) => n + (p.harvest || []).length, 0);
-  const name = (user.displayName || user.email || "").split(/[ @]/)[0];
   view.innerHTML = `
-    <div class="hero"><h2>Halo${name ? ", " + esc(name) : ""}</h2>
+    <div class="hero"><h2>Halo</h2>
       <p>Tiap panen kecil adalah satu langkah menuju kemandirian.</p>
       <div class="stats"><div><b>${active.length}</b><span>sedang berjalan</span></div>
       <div><b>${finished.length}</b><span>selesai</span></div><div><b>${harvestTotal}</b><span>catatan panen</span></div></div></div>
+    ${(() => { const pc = pins.map(byId).filter(Boolean); return pc.length ? `<div class="section-title" style="margin-top:0"><h3>Rencana tanam berikutnya</h3><span class="muted">${pc.length} dipin</span></div>${pc.map(pinCard).join("")}` : ""; })()}
     <div class="section-title"><h3>Proyek saya</h3><button class="btn small" id="btnNew">+ Mulai baru</button></div>
     ${projects.length ? projects.map(projCard).join("") :
       `<div class="empty">Belum ada proyek. Pilih satu panduan dan mulai tanam atau ternak pertama Anda.<br><br><button class="btn" id="btnNew2">Lihat panduan</button></div>`}`;
@@ -1306,6 +1345,12 @@ function renderHome(){
   $("#btnNew2")?.addEventListener("click", () => { tab = "catalog"; render(); });
   view.querySelectorAll("[data-open]").forEach(b => b.onclick = () => { openId = b.dataset.open; watchLogs(openId); render(); window.scrollTo(0, 0); });
   view.querySelectorAll("[data-del]").forEach(b => b.onclick = () => deleteProject(projects.find(x => x.id === b.dataset.del)));
+  view.querySelectorAll("[data-pinstart]").forEach(b => b.onclick = () => startSheet(b.dataset.pinstart));
+  view.querySelectorAll("[data-unpin]").forEach(b => b.onclick = () => { togglePin(b.dataset.unpin); renderHome(); });
+  view.querySelectorAll("[data-pinopen]").forEach(b => b.onclick = () => {
+    const id = b.dataset.pinopen; catFilter = "all"; catQuery = ""; catOpen[id] = ["steps"]; tab = "catalog"; render();
+    requestAnimationFrame(() => document.querySelector(`.cat[data-id="${id}"]`)?.scrollIntoView({ block:"start" }));
+  });
 }
 
 /* Hapus proyek beserta jurnal dan foto (dipakai di Dashboard dan halaman detail). */
@@ -1370,16 +1415,16 @@ function calSheet(y = new Date().getFullYear(), m = new Date().getMonth(), sel =
 $("#btnCal").onclick = () => calSheet();
 
 /* ---------------- HASIL PANEN ---------------- */
-function renderHarvest(){
+function renderHarvest(target = view){
   const withH = projects.filter(p => (p.harvest || []).length);
   const all = withH.flatMap(p => p.harvest.map(h => ({ ...h, pname: p.name, unit: p.unit || "" })))
     .sort((a, b) => b.date.localeCompare(a.date));
   if (!all.length) {
-    view.innerHTML = `<div class="empty">Belum ada catatan panen. Buka proyek Anda, lalu tekan <b>+ Catat panen</b> pada tahap Panen.<br><br><button class="btn" id="goHome">Lihat proyek saya</button></div>`;
-    $("#goHome").onclick = () => { tab = "home"; render(); };
+    target.innerHTML = `<div class="empty">Belum ada catatan panen. Buka proyek Anda, lalu tekan <b>+ Catat panen</b> pada tahap Panen.<br><br><button class="btn" id="goHome">Lihat proyek saya</button></div>`;
+    target.querySelector("#goHome").onclick = () => { tab = "home"; render(); };
     return;
   }
-  view.innerHTML = `
+  target.innerHTML = `
     <div class="section-title" style="margin-top:0"><h3>Total per proyek</h3><span class="muted">${all.length} catatan</span></div>
     ${withH.map(p => {
       const sum = Math.round(p.harvest.reduce((n, h) => n + Number(h.qty || 0), 0) * 100) / 100;
@@ -1391,7 +1436,332 @@ function renderHarvest(){
     <div class="section-title"><h3>Riwayat panen</h3></div>
     ${all.slice(0, 40).map(h => `<div class="log"><div class="d"><span>${fmtDate(h.date)}</span><span>${esc(h.pname)}</span></div>
       <div class="t"><b>${esc(h.qty)} ${esc(h.unit)}</b>${h.note ? " — " + esc(h.note) : ""}</div></div>`).join("")}`;
-  view.querySelectorAll("[data-open]").forEach(b => b.onclick = () => { openId = b.dataset.open; watchLogs(openId); render(); window.scrollTo(0, 0); });
+  target.querySelectorAll("[data-open]").forEach(b => b.onclick = () => { openId = b.dataset.open; watchLogs(openId); render(); window.scrollTo(0, 0); });
+}
+
+/* ---------------- PIN RENCANA TANAM ----------------
+   Panduan yang dipin muncul di Dashboard sebagai "Rencana tanam berikutnya". Disimpan di users/{uid}/meta/pins. */
+let pins = [];
+function togglePin(id){
+  const on = !pins.includes(id);
+  pins = on ? [...pins, id] : pins.filter(x => x !== id);
+  setDoc(doc(db, "users", user.uid, "meta", "pins"), { ids: pins, updatedAt: serverTimestamp() }).catch(e => toast(errMsg(e)));
+  toast(on ? "Dipin ke Dashboard." : "Pin dilepas.");
+  return on;
+}
+function pinCard(c){
+  const running = projects.some(p => p.tplId === c.id && !p.completed);
+  return `<div class="projrow pinrow"><button class="proj" data-pinopen="${c.id}"><div class="ico">${icon(c.id)}</div>
+    <div class="body"><div class="name">${esc(c.name)}</div><div class="sub">${esc(c.level)} · ±${Math.max(1, Math.round(c.days / 30))} bulan${running ? " · sedang berjalan" : " · belum dimulai"}</div></div></button>
+    <button class="btn small" data-pinstart="${c.id}">Mulai</button>
+    <button class="pinoff" data-unpin="${c.id}" aria-label="Lepas pin ${esc(c.name)}" title="Lepas pin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 17v5M9 3h6l-1 6 3 3H7l3-3-1-6z"/></svg></button></div>`;
+}
+
+/* ---------------- ANALISIS (perencanaan, SWOT, desain lokasi) ----------------
+   Data tersimpan di users/{uid}/analysis: dokumen "plan", dokumen "swot", dan satu dokumen per desain lokasi (kind:"layout"). */
+let anaSub = "plan", anaDocs = [], planAns = {}, swotData = { s:[], w:[], o:[], t:[] }, layDraft = null, layId = null;
+const anaTimers = {};
+function anaSaveLater(key, fn){ clearTimeout(anaTimers[key]); anaTimers[key] = setTimeout(() => { anaTimers[key] = null; fn(); }, 600); }
+const anaCol = () => collection(db, "users", user.uid, "analysis");
+const anaDoc = id => doc(db, "users", user.uid, "analysis", id);
+
+/* Dipanggil dari listener Firestore: sinkronkan data lalu segarkan tampilan tanpa merusak ketikan. */
+function anaSync(snap){
+  anaDocs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  const pl = anaDocs.find(x => x.id === "plan"), sw = anaDocs.find(x => x.id === "swot");
+  if (pl && !anaTimers.plan) planAns = { ...(pl.answers || {}) };
+  if (sw && !anaTimers.swot) swotData = { s: sw.s || [], w: sw.w || [], o: sw.o || [], t: sw.t || [] };
+  if (tab !== "analysis" || openId || editing) return;
+  if (anaSub === "layout") { paintSaved(); return; }
+  const a = document.activeElement;
+  if (a && view.contains(a) && /INPUT|TEXTAREA|SELECT/.test(a.tagName)) return;
+  renderAnalysis();
+}
+
+function renderAnalysis(){
+  const subs = [["plan","Perencanaan"],["swot","SWOT"],["layout","Desain lokasi"],["panen","Rekap panen"]];
+  view.innerHTML = `<div class="seg ana-sub" role="group" aria-label="Menu analisis">${subs.map(([k, l]) => `<button data-sub="${k}" class="${anaSub === k ? "on" : ""}">${l}</button>`).join("")}</div><div id="anaBody"></div>`;
+  view.querySelectorAll("[data-sub]").forEach(b => b.onclick = () => { anaSub = b.dataset.sub; renderAnalysis(); window.scrollTo(0, 0); });
+  const body = $("#anaBody");
+  if (anaSub === "plan") renderPlan(body); else if (anaSub === "swot") renderSwot(body); else if (anaSub === "layout") renderLayout(body); else renderHarvest(body);
+}
+
+/* ===== 1. PERENCANAAN ===== */
+const PLAN_Q = [
+  { k:"lokasi", q:"Di mana Anda akan berkebun?", o:[["balkon","Balkon / teras"],["pekarangan","Pekarangan"],["atap","Atap / dak"],["lahan","Lahan kebun"],["indoor","Dalam ruangan"]] },
+  { k:"tinggal", q:"Status tempat tinggal", o:[["milik","Menetap, milik sendiri"],["sewa","Menetap, sewa / kontrak"],["sementara","Sementara (< 1 tahun)"],["pindah","Sering berpindah"]] },
+  { k:"matahari", q:"Sinar matahari langsung per hari", o:[["tinggi","≥ 6 jam"],["sedang","3–6 jam"],["rendah","< 3 jam"]] },
+  { k:"air", q:"Ketersediaan air", o:[["mudah","Mudah (kran / sumur)"],["terbatas","Terbatas"],["hujan","Hanya air hujan"]] },
+  { k:"waktu", q:"Waktu merawat per hari", o:[["sedikit","< 15 menit"],["sedang","15–60 menit"],["banyak","> 1 jam"]] },
+  { k:"modal", q:"Modal awal", o:[["kecil","Kecil (< Rp500 rb)"],["sedang","Sedang (Rp0,5–3 juta)"],["besar","Besar (> Rp3 juta)"]] },
+  { k:"tujuan", q:"Tujuan utama", o:[["konsumsi","Konsumsi sendiri"],["jual","Dijual"],["hobi","Hobi / belajar"]] }
+];
+const PLAN_SCORE = {
+  matahari:{ w:.3, v:{ tinggi:100, sedang:65, rendah:30 } }, air:{ w:.2, v:{ mudah:100, terbatas:55, hujan:35 } },
+  waktu:{ w:.2, v:{ banyak:100, sedang:70, sedikit:40 } }, modal:{ w:.1, v:{ besar:100, sedang:70, kecil:45 } },
+  tinggal:{ w:.2, v:{ milik:100, sewa:75, sementara:50, pindah:35 } }
+};
+function planScore(a){
+  let sw = 0, t = 0, n = 0;
+  for (const k in PLAN_SCORE) { const v = PLAN_SCORE[k].v[a[k]]; if (v != null) { sw += PLAN_SCORE[k].w; t += v * PLAN_SCORE[k].w; n++; } }
+  return n >= 3 ? Math.round(t / sw) : null;
+}
+const SHADE_OK = ["bayam-hijau","selada-keriting","selada-air","sawi-keriting","sawi-putih","pakchoy","pakchoy-putih","sawi-pagoda","seledri","daun-bawang","parsley","selasih"];
+const MID_OK = [...SHADE_OK, "kangkung", "lobak", "ciplukan"];
+const BIG_PLANT = ["jagung-manis","jagung-ketan-ungu","labu-kuning","kubis","kembang-kol","brokoli","kelor","kacang-roay","kecipir"];
+const LOW_MAINT = ["kelor","daun-bawang","kangkung","bayam-hijau","selasih","ciplukan","terong-pokak","cabai-212","seledri"];
+function planPlants(a){
+  let list = CATALOG.filter(c => ["tanaman","obat","pangan","hidro"].includes(c.cat) && c.days);
+  if (a.matahari === "rendah" || a.lokasi === "indoor") list = list.filter(c => SHADE_OK.includes(c.id));
+  else if (a.matahari === "sedang") list = list.filter(c => MID_OK.includes(c.id));
+  if (["balkon","indoor","atap"].includes(a.lokasi)) list = list.filter(c => !BIG_PLANT.includes(c.id));
+  if (a.tinggal === "sementara" || a.tinggal === "pindah") list = list.filter(c => c.days <= 50);
+  if (a.waktu === "sedikit") { const l = list.filter(c => LOW_MAINT.includes(c.id)); if (l.length >= 3) list = l; }
+  const lv = { Pemula:0, Menengah:1, Lanjut:2 }, dir = a.tinggal === "milik" ? -1 : 1;
+  return list.sort((x, y) => (lv[x.level] ?? 1) - (lv[y.level] ?? 1) || dir * (x.days - y.days)).slice(0, 6);
+}
+function planTips(a){
+  const t = [];
+  const loc = {
+    balkon:"Balkon: pakai rak bertingkat, pot, dan vertikultur untuk menghemat ruang. Hitung kapasitasnya di menu Desain lokasi.",
+    pekarangan:"Pekarangan: bedengan permanen selebar 1–1,2 m memudahkan perawatan, ditambah pot untuk tanaman bumbu.",
+    atap:"Atap atau dak: pakai pot atau polybag dengan alas penampung air, beri paranet saat terik, dan periksa kekuatan beban dak.",
+    lahan:"Lahan kebun: buat bedengan dan atur rotasi tanaman supaya hama tidak menumpuk.",
+    indoor:"Dalam ruangan: pilih sayur daun kecil atau hidroponik, dan pakai lampu tumbuh bila dekat jendela kurang terang."
+  }[a.lokasi]; if (loc) t.push(loc);
+  if (a.tinggal === "milik") t.push("Tinggal menetap: investasikan pada bedengan atau rak permanen, buat kompos sendiri, dan tanam tanaman yang berbuah berulang (cabai, terong, kelor).");
+  else if (a.tinggal === "sewa") t.push("Lahan sewa: pakai pot, polybag, atau rak yang mudah dibongkar, dan minta izin pemilik bila ingin membuat bedengan.");
+  else if (a.tinggal === "sementara" || a.tinggal === "pindah") t.push("Tinggal sementara: pilih tanaman cepat panen (≤ 50 hari) dalam wadah yang mudah dibawa, supaya sempat dipanen sebelum pindah.");
+  if (a.matahari === "rendah") t.push("Sinar kurang dari 3 jam: tanam sayur daun yang tahan teduh. Tanaman berbuah (cabai, tomat, terong) akan sulit berbuah.");
+  else if (a.matahari === "sedang") t.push("Sinar 3–6 jam: cocok untuk sayur daun dan bumbu. Taruh tanaman berbuah di titik yang paling terang.");
+  else if (a.matahari === "tinggi") t.push("Sinar penuh (≥ 6 jam): cabai, tomat, dan terong akan tumbuh baik. Beri mulsa agar tanah tidak cepat kering.");
+  if (a.air === "terbatas") t.push("Air terbatas: pakai mulsa, siram pagi atau sore, dan pilih tanaman yang tahan kering.");
+  else if (a.air === "hujan") t.push("Hanya air hujan: sediakan tandon penampung dan atur masa tanam di musim hujan.");
+  if (a.waktu === "sedikit") t.push("Waktu terbatas: pilih tanaman perawatan rendah dan wadah penyimpan air, misalnya pot swa-siram dari botol bekas.");
+  if (a.modal === "kecil") t.push("Modal kecil: manfaatkan ember, galon, dan botol bekas sebagai wadah, serta buat kompos sendiri.");
+  if (a.tujuan === "jual") t.push("Tujuan dijual: mulai dari sayur cepat panen dan uji dulu ke tetangga atau warung sekitar sebelum menambah luas tanam.");
+  return t;
+}
+function renderPlan(body){
+  const a = planAns;
+  body.innerHTML = `<div class="cat"><h3>Perencanaan kebun</h3><p>Jawab pertanyaan berikut. Hasil analisis muncul otomatis dan tersimpan di akun Anda.</p>
+    ${PLAN_Q.map(q => `<div class="ana-q"><b>${q.q}</b><div class="seg" data-q="${q.k}">${q.o.map(([v, l]) => `<button data-v="${v}" class="${a[q.k] === v ? "on" : ""}">${l}</button>`).join("")}</div></div>`).join("")}</div>
+    <div id="planOut"></div>`;
+  body.querySelectorAll("[data-q]").forEach(g => g.querySelectorAll("button").forEach(b => b.onclick = () => {
+    const k = g.dataset.q; planAns[k] = planAns[k] === b.dataset.v ? "" : b.dataset.v;
+    g.querySelectorAll("button").forEach(x => x.classList.toggle("on", planAns[k] === x.dataset.v));
+    paintPlan(); anaSaveLater("plan", savePlan);
+  }));
+  paintPlan();
+}
+function savePlan(){ setDoc(anaDoc("plan"), { kind:"plan", answers: planAns, updatedAt: serverTimestamp() }).catch(e => toast(errMsg(e))); }
+function paintPlan(){
+  const out = $("#planOut"); if (!out) return;
+  const a = planAns, n = PLAN_Q.filter(q => a[q.k]).length, sc = planScore(a);
+  if (n < 2) { out.innerHTML = `<div class="empty">Pilih minimal dua jawaban untuk melihat analisis.</div>`; return; }
+  const label = sc == null ? "" : sc >= 75 ? "Sangat siap" : sc >= 55 ? "Cukup siap" : "Perlu persiapan";
+  const plants = planPlants(a), tips = planTips(a);
+  out.innerHTML = `
+    ${sc == null ? "" : `<div class="cat"><h3>Kesiapan berkebun</h3><div class="stats" style="grid-template-columns:1fr;margin-top:.4rem"><div style="background:var(--mist)"><b>${sc}</b><span>dari 100 · ${label}</span></div></div><div class="bar"><i style="width:${sc}%"></i></div>
+      <p style="margin-top:.6rem">Skor dihitung dari sinar matahari, air, waktu, modal, dan status tempat tinggal. Skor rendah bukan larangan, hanya menunjukkan hal yang perlu disiasati.</p></div>`}
+    ${tips.length ? `<div class="cat"><h3>Saran untuk Anda</h3><ul class="ana-tips">${tips.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div>` : ""}
+    <div class="section-title"><h3>Tanaman yang cocok</h3></div>
+    ${plants.length ? plants.map(c => `<div class="projrow"><div class="proj" style="cursor:default"><div class="ico">${icon(c.id)}</div><div class="body"><div class="name">${esc(c.name)}</div><div class="sub">${esc(c.level)} · ±${Math.max(1, Math.round(c.days / 30))} bulan</div></div></div><button class="btn small" data-start="${c.id}" style="margin-left:.5rem">Mulai</button></div>`).join("")
+      : `<div class="empty">Belum ada panduan yang cocok dengan kombinasi ini. Coba ubah jawaban sinar matahari atau lokasi.</div>`}
+    <div class="actions" style="display:flex;gap:.6rem;margin-top:1rem"><button class="btn" id="toSwot" style="flex:1">Buat SWOT dari jawaban ini</button></div>`;
+  out.querySelectorAll("[data-start]").forEach(b => b.onclick = () => startSheet(b.dataset.start));
+  $("#toSwot").onclick = () => { swotMerge(swotFromPlan(planAns)); anaSub = "swot"; renderAnalysis(); window.scrollTo(0, 0); toast("SWOT diisi dari jawaban perencanaan."); };
+}
+
+/* ===== 2. SWOT ===== */
+const SW = [["s","Kekuatan","Strengths · hal yang mendukung"],["w","Kelemahan","Weaknesses · hal yang menghambat dari dalam"],["o","Peluang","Opportunities · faktor luar yang menguntungkan"],["t","Ancaman","Threats · faktor luar yang merugikan"]];
+const SWOT_PRESETS = {
+  s:["Lahan milik sendiri","Air mudah didapat","Sinar matahari penuh","Waktu merawat cukup","Modal cukup","Tinggal menetap","Ada anggota keluarga yang membantu"],
+  w:["Lahan sempit","Sinar matahari kurang","Belum berpengalaman","Modal terbatas","Waktu merawat terbatas","Air terbatas","Sering bepergian"],
+  o:["Harga sayur dan cabai di pasar mudah naik","Ada komunitas urban farming","Hasil bisa dijual ke tetangga","Sampah dapur bisa jadi kompos","Bahan bekas bisa jadi wadah tanam","Bisa menghemat belanja dapur"],
+  t:["Hama dan penyakit tanaman","Hujan lebat atau kemarau panjang","Berpotensi pindah tempat tinggal","Hewan peliharaan atau tetangga mengganggu","Harga sarana tanam naik","Angin kencang atau terik di atap"]
+};
+function swotFromPlan(a){
+  const r = { s:[], w:[], o:[], t:[] };
+  const put = (k, x) => r[k].push(x);
+  if (a.matahari === "tinggi") put("s","Sinar matahari penuh (≥ 6 jam)"); else if (a.matahari === "sedang") put("w","Sinar matahari sedang (3–6 jam), cocok untuk sayur daun"); else if (a.matahari === "rendah") put("w","Sinar matahari kurang (< 3 jam)");
+  if (a.air === "mudah") put("s","Air mudah didapat"); else if (a.air === "terbatas") put("w","Air terbatas"); else if (a.air === "hujan") { put("t","Air bergantung pada hujan"); put("o","Air hujan bisa ditampung"); }
+  if (a.waktu === "banyak") put("s","Waktu merawat cukup"); else if (a.waktu === "sedikit") put("w","Waktu merawat sangat terbatas");
+  if (a.modal === "besar") put("s","Modal cukup untuk wadah dan peralatan"); else if (a.modal === "kecil") { put("w","Modal awal terbatas"); put("o","Bahan bekas bisa jadi wadah tanam"); }
+  if (a.tinggal === "milik") put("s","Tinggal menetap, tempat milik sendiri"); else if (a.tinggal === "sewa") put("w","Tempat sewa, tidak bisa membuat bangunan permanen"); else if (a.tinggal === "sementara" || a.tinggal === "pindah") put("t","Berpotensi pindah sebelum panen");
+  if (a.lokasi === "balkon") { put("w","Ruang terbatas (balkon)"); put("o","Rak bertingkat dan vertikultur menghemat ruang"); }
+  else if (a.lokasi === "atap") { put("t","Terik dan angin di atap"); put("w","Beban dak terbatas"); }
+  else if (a.lokasi === "pekarangan") put("s","Ada lahan pekarangan");
+  else if (a.lokasi === "lahan") { put("s","Lahan cukup luas"); put("t","Hama dan penyakit lebih banyak di lahan terbuka"); }
+  else if (a.lokasi === "indoor") { put("w","Butuh lampu tumbuh (biaya listrik)"); put("o","Hidroponik dalam ruangan tidak terpengaruh cuaca"); }
+  if (a.tujuan === "jual") put("o","Hasil bisa dijual ke pasar sekitar"); else if (a.tujuan === "konsumsi") put("o","Menghemat belanja dapur"); else if (a.tujuan === "hobi") put("o","Belajar dan bergabung dengan komunitas");
+  return r;
+}
+function swotMerge(add){ for (const k of ["s","w","o","t"]) (add[k] || []).forEach(x => { if (!swotData[k].includes(x)) swotData[k].push(x); }); swotSave(); }
+function swotSave(){ clearTimeout(anaTimers.swot); anaTimers.swot = null; setDoc(anaDoc("swot"), { kind:"swot", s: swotData.s, w: swotData.w, o: swotData.o, t: swotData.t, updatedAt: serverTimestamp() }).catch(e => toast(errMsg(e))); }
+function renderSwot(body, focusK){
+  const d = swotData, n = k => d[k].length, tot = n("s") + n("w") + n("o") + n("t");
+  const pos = n("s") + n("o"), pct = tot ? Math.round(pos / tot * 100) : 0;
+  const verdict = !tot ? "" : pct >= 60 ? "Kondisi mendukung. Anda bisa mulai sekarang, sambil mengawasi kelemahan dan ancaman." : pct >= 40 ? "Kondisi seimbang. Mulai dari skala kecil dan perkuat kelemahan yang paling terasa." : "Hambatan lebih banyak dari dukungan. Tangani kelemahan utama dulu, atau mulai dengan tanaman yang paling mudah.";
+  const first = k => d[k][0];
+  const strat = [["SO","Pakai kekuatan untuk meraih peluang","s","o"],["WO","Atasi kelemahan lewat peluang","w","o"],["ST","Pakai kekuatan untuk menghadapi ancaman","s","t"],["WT","Kurangi kelemahan agar ancaman tidak membesar","w","t"]].filter(x => first(x[2]) && first(x[3]));
+  body.innerHTML = `
+    <div class="cat"><h3>Analisis SWOT</h3><p>Catat faktor yang memengaruhi rencana berkebun Anda. Ketuk saran untuk menambahkannya, atau tulis sendiri.</p>
+      <button class="btn small alt" id="swFromPlan">Isi dari Perencanaan</button></div>
+    <div class="swot">${SW.map(([k, name, hint]) => `<div class="q ${k}"><h4>${name} <span class="muted">(${k.toUpperCase()})</span></h4><div class="muted" style="font-size:.78rem">${hint}</div>
+      <ul>${d[k].map((x, i) => `<li><span>${esc(x)}</span><button data-del="${k}:${i}" aria-label="Hapus butir">×</button></li>`).join("")}</ul>
+      <div class="add"><input data-in="${k}" maxlength="80" placeholder="Tambah butir..." aria-label="Tambah ${name}"><button class="btn small" data-add="${k}" aria-label="Tambah">+</button></div>
+      <div class="sug">${SWOT_PRESETS[k].filter(x => !d[k].includes(x)).slice(0, 5).map(x => `<button data-sug="${k}" data-t="${esc(x)}">+ ${esc(x)}</button>`).join("")}</div></div>`).join("")}</div>
+    ${tot ? `<div class="cat" style="margin-top:.8rem"><h3>Ringkasan</h3>
+      <div class="rowtotal">Dukungan (S + O): <b>${pos}</b> · Hambatan (W + T): <b>${n("w") + n("t")}</b></div>
+      <div class="bar"><i style="width:${pct}%"></i></div><p style="margin-top:.6rem">${verdict}</p>
+      ${strat.length ? `<h4 style="font-family:var(--serif);margin:.4rem 0">Contoh strategi</h4><ul class="ana-tips">${strat.map(([c, l, a, b]) => `<li><b>${c}</b> · ${l}: ${esc(first(a))} → ${esc(first(b))}</li>`).join("")}</ul><p class="muted">Contoh dibuat dari butir pertama tiap kotak. Susun ulang urutan dengan menghapus dan menambah butir.</p>` : ""}</div>` : ""}`;
+  const add = k => { const inp = body.querySelector(`[data-in="${k}"]`), v = inp.value.trim().slice(0, 80); if (!v) return; if (!d[k].includes(v)) d[k].push(v); swotSave(); renderSwot(body, k); };
+  body.querySelectorAll("[data-add]").forEach(b => b.onclick = () => add(b.dataset.add));
+  body.querySelectorAll("[data-in]").forEach(i => i.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); add(i.dataset.in); } }));
+  body.querySelectorAll("[data-sug]").forEach(b => b.onclick = () => { const k = b.dataset.sug; if (!d[k].includes(b.dataset.t)) d[k].push(b.dataset.t); swotSave(); renderSwot(body); });
+  body.querySelectorAll("[data-del]").forEach(b => b.onclick = () => { const [k, i] = b.dataset.del.split(":"); d[k].splice(Number(i), 1); swotSave(); renderSwot(body); });
+  $("#swFromPlan").onclick = () => { if (!PLAN_Q.some(q => planAns[q.k])) { toast("Isi menu Perencanaan dulu."); return; } swotMerge(swotFromPlan(planAns)); renderSwot(body); };
+  if (focusK) body.querySelector(`[data-in="${focusK}"]`)?.focus();
+}
+
+/* ===== 3. DESAIN LOKASI ===== */
+const LAY_DEF = { name:"", P:3, L:1.2, T:2.5, mode:"rak", rackLen:100, rackDep:40, spacing:40, pot:25, aisle:60, ppp:1 };
+const POTS = [[15,"Ø 15 cm (pot kecil)"],[20,"Ø 20 cm"],[25,"Ø 25 cm (sedang)"],[30,"Ø 30 cm (polybag 30)"],[40,"Ø 40 cm (besar / drum)"]];
+const LAY_MODES = [["rak","Rak bertingkat"],["lantai","Pot di lantai"],["dinding","Dinding / vertikal"]];
+const MODE_NAME = Object.fromEntries(LAY_MODES);
+function calcLayout(i){
+  const P = i.P * 100, L = i.L * 100, T = i.T * 100, mg = 10, gap = 5, pd = i.pot, Pu = P - 2 * mg, Lu = L - 2 * mg, w = [];
+  if (!(Pu > 0 && Lu > 0)) return { err:"Ukuran ruang terlalu kecil. Isi panjang dan lebar dalam meter." };
+  const usableH = T - 20;
+  let unitLen, depth, tiers, perTier, perRow = 1, maxRows = 99, colW = pd;
+  if (i.mode === "rak") {
+    unitLen = Math.min(i.rackLen, Pu); depth = i.rackDep;
+    tiers = usableH >= i.spacing ? Math.min(6, Math.floor(usableH / i.spacing)) : 0;
+    perTier = Math.floor(unitLen / pd) * Math.floor(depth / pd);
+    perRow = Math.max(0, Math.floor((Pu + gap) / (unitLen + gap)));
+  } else if (i.mode === "lantai") {
+    unitLen = Pu; depth = pd; tiers = 1; perTier = Math.floor(Pu / pd);
+  } else {
+    unitLen = Pu; depth = pd; maxRows = 2; colW = pd + gap;
+    tiers = usableH >= i.spacing ? Math.min(8, Math.floor(usableH / i.spacing)) : 0;
+    perTier = Math.floor(Pu / colW);
+  }
+  let aisle = i.aisle, n = 0;
+  while (n < maxRows && (n + 1) * depth + Math.ceil((n + 1) / 2) * aisle <= Lu) n++;
+  if (n === 0 && depth + 40 <= Lu) { n = 1; aisle = Math.round(Lu - depth); w.push(`Lorong hanya ${aisle} cm, lebih sempit dari pilihan Anda (${i.aisle} cm).`); }
+  if (n === 0) w.push("Lebar ruang tidak cukup untuk rak dan lorong. Kecilkan rak atau lorong.");
+  if (perTier === 0) w.push(`Pot Ø ${pd} cm tidak muat di ${i.mode === "rak" ? "rak" : "ruang"} ini.`);
+  if (i.mode !== "lantai" && tiers === 0) w.push(`Tinggi ruang belum cukup untuk satu tingkat dengan jarak ${i.spacing} cm.`);
+  if (i.mode !== "lantai" && tiers > 0 && i.spacing < pd * 0.8 + 15) w.push("Jarak antartingkat mungkin terlalu rapat untuk pot dan tanamannya. Naikkan jarak tingkat.");
+  const units = n * perRow, total = units * tiers * perTier;
+  const areaUnits = units * unitLen * depth / 10000, areaAisle = Math.ceil(n / 2) * aisle * Pu / 10000;
+  const pct = Math.min(100, Math.round((areaUnits + areaAisle) / (P * L / 10000) * 100));
+  const potKg = Math.PI * Math.pow(pd / 2, 2) * (pd * 0.8) / 1000;
+  const kg = Math.round(total * potKg), kgm2 = areaUnits ? Math.round(kg / areaUnits) : 0;
+  return { mode:i.mode, P, L, T, Pu, Lu, mg, gap, n, perRow, units, tiers, perTier, total, plants: total * i.ppp, pct, kg, kgm2, aisle, unitLen, depth, colW, w };
+}
+function topSvg(r, i){
+  const pd = i.pot, fs = Math.max(r.P, r.L) / 32, pad = fs * 2.4;
+  let g = "", y = r.mg;
+  for (let k = 0; k < r.n; k++) {
+    for (let j = 0; j < r.perRow; j++) {
+      const x = r.mg + j * (r.unitLen + r.gap);
+      g += `<rect x="${x}" y="${y}" width="${r.unitLen}" height="${r.depth}" rx="2" fill="var(--sage)" fill-opacity=".55" stroke="var(--moss)" stroke-width="1" vector-effect="non-scaling-stroke"/>`;
+      const cols = i.mode === "dinding" ? r.perTier : Math.floor(r.unitLen / pd), rws = Math.max(1, Math.floor(r.depth / pd)), cw = r.colW;
+      const x0 = x + (r.unitLen - cols * cw) / 2, y0 = y + (r.depth - rws * pd) / 2;
+      for (let c = 0; c < cols; c++) for (let q = 0; q < rws; q++) g += `<circle cx="${(x0 + (c + .5) * cw).toFixed(1)}" cy="${(y0 + (q + .5) * pd).toFixed(1)}" r="${(pd / 2 - .5).toFixed(1)}" fill="var(--leaf)" fill-opacity=".9"/>`;
+    }
+    y += r.depth;
+    if (k % 2 === 0) {
+      g += `<rect x="${r.mg}" y="${y}" width="${r.Pu}" height="${r.aisle}" fill="var(--sun)" fill-opacity=".18"/>`;
+      if (r.aisle >= fs * 1.3) g += `<text x="${r.P / 2}" y="${y + r.aisle / 2 + fs * .35}" text-anchor="middle" font-size="${fs}" fill="var(--ink2)">lorong ${r.aisle} cm</text>`;
+      y += r.aisle;
+    }
+  }
+  const vb = `${-pad} ${-pad * .6} ${r.P + pad * 2} ${r.L + pad * 2.2}`;
+  return `<svg class="lay-svg" viewBox="${vb}" role="img" aria-label="Denah tampak atas"><rect x="0" y="0" width="${r.P}" height="${r.L}" fill="var(--paper)" stroke="var(--moss)" stroke-width="2" vector-effect="non-scaling-stroke"/>
+    <rect x="${r.mg}" y="${r.mg}" width="${r.Pu}" height="${r.Lu}" fill="none" stroke="var(--line)" stroke-dasharray="6 4" vector-effect="non-scaling-stroke"/>${g}
+    <line x1="0" y1="0" x2="${r.P}" y2="0" stroke="var(--soil)" stroke-width="5" vector-effect="non-scaling-stroke"/>
+    <text x="${r.P / 2}" y="${r.L + fs * 1.7}" text-anchor="middle" font-size="${fs}" fill="var(--ink2)">${i.P} m</text>
+    <text transform="rotate(-90 ${-fs * .9} ${r.L / 2})" x="${-fs * .9}" y="${r.L / 2}" text-anchor="middle" font-size="${fs}" fill="var(--ink2)">${i.L} m</text></svg>`;
+}
+function sideSvg(r, i){
+  if (r.mode === "lantai" || !r.tiers || !r.perTier) return "";
+  const W = r.mode === "rak" ? r.unitLen : r.Pu, H = r.T, pd = i.pot, fs = Math.max(W, H) / 30, pad = fs * 2.4;
+  const cols = r.mode === "rak" ? Math.floor(W / pd) : r.perTier, cw = r.colW, x0 = (W - cols * cw) / 2;
+  let g = "";
+  for (let t = 0; t < r.tiers; t++) {
+    const ys = H - (10 + t * i.spacing);
+    g += `<line x1="0" x2="${W}" y1="${ys}" y2="${ys}" stroke="var(--soil)" stroke-width="3" vector-effect="non-scaling-stroke"/>`;
+    for (let c = 0; c < cols; c++) { const cx = x0 + (c + .5) * cw; g += `<rect x="${(cx - pd / 2).toFixed(1)}" y="${(ys - pd * .8).toFixed(1)}" width="${pd}" height="${(pd * .8).toFixed(1)}" rx="2" fill="var(--soil)" fill-opacity=".75"/><circle cx="${cx.toFixed(1)}" cy="${(ys - pd * .8 - pd * .25).toFixed(1)}" r="${(pd * .38).toFixed(1)}" fill="var(--leaf)"/>`; }
+  }
+  return `<svg class="lay-svg" viewBox="${-pad} ${-pad * .5} ${W + pad * 2} ${H + pad * 1.8}" role="img" aria-label="Tampak samping"><rect x="0" y="0" width="${W}" height="${H}" fill="none" stroke="var(--line)" stroke-dasharray="6 4" vector-effect="non-scaling-stroke"/>${g}
+    <text x="${W / 2}" y="${H + fs * 1.7}" text-anchor="middle" font-size="${fs}" fill="var(--ink2)">${Math.round(W)} cm</text>
+    <text transform="rotate(-90 ${-fs * .9} ${H / 2})" x="${-fs * .9}" y="${H / 2}" text-anchor="middle" font-size="${fs}" fill="var(--ink2)">${i.T} m</text></svg>`;
+}
+function renderLayout(body){
+  if (!layDraft) layDraft = { ...LAY_DEF };
+  const d = layDraft, m = d.mode;
+  const num = (k, label, step, min) => `<div><label for="ly_${k}">${label}</label><input id="ly_${k}" data-k="${k}" type="number" inputmode="decimal" step="${step}" min="${min}" value="${d[k]}"></div>`;
+  const sel = (k, label, opts) => `<div><label for="ly_${k}">${label}</label><select id="ly_${k}" data-k="${k}">${opts.map(([v, l]) => `<option value="${v}"${Number(d[k]) === v ? " selected" : ""}>${l}</option>`).join("")}</select></div>`;
+  body.innerHTML = `
+    <div class="cat"><h3>Desain lokasi kebun</h3><p>Isi ukuran ruang (misalnya balkon). Aplikasi menghitung berapa rak dan pot yang muat, lengkap dengan denahnya.</p>
+      <label for="ly_name">Nama lokasi</label><input id="ly_name" data-k="name" maxlength="40" placeholder="Contoh: Balkon lantai 2" value="${esc(d.name)}">
+      <div class="lay-grid c3">${num("P","Panjang (m)","0.1",0.5)}${num("L","Lebar (m)","0.1",0.5)}${num("T","Tinggi (m)","0.1",0.5)}</div>
+      <label>Cara menata</label><div class="seg" id="lyMode">${LAY_MODES.map(([v, l]) => `<button data-m="${v}" class="${m === v ? "on" : ""}">${l}</button>`).join("")}</div>
+      <div class="lay-grid">
+        ${m === "rak" ? num("rackLen","Panjang rak (cm)","5",30) + num("rackDep","Lebar rak (cm)","5",15) : ""}
+        ${m !== "lantai" ? num("spacing","Jarak antartingkat (cm)","5",20) : ""}
+        ${sel("pot","Ukuran pot", POTS)}
+        ${num("aisle","Lebar lorong (cm)","5",40)}
+        ${sel("ppp","Tanaman per pot", [[1,"1 (cabai, terong, tomat)"],[3,"3 (kangkung, bayam, sawi)"],[5,"5 (daun bawang, bumbu)"]])}
+      </div></div>
+    <div id="layOut"></div>
+    <div class="cat"><div class="actions" style="display:flex;gap:.6rem;flex-wrap:wrap"><button class="btn" id="laySave" style="flex:1">${layId ? "Perbarui desain" : "Simpan desain"}</button><button class="btn alt" id="layNew" style="flex:1">Desain baru</button></div></div>
+    <div class="section-title"><h3>Desain tersimpan</h3></div><div id="laySaved"></div>`;
+  body.querySelectorAll("[data-k]").forEach(el => { const h = () => { layDraft[el.dataset.k] = el.dataset.k === "name" ? el.value : Math.max(0, Number(el.value) || 0); paintLayout(); }; el.addEventListener("input", h); el.addEventListener("change", h); });
+  body.querySelectorAll("#lyMode button").forEach(b => b.onclick = () => { layDraft.mode = b.dataset.m; renderLayout(body); });
+  $("#laySave").onclick = saveLayout;
+  $("#layNew").onclick = () => { layDraft = { ...LAY_DEF }; layId = null; renderLayout(body); };
+  paintLayout(); paintSaved();
+}
+function paintLayout(){
+  const out = $("#layOut"); if (!out) return;
+  const d = layDraft, r = calcLayout(d);
+  if (r.err) { out.innerHTML = `<div class="warn">${esc(r.err)}</div>`; return; }
+  const unitWord = d.mode === "rak" ? "rak" : "baris";
+  out.innerHTML = `
+    <div class="lay-res"><div><b>${r.total}</b><span>total pot</span></div><div><b>${r.plants}</b><span>tanaman</span></div><div><b>${r.units}</b><span>${unitWord}</span></div>
+      <div><b>${d.mode === "lantai" ? "–" : r.tiers}</b><span>tingkat</span></div><div><b>${r.perTier}</b><span>pot per tingkat</span></div><div><b>${r.pct}%</b><span>luas terpakai</span></div></div>
+    ${r.w.map(x => `<div class="warn">${esc(x)}</div>`).join("")}
+    <div class="cat"><h3>Denah tampak atas</h3><p>Sisi atas gambar adalah dinding tempat ${unitWord} menempel. Area kuning adalah lorong. Jarak 10 cm disisakan dari tiap dinding untuk sirkulasi udara dan aliran air.</p>${topSvg(r, d)}
+      ${sideSvg(r, d) ? `<h3 style="margin-top:1rem">Tampak samping</h3><p>Satu ${unitWord} dengan ${r.tiers} tingkat, jarak ${d.spacing} cm.</p>${sideSvg(r, d)}` : ""}</div>
+    <div class="cat"><h3>Ringkasan</h3><p>${r.n} ${d.mode === "rak" ? "baris rak" : "baris"}${d.mode === "rak" ? ` × ${r.perRow} rak (${Math.round(r.unitLen)} × ${r.depth} cm)` : ""}, ${d.mode === "lantai" ? "satu tingkat" : r.tiers + " tingkat"}, ${r.perTier} pot per ${d.mode === "lantai" ? "baris" : "tingkat"}. Total ${r.total} pot Ø ${d.pot} cm.</p>
+      <p>Perkiraan beban pot berisi media basah sekitar <b>${r.kg} kg</b> (± ${r.kgm2} kg per m² area rak), belum termasuk rangka. Periksa kekuatan lantai balkon atau dak sebelum menata. Angka ini perkiraan kasar.</p></div>`;
+}
+async function saveLayout(){
+  const d = layDraft, r = calcLayout(d); if (r.err) { toast(r.err); return; }
+  const name = (d.name || "").trim() || "Lokasi tanpa nama";
+  const isNew = !layId, ref = isNew ? doc(anaCol()) : anaDoc(layId);
+  layId = ref.id; layDraft.name = name;
+  const data = { kind:"layout", name, inp:{ ...d, name }, res:{ total:r.total, plants:r.plants, units:r.units, tiers:r.tiers, perTier:r.perTier }, updatedAt: serverTimestamp() };
+  if (isNew) data.createdAt = serverTimestamp();
+  setDoc(ref, data, { merge:true }).catch(e => toast(errMsg(e)));
+  toast("Desain tersimpan.");
+  const b = $("#laySave"); if (b) b.textContent = "Perbarui desain";
+  const nm = $("#ly_name"); if (nm) nm.value = name;
+  paintSaved();
+}
+function paintSaved(){
+  const box = $("#laySaved"); if (!box) return;
+  const items = anaDocs.filter(x => x.kind === "layout").sort((a, b) => (b.updatedAt?.toMillis?.() ?? Date.now()) - (a.updatedAt?.toMillis?.() ?? Date.now()));
+  box.innerHTML = items.length ? items.map(x => `<div class="projrow"><button class="proj" data-load="${x.id}"><div class="body"><div class="name">${esc(x.name)}${x.id === layId ? '<span class="chip">Dibuka</span>' : ""}</div>
+      <div class="sub">${x.inp?.P} × ${x.inp?.L} × ${x.inp?.T} m · ${esc(MODE_NAME[x.inp?.mode] || "")} · ${x.res?.total ?? 0} pot</div></div></button>
+      <button class="projdel" data-dl="${x.id}" aria-label="Hapus desain ${esc(x.name)}" title="Hapus desain"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" style="width:20px;height:20px"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg></button></div>`).join("")
+    : `<div class="empty">Belum ada desain tersimpan.</div>`;
+  box.querySelectorAll("[data-load]").forEach(b => b.onclick = () => { const x = anaDocs.find(z => z.id === b.dataset.load); if (!x) return; layDraft = { ...LAY_DEF, ...x.inp }; layId = x.id; renderLayout($("#anaBody")); window.scrollTo(0, 0); });
+  box.querySelectorAll("[data-dl]").forEach(b => b.onclick = () => { const x = anaDocs.find(z => z.id === b.dataset.dl); if (!x || !confirm(`Hapus desain "${x.name}"?`)) return; if (layId === x.id) layId = null; deleteDoc(anaDoc(x.id)).catch(e => toast(errMsg(e))); toast("Desain dihapus."); const sb = $("#laySave"); if (sb) sb.textContent = layId ? "Perbarui desain" : "Simpan desain"; });
 }
 
 /* ---------------- PANDUAN ---------------- */
@@ -1403,7 +1773,7 @@ function renderCatalog(){
     <div class="filterbar"><div class="fixgrp"><button data-f="all" class="${catFilter === "all" ? "on" : ""}" aria-label="${esc(CATS.all)}" title="${esc(CATS.all)} (ketuk 2x untuk tambah kategori)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/></svg></button></div><div class="filters">${[...allCats().map(k => [k.id, k.name]), ...(CATALOG.some(c => !c.cat) ? [["none", "Tanpa kategori"]] : [])].map(([k, v]) => `<button data-f="${k}" class="${catFilter === k ? "on" : ""}">${esc(v)}</button>`).join("")}</div></div>
     <div class="searchbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><input id="catSearch" type="search" enterkeyhint="search" autocomplete="off" placeholder="Cari panduan, bahan, atau alat" aria-label="Cari panduan" value="${esc(catQuery)}"><button class="sclear hidden" id="catClear" aria-label="Hapus pencarian" title="Hapus pencarian">${IC_X}</button></div>
     </div>
-    ${list.map(c0 => { const c = withMedia(c0); return `<div class="cat" data-id="${c.id}" data-q="${esc([c.name, allCats().find(k => k.id === c.cat)?.name || "tanpa kategori", c.level, ...(c.medias || []).map(m => MEDIA[m]), ...c.tools, ...c.bahan.map(b => b.n)].join(" ").toLowerCase())}"><h3><button class="ctitle" aria-expanded="false"><span class="ico sm">${icon(c.id)}</span><span>${esc(c.name)}</span></button><button class="btn small alt icon dupbtn" data-dup aria-label="Duplikat panduan" title="Duplikat panduan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg></button><button class="chevbtn" aria-label="Buka atau tutup panduan" title="Buka atau tutup"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button></h3>
+    ${list.map(c0 => { const c = withMedia(c0); return `<div class="cat" data-id="${c.id}" data-q="${esc([c.name, allCats().find(k => k.id === c.cat)?.name || "tanpa kategori", c.level, ...(c.medias || []).map(m => MEDIA[m]), ...c.tools, ...c.bahan.map(b => b.n)].join(" ").toLowerCase())}"><h3><button class="ctitle" aria-expanded="false"><span class="ico sm">${icon(c.id)}</span><span>${esc(c.name)}</span></button><button class="btn small alt icon pinbtn${pins.includes(c.id) ? " on" : ""}" data-pin aria-pressed="${pins.includes(c.id)}" aria-label="${pins.includes(c.id) ? "Lepas pin dari Dashboard" : "Pin ke Dashboard"}" title="${pins.includes(c.id) ? "Lepas pin dari Dashboard" : "Pin ke Dashboard"}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 17v5M9 3h6l-1 6 3 3H7l3-3-1-6z"/></svg></button><button class="btn small alt icon dupbtn" data-dup aria-label="Duplikat panduan" title="Duplikat panduan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg></button><button class="chevbtn" aria-label="Buka atau tutup panduan" title="Buka atau tutup"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button></h3>
       ${c.medias && c.medias.length ? `<div class="media" role="group" aria-label="Media tanam">${c.medias.map(m => `<button data-media="${m}" class="${c.mediaKey === m ? "on" : ""}" aria-pressed="${c.mediaKey === m}">${MEDIA[m]}</button>`).join("")}</div>` : ""}
       <div class="meta"><button class="catchip" data-tag aria-label="Ubah kategori" title="Ketuk untuk ubah kategori">${esc(allCats().find(k => k.id === c.cat)?.name || "Tanpa kategori")}</button><span>${c.level}</span><span>±${Math.max(1, Math.round(c.days / 30))} bulan</span><span>${c.stages.length} tahap</span>${c.custom ? "<span>Salinan</span>" : ""}</div>
       <div class="cat-actions"><button class="btn small icon" data-start="${c.id}" aria-label="Mulai proyek ini" title="Mulai proyek ini"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg></button>
@@ -1489,6 +1859,11 @@ function renderCatalog(){
   });
   view.querySelectorAll("[data-tag]").forEach(b => b.onclick = () => categorySheet(b.closest(".cat").dataset.id));
   view.querySelectorAll("[data-dup]").forEach(b => b.onclick = () => duplicateSheet(b.closest(".cat").dataset.id));
+  view.querySelectorAll("[data-pin]").forEach(b => b.onclick = () => {
+    const id = b.closest(".cat").dataset.id, on = togglePin(id);
+    b.classList.toggle("on", on); b.setAttribute("aria-pressed", on);
+    const t = on ? "Lepas pin dari Dashboard" : "Pin ke Dashboard"; b.title = t; b.setAttribute("aria-label", t);
+  });
   view.querySelectorAll("[data-delguide]").forEach(b => b.onclick = () => deleteGuide(b.closest(".cat").dataset.id));
   view.querySelectorAll("[data-steps-btn]").forEach(b => b.onclick = () => showPanel(b.closest(".cat"), "steps"));
   view.querySelectorAll("[data-panel-btn]").forEach(b => b.onclick = () => showPanel(b.closest(".cat"), b.dataset.panelBtn));
