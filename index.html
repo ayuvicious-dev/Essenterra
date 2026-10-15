@@ -146,6 +146,11 @@ nav.tabs button.fab span{position:absolute;width:1px;height:1px;overflow:hidden;
 .filterbar .fixgrp button[data-f="all"]{padding:.4rem;display:grid;place-items:center;border-radius:99px;border:1.5px solid var(--sage);color:var(--moss);white-space:nowrap;font-size:.88rem}
 .filterbar .fixgrp button[data-f="all"] svg{width:22px;height:22px}
 .filterbar .fixgrp button[data-f="all"].on{background:var(--moss);color:var(--btntext);border-color:var(--moss)}
+.filterbar .fixgrp button.starf{padding:.4rem;display:grid;place-items:center;border-radius:99px;border:1.5px solid var(--sage);color:var(--moss);position:relative}
+.filterbar .fixgrp button.starf svg{width:22px;height:22px}
+.filterbar .fixgrp button.starf.on{background:var(--moss);color:var(--btntext);border-color:var(--moss)}
+.filterbar .fixgrp button.starf.done svg{fill:currentColor}
+.starinfo{font-size:.8rem;color:var(--ink2);margin:.1rem .2rem .5rem}
 .filters button.on{background:var(--moss);color:var(--btntext);border-color:var(--moss)}
 .catbar{position:sticky;top:calc(var(--hdr,70px) - 1px);z-index:4;background:var(--bg);margin:-.35rem -1rem .5rem;padding:.35rem 1rem .05rem}
 .catbar .filters{margin-bottom:.5rem}
@@ -171,9 +176,22 @@ nav.tabs button.fab span{position:absolute;width:1px;height:1px;overflow:hidden;
 .chev{width:20px;height:20px;color:var(--ink2);transition:transform .2s;flex:none}
 .chevbtn{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;flex:none;color:var(--ink2)}
 .chevbtn:active{background:var(--mist)}
+.fullbtn{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;flex:none;color:var(--ink2)}
+.fullbtn:active{background:var(--mist)}.fullbtn svg{width:20px;height:20px}
+/* Layar penuh: hanya informasi panduan, tanpa tombol fitur lain */
+.fullview{position:fixed;inset:0;z-index:60;background:var(--bg);color:var(--ink);overflow-y:auto;-webkit-overflow-scrolling:touch}
+.fullview .fvbar{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:.6rem;background:var(--bg);border-bottom:1px solid var(--line);padding:calc(.7rem + env(safe-area-inset-top,0px)) 1rem .7rem}
+.fullview .fvbar h2{flex:1;min-width:0;font-family:var(--serif);font-size:1.15rem;display:flex;align-items:center;gap:.5rem}
+.fullview .fvbar h2 span:last-child{overflow:hidden;text-overflow:ellipsis}
+.fullview .fvx{flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;color:var(--ink)}
+.fullview .fvx:active{background:var(--mist)}.fullview .fvx svg{width:22px;height:22px}
+.fullview .fvbody{max-width:720px;margin:0 auto;padding:.2rem 1rem calc(2rem + env(safe-area-inset-bottom,0px))}
+.fullview .fvphoto{display:block;width:33.333%;min-width:120px;max-width:100%;height:auto;object-fit:contain;border-radius:14px;border:1px solid var(--line);background:var(--mist);margin:.9rem auto 0}
+.fullview .meta{margin:.9rem 0 .2rem}
 .cat h3 .dupbtn{margin-left:auto}
 .cat h3 .gnameedit{flex:1;min-width:0;width:auto;font:inherit;letter-spacing:inherit;line-height:inherit;color:inherit;padding:.2rem .3rem;margin:-.2rem -.3rem;border:0;border-radius:0;background:transparent;outline:none;overflow:visible}
 .cat.open .chev{transform:rotate(180deg)}
+.cat .cat-tools{display:flex;align-items:center;gap:.3rem;margin:.4rem 0 0}
 .gsteps{border-top:1px solid var(--line);margin-top:1rem;padding-top:1rem}
 .gtools{border-top:1px solid var(--line);margin-top:1rem;padding-top:1rem}
 .gtools h4{font-family:var(--serif);font-size:1rem;margin-bottom:.5rem}
@@ -311,6 +329,9 @@ nav.tabs button.fab span{position:absolute;width:1px;height:1px;overflow:hidden;
 /* Pin rencana tanam */
 .cat h3 .pinbtn{margin-left:auto}.cat h3 .pinbtn + .dupbtn{margin-left:0}
 .btn.icon.pinbtn.on{color:var(--sun)}.btn.icon.pinbtn.on svg{fill:currentColor}
+/* Bintang: panduan sudah dicek kesesuaiannya */
+.cat h3 .starbtn{margin-left:auto}.cat h3 .starbtn + .pinbtn{margin-left:0}
+.btn.icon.starbtn.on{color:var(--moss)}.btn.icon.starbtn.on svg{fill:currentColor}
 .cat[data-id]{scroll-margin-top:150px}
 .pinrow .proj{border-left:4px solid var(--sun)}
 .pinrow .btn{flex:none;margin-left:.5rem}
@@ -332,6 +353,17 @@ nav.tabs button.fab span{position:absolute;width:1px;height:1px;overflow:hidden;
 .gphoto{text-align:center}
 .gphoto img{display:block;width:33.333%;min-width:110px;height:auto;margin:0 auto .6rem;border-radius:12px;border:1px solid var(--line);background:var(--mist)}
 .gphoto .empty{font-size:.88rem}
+
+/* Periode panen */
+.gharvest{border-top:1px solid var(--line);margin-top:1rem;padding-top:1rem}
+.gharvest h4{font-family:var(--serif);font-size:1rem;margin:0}
+.gharvest .hint{font-size:.78rem;margin:0 0 .6rem}
+.gharvest .empty{font-size:.88rem}
+.gharvest .hvadd{display:flex;gap:.5rem;align-items:flex-end;margin-top:.8rem}
+.gharvest .hvadd>div{flex:1;min-width:0}
+.gharvest .hvadd label{margin:0 0 .2rem;font-size:.75rem}
+.gharvest .hvadd .btn{flex:none}
+.gharvest .btable td.d{color:var(--ink2);font-size:.75rem}
 </style>
 </head>
 <body>
@@ -1154,6 +1186,148 @@ const POT_PLAN = {
   "paprika-merah":{pots:5,l:30,g:1000},"labu-kuning":{pots:3,l:40,g:3000},"jagung-manis":{pots:9,l:25,g:250},"jagung-ketan-ungu":{pots:9,l:25,g:250},
   "ciplukan":{pots:5,l:20,g:200}
 };
+/* ---------------- VARIAN MEDIA OTOMATIS: Hidroponik dan Aeroponik ----------------
+   Dibangun dari data panduan tanah (benih, panen, pengolahan) ditambah parameter budidaya di MEDIA_SPEC.
+   Hanya untuk tanaman yang layak: sayuran daun, herba, dan sayuran buah berukuran sedang.
+   Tidak diberi varian: kelor (pohon), labu kuning dan kecipir dan kacang roay (merambat besar dan siklus panjang),
+   jagung (tinggi dan butuh ruang), ciplukan (data budidaya hidroponik belum memadai). Varian bawaan (kangkung, cabai, tomat) tidak diubah.
+   k = jenis: leaf | stek | anak | head | fruit | vine | alias (salin dari varietas induk). h / a = hari panen sejak semai (hidroponik / aeroponik).
+   ec = EC fase tumbuh, ecF = EC fase buah (mS/cm), ph = rentang pH. Semua angka adalah rentang umum, kalibrasi dengan kondisi lokal. */
+const MEDIA_SPEC = {
+  "bayam-hijau":{ k:"leaf", h:21, a:19, m:7, ec:"1,5–2,0", ph:"5,8–6,5" },
+  "sawi-keriting":{ k:"leaf", h:28, a:26, m:10, ec:"1,5–2,0", ph:"5,5–6,5" },
+  "pakchoy":{ k:"leaf", h:28, a:26, m:10, ec:"1,5–2,0", ph:"5,5–6,5" },
+  "pakchoy-putih":{ k:"leaf", h:28, a:26, m:10, ec:"1,5–2,0", ph:"5,5–6,5" },
+  "sawi-pagoda":{ k:"leaf", h:35, a:32, m:10, ec:"1,5–2,0", ph:"5,5–6,5" },
+  "selada-keriting":{ k:"leaf", h:32, a:29, m:12, ec:"0,8–1,4", ph:"5,5–6,5" },
+  "selasih":{ k:"leaf", h:35, a:32, m:14, g:4, ec:"1,0–1,6", ph:"5,5–6,5", gd:"Benih selasih berkecambah dalam 3–5 hari. Setelah muncul kecambah, beri cahaya terang." },
+  "parsley":{ k:"leaf", h:65, a:60, m:28, g:14, ec:"1,0–1,8", ph:"5,5–6,0", gd:"Benih parsley berkecambah lambat, sekitar 10–14 hari. Jaga rockwool tetap lembap." },
+  "seledri":{ k:"leaf", h:70, a:65, m:35, g:12, ec:"1,8–2,4", ph:"5,8–6,5", gd:"Benih seledri berkecambah lambat, sekitar 10–14 hari. Jaga rockwool tetap lembap dan terang." },
+  "lobak":{ k:"leaf", h:30, m:6, ec:"1,5–2,0", ph:"5,8–6,5", gn:"Pembentukan umbi", gx:"Akar membesar menjadi umbi. Jaga EC dan volume larutan tetap stabil." },
+  "selada-air":{ k:"stek", h:25, ec:"0,8–1,4", ph:"6,0–6,5" },
+  "daun-bawang":{ k:"anak", h:45, ec:"1,4–1,8", ph:"6,0–6,5" },
+  "sawi-putih":{ k:"head", h:51, ec:"1,8–2,4", ph:"5,8–6,5" },
+  "kubis":{ k:"head", h:66, ec:"1,8–2,4", ph:"5,8–6,5" },
+  "brokoli":{ k:"head", h:68, ec:"1,8–2,4", ph:"5,8–6,5" },
+  "kembang-kol":{ k:"head", h:70, ec:"1,8–2,4", ph:"5,8–6,5" },
+  "cabai-merah-besar":{ k:"alias", from:"cabai", h:95, a:90 },
+  "cabai-gendot":{ k:"alias", from:"cabai", h:90, a:85 },
+  "cabai-212":{ k:"alias", from:"cabai", h:90, a:85 },
+  "cabai-hijau-besar":{ k:"alias", from:"cabai", h:80, a:75 },
+  "tomat-rampai":{ k:"alias", from:"tomat", h:70, a:65 },
+  "tomat-cherry":{ k:"alias", from:"tomat", h:65, a:60 },
+  "terong-ungu":{ k:"fruit", h:80, ec:"1,8–2,2", ecF:"2,0–2,5", ph:"5,8–6,3", sup:"Ajir bambu dan tali rafia", vt:["Pangkas tunas air di bawah cabang pertama","Beri ajir dan ikat batang"] },
+  "terong-lalap":{ k:"fruit", h:70, ec:"1,8–2,2", ecF:"2,0–2,5", ph:"5,8–6,3", sup:"Ajir bambu dan tali rafia", vt:["Pangkas tunas air di bawah cabang pertama","Beri ajir dan ikat batang"] },
+  "terong-lalap-ungu":{ k:"fruit", h:70, ec:"1,8–2,2", ecF:"2,0–2,5", ph:"5,8–6,3", sup:"Ajir bambu dan tali rafia", vt:["Pangkas tunas air di bawah cabang pertama","Beri ajir dan ikat batang"] },
+  "terong-pokak":{ k:"fruit", h:90, ec:"1,8–2,2", ecF:"2,0–2,5", ph:"5,8–6,3", sup:"Ajir bambu dan tali rafia", vt:["Pangkas tunas air di bawah cabang pertama","Beri ajir dan ikat batang"] },
+  "paprika-merah":{ k:"fruit", h:115, a:110, ec:"1,8–2,2", ecF:"2,0–2,5", ph:"5,8–6,3", sup:"Ajir atau tali penyangga setinggi ±2 m", vt:["Pelihara 2 batang utama dan ikat pada tali penyangga","Buang bunga pertama agar tanaman menguat"] },
+  "timun-baby":{ k:"vine", h:38, a:35, m:10, ec:"1,7–2,2", ecF:"2,0–2,5", ph:"5,8–6,3", sup:"Para-para atau tali rambatan setinggi ±2 m", vt:["Arahkan sulur ke tali rambatan tiap beberapa hari","Buang daun tua di bagian bawah"] },
+  "buncis":{ k:"vine", h:45, m:10, ec:"1,5–2,0", ecF:"1,8–2,2", ph:"6,0–6,5", sup:"Ajir pendek (opsional)", vt:["Beri ajir pendek bila tanaman rebah"] },
+  "kacang-panjang":{ k:"vine", h:42, m:10, ec:"1,5–2,0", ecF:"1,8–2,2", ph:"6,0–6,5", sup:"Para-para atau tali rambatan setinggi ±2 m", vt:["Arahkan sulur ke tali rambatan tiap beberapa hari"] },
+  "kacang-panjang-merah":{ k:"vine", h:48, m:10, ec:"1,5–2,0", ecF:"1,8–2,2", ph:"6,0–6,5", sup:"Para-para atau tali rambatan setinggi ±2 m", vt:["Arahkan sulur ke tali rambatan tiap beberapa hari"] }
+};
+(function buildMediaVariants(){
+  const st = (n, day, d, t, type) => type ? { n, day, d, t, type } : { n, day, d, t };
+  const fix = a => { let p = -1; a.forEach(s => { if (s.day <= p) s.day = p + 1; p = s.day; }); return a; };
+  const slab = () => ({ n:"Rockwool atau media semai halus", g:"1 slab", q:1, h:25000 });
+  const netpot = n => ({ n:"Net pot 5 cm", g:"isi 25", q:Math.max(1, Math.ceil(n / 25)), h:12000 });
+  const phAdj = () => ({ n:"pH down/pH up (opsional)", g:"100 ml", q:1, h:20000 });
+  const air = () => ({ n:"Air bersih", g:"secukupnya", q:1, h:0 });
+  const nozzle = () => ({ n:"Nozzle kabut cadangan", g:"isi 5", q:1, h:20000 });
+  const pvc = () => ({ n:"Pipa PVC dan sambungan untuk rangka", g:"1 set", q:1, h:90000 });
+  const ab = buah => ({ n: buah ? "Nutrisi hidroponik AB mix (sayuran buah)" : "Nutrisi hidroponik AB mix", g:"1 set (A dan B)", q:1, h: buah ? 45000 : 35000 });
+  const pl = id => POT_PLAN[id] || { pots:10, l:20 };
+  const parts = c => ({ seed: clone(c.bahan[0]), hv: c.stages.find(s => s.type === "harvest"), pr: c.stages.find(s => s.type === "process") });
+  const days = h => Math.round(h * 1.3);
+  const install = (aero, sp, extra) => aero
+    ? st("Rakit instalasi aeroponik", 0, "Pasang tangki, pompa, timer, dan nozzle di bawah tray tanam. Uji semprotan sebelum ada tanaman. Ruang akar harus gelap dan tertutup.",
+        ["Pasang pompa dan nozzle, pastikan kabut merata", "Atur timer (contoh: semprot 5–10 detik tiap 3–5 menit, sesuaikan pompa dan nozzle)", "Isi larutan nutrisi: EC sekitar " + sp.ec + " dan pH " + sp.ph])
+    : st("Siapkan instalasi dan larutan nutrisi", 0, (extra || "Isi bak atau rakit dengan air, lalu campur nutrisi AB mix sesuai takaran kemasan.") + " Target awal: EC sekitar " + sp.ec + " mS/cm dan pH " + sp.ph + ".",
+        ["Cuci bak dan net pot sampai bersih", "Isi air, tambahkan nutrisi A dan B secara terpisah (jangan dicampur pekat)", "Cek EC dan pH, sesuaikan bila perlu"]);
+  const finish = (S, p, H) => { S.push({ n:p.hv.n, day:H, d:p.hv.d, t:clone(p.hv.t), type:"harvest" }); S.push({ n:p.pr.n, day:H + 1, d:p.pr.d, t:clone(p.pr.t), type:"process" }); return fix(S); };
+
+  function leaf(c, sp, aero){
+    const p = parts(c), H = aero ? sp.a : sp.h, f = H / sp.h, M = Math.max(3, Math.round(sp.m * f)), G = Math.min(1 + (sp.g || 3), M - 1), gr = M + Math.round((H - M) * 0.35);
+    const k = VARIANTS.kangkung[aero ? "aeroponik" : "hidroponik"], S = [install(aero, sp), st("Semai di rockwool", 1, "Tanam benih di rockwool lembap, tanpa tanah.", SEMAI_TIPS),
+      st("Perkecambahan", G, sp.gd || "Benih berkecambah dalam 2–4 hari. Setelah muncul kecambah, beri cahaya terang.", ["Semprot air bila rockwool mengering", "Pindahkan ke tempat terang dengan matahari pagi"]),
+      aero ? st("Pindah ke tray aeroponik", M, "Bibit 2–3 daun. Akar akan menggantung di ruang kabut.", ["Masukkan rockwool ke net pot", "Pasang net pot di lubang tray", "Pastikan akar terkena kabut, bukan tergenang"])
+           : st("Pindah ke instalasi", M, "Bibit 2–3 daun dan akar mulai keluar dari rockwool.", ["Masukkan rockwool ke net pot", "Pasang net pot di bak sampai ujung akar menyentuh larutan", "Cek EC dan pH"]),
+      st(sp.gn || "Pertumbuhan daun", gr, (sp.gx ? sp.gx + " " : "") + (aero ? "Akar cepat kering bila semprotan berhenti, jadi cek sistem tiap hari. " : "Jaga larutan tetap bersih. ") + "EC sekitar " + sp.ec + " dan pH " + sp.ph + ".",
+        aero ? ["Cek pompa, timer, dan nozzle tiap hari (jangan sampai mampet)", "Cek EC dan pH tiap 2 hari", "Ganti larutan tiap 7–10 hari"]
+             : ["Cek EC dan pH tiap 2–3 hari", "Tambah air atau nutrisi bila volume turun", "Ganti larutan tiap 10–14 hari", "Tutup bak dari cahaya agar lumut tidak tumbuh"])];
+    return { days:days(H), tools:clone(k.tools), bahan:[p.seed, slab(), ab(false), netpot(pl(c.id).pots), ...(aero ? [nozzle()] : []), phAdj(), air()], stages:finish(S, p, H) };
+  }
+  function stek(c, sp){
+    const p = parts(c), H = sp.h, k = VARIANTS.kangkung.hidroponik;
+    const S = [install(false, sp, "Siapkan bak dangkal atau NFT dengan aliran pelan. Selada air suka air dingin dan terus mengalir; campur nutrisi AB mix sesuai takaran kemasan."),
+      st("Siapkan stek", 1, "Potong batang sehat sepanjang ±10 cm, buang daun bagian bawah, lalu rendam pangkalnya di air bersih.", ["Pilih batang segar tanpa bercak", "Buang daun bawah, sisakan 3–4 pasang daun di pucuk", "Letakkan di rockwool lembap atau air bersih tempat teduh"]),
+      st("Akar tumbuh", 7, "Akar putih muncul dari ruas batang dalam 5–7 hari.", ["Jaga rockwool tetap lembap", "Ganti air bila keruh"]),
+      st("Pindah ke net pot", 10, "Stek berakar dipasang di net pot sehingga pangkal batang menyentuh larutan.", ["Masukkan stek di net pot", "Pasang di bak sampai akar menyentuh larutan", "Cek EC dan pH"]),
+      st("Pertumbuhan", 17, "Jaga larutan tetap bersih dan dingin. EC sekitar " + sp.ec + " dan pH " + sp.ph + ".", ["Cek EC dan pH tiap 2–3 hari", "Tambah air atau nutrisi bila volume turun", "Ganti larutan tiap 10–14 hari", "Naungi bak dari terik agar air tidak panas"])];
+    return { days:days(H), tools:clone(k.tools), bahan:[p.seed, slab(), ab(false), netpot(pl(c.id).pots), phAdj(), air()], stages:finish(S, p, H) };
+  }
+  function anak(c, sp){
+    const p = parts(c), H = sp.h, k = VARIANTS.kangkung.hidroponik;
+    const S = [install(false, sp),
+      st("Siapkan anakan", 1, "Pilih anakan sehat, pangkas daun sisakan ±10 cm, lalu bersihkan sisa tanah dari akar.", ["Cuci akar sampai bersih", "Potong ujung daun sisakan ±10 cm", "Pangkas akar terlalu panjang"]),
+      st("Akar tumbuh", 7, "Pangkal anakan dipasang di net pot dengan akar menyentuh larutan. Akar baru muncul dalam 5–7 hari.", ["Pasang anakan di net pot dengan rockwool atau busa penahan", "Pastikan hanya akar yang terendam, pangkal batang tidak tergenang", "Cek EC dan pH"]),
+      st("Pertumbuhan rumpun", 20, "Anakan membentuk rumpun. EC sekitar " + sp.ec + " dan pH " + sp.ph + ".", ["Cek EC dan pH tiap 2–3 hari", "Tambah air atau nutrisi bila volume turun", "Ganti larutan tiap 10–14 hari"]),
+      st("Perawatan rutin", 32, "Jaga larutan bersih dan cahaya cukup agar batang tegak.", ["Buang daun menguning", "Tutup bak dari cahaya agar lumut tidak tumbuh"])];
+    return { days:days(H), tools:clone(k.tools), bahan:[p.seed, slab(), ab(false), netpot(pl(c.id).pots), phAdj(), air()], stages:finish(S, p, H) };
+  }
+  const role = n => /semai/i.test(n) ? "sow" : /perawatan bibit/i.test(n) ? "seedling" : /pindah/i.test(n) ? "move" : /kepala/i.test(n) ? "head" : /berbunga/i.test(n) ? "flower" : /berbuah|berpolong/i.test(n) ? "fruit" : "veg";
+  function fruitLike(c, sp, aero){
+    const p = parts(c), P = pl(c.id), tH = p.hv.day, H = aero ? sp.a : sp.h, f = H / tH, vine = sp.k === "vine", head = sp.k === "head", buah = !head;
+    const sc = d => Math.round(d * f), vt = sp.vt || [], ecF = sp.ecF || sp.ec;
+    const T = {
+      sow: () => st(aero ? "Semai benih dan rakit instalasi" : "Semai benih", 0, aero ? "Semai di rockwool sambil merakit tower. Uji semprotan sebelum bibit dipindah." : "Semai di rockwool atau media halus, jaga tetap lembap.",
+        aero ? ["Rendam benih 6 jam, taruh 1 biji per lubang rockwool", "Rakit tower, pompa, timer, dan nozzle", "Isi larutan nutrisi dan uji kabut merata"] : ["Rendam benih 6 jam dalam air hangat", "Tabur 1 biji per lubang semai", "Letakkan di tempat teduh terang"]),
+      seedling: d => st("Perawatan bibit", d, "Setelah daun sejati muncul, beri nutrisi encer (EC sekitar 0,8) dan cahaya pagi.", ["Siram nutrisi encer, bukan air saja", "Pindahkan ke cahaya matahari bertahap"]),
+      move: d => aero ? st("Pindah ke tower", d, "Bibit 4–6 daun. Pasang di net pot sehingga akar menggantung di ruang kabut.", ["Masukkan bibit di net pot dengan rockwool", "Pasang di lubang tower", "Pastikan akar terkena kabut, bukan tergenang"])
+                      : st("Pindah ke wadah hidroponik", d, "Bibit 4–6 daun. Tanam di pot berisi cocopeat dan pasang selang tetes.", ["Isi pot dengan cocopeat yang sudah dibasahi", "Pindahkan bibit sore hari", "Pasang selang tetes" + (sp.sup && !head ? " dan penyangga" : "")]),
+      veg: (n, d) => st(n, d, (head ? "Fokus membentuk daun. " : "Fokus pada daun dan batang. ") + "EC sekitar " + sp.ec + " dan pH " + sp.ph + "." + (aero ? " Akar cepat kering jika pompa berhenti." : ""),
+        aero ? ["Cek pompa, timer, dan nozzle tiap hari", "Cek EC dan pH tiap 2 hari", ...vt, "Pantau hama kutu daun dan thrips"]
+             : ["Atur penyiraman tetes beberapa kali sehari, jangan sampai kering", "Cek EC dan pH tiap 2–3 hari", ...vt, "Pantau hama kutu daun dan thrips"]),
+      flower: (n, d) => st(n, d, "Naikkan EC ke sekitar " + ecF + " dan pakai formula yang lebih kaya kalium.", ["Sesuaikan nutrisi untuk fase buah", aero ? "Jaga siklus semprot stabil" : "Jaga penyiraman stabil, hindari kekeringan", "Buang bunga atau buah yang rusak"]),
+      fruit: (n, d) => st(n, d, "Jaga penyiraman dan nutrisi stabil agar buah tumbuh merata.", ["Jaga EC dan pH stabil", aero ? "Cek siklus semprot tiap hari" : "Siram tetes teratur", "Pangkas daun yang menutupi buah"]),
+      head: (n, d) => st(n, d, "Kepala mulai terbentuk. Jaga EC stabil dan pasokan air merata agar kepala tidak retak.", ["Jaga penyiraman tetes teratur", "Cek EC dan pH tiap 2–3 hari", "Buang daun tua yang menguning"])
+    };
+    let S = [];
+    if (vine) {
+      const M = Math.max(5, Math.round(sp.m * f));
+      S.push(install(aero, sp), st("Semai di rockwool", 1, "Tanam benih di rockwool lembap, tanpa tanah.", SEMAI_TIPS),
+        st("Perkecambahan", 4, "Benih berkecambah dalam 3–5 hari. Setelah muncul kecambah, beri cahaya terang.", ["Semprot air bila rockwool mengering", "Pindahkan ke tempat terang dengan matahari pagi"]), T.move(M));
+    }
+    c.stages.filter(s => !s.type).forEach(s => {
+      const r = role(s.name || s.n);
+      if (vine && (/^(siapkan|tanam|perkecambahan)/i.test(s.n) || r === "sow" || r === "move")) return;
+      const d = sc(s.day);
+      if (r === "sow") S.push(T.sow()); else if (r === "seedling") S.push(T.seedling(d)); else if (r === "move") S.push(T.move(d));
+      else if (r === "flower") S.push(T.flower(s.n, d)); else if (r === "fruit") S.push(T.fruit(s.n, d)); else if (r === "head") S.push(T.head(s.n, d)); else S.push(T.veg(s.n, d));
+    });
+    const sup = sp.sup ? [sp.sup] : [], tk = clone(aero
+      ? ["Tower atau rangka aeroponik (pipa PVC/tong) berpenutup gelap", "Tangki larutan, pompa, dan timer siklus semprot", "Nozzle kabut dan selang", "Tray semai", ...sup, "TDS/EC meter", "pH meter atau kertas lakmus", head ? "Pisau tajam untuk panen" : "Gunting pangkas", "Timbangan dapur digital"]
+      : ["Tray semai", "Pot/polybag/ember ≥" + P.l + " L berlubang drainase (media cocopeat)", "Reservoir nutrisi, pompa kecil, selang tetes (drip), dan timer", ...sup, "TDS/EC meter", "pH meter atau kertas lakmus", head ? "Pisau tajam untuk panen" : "Gunting pangkas", "Timbangan dapur digital"]);
+    const coco = { n:"Cocopeat atau campuran cocopeat dan sekam bakar", g:"5 kg", q:Math.max(1, Math.ceil(P.pots * P.l / 70)), h:18000 };
+    return { days:days(H), tools:tk, bahan:[p.seed, slab(), ...(aero ? [netpot(P.pots)] : [coco]), ab(buah), ...(aero ? [pvc(), nozzle()] : []), phAdj(), air()], stages:finish(S, p, H) };
+  }
+  function alias(c, sp, mk){
+    const b = VARIANTS[sp.from] && VARIANTS[sp.from][mk]; if (!b) return null;
+    const H0 = b.stages.find(s => s.type === "harvest").day, H = mk === "hidroponik" ? sp.h : sp.a, f = H / H0, v = clone(b);
+    v.days = Math.round(b.days * f); v.stages.forEach(s => { s.day = Math.round(s.day * f); }); fix(v.stages); v.bahan[0] = clone(c.bahan[0]);
+    return v;
+  }
+  Object.keys(MEDIA_SPEC).forEach(id => {
+    const c = CATALOG.find(x => x.id === id), sp = MEDIA_SPEC[id]; if (!c || VARIANTS[id]) return;
+    const out = {};
+    [["hidroponik", false], ["aeroponik", true]].forEach(([mk, aero]) => {
+      if (aero && !sp.a) return;
+      const v = sp.k === "alias" ? alias(c, sp, mk) : sp.k === "leaf" ? leaf(c, sp, aero) : sp.k === "stek" ? stek(c, sp) : sp.k === "anak" ? anak(c, sp) : fruitLike(c, sp, aero);
+      if (v) out[mk] = v;
+    });
+    if (Object.keys(out).length) VARIANTS[id] = out;
+  });
+})();
 /* Prediksi hasil: g = qty panen (gram), p = estimasi harga pasar (Rp per kg), n = catatan dasar perkiraan.
    Nilai bawaan hanya perkiraan kasar per siklus untuk skala bahan di daftar; pengguna bisa mengubahnya lewat panel Prediksi. */
 const PRED_BASE = {
@@ -1205,6 +1379,8 @@ function applyEdits(){
     c.bahan = c.bahan.map(normBahan);
     c.pred = normPred(e.pred && typeof e.pred === "object" ? e.pred : predBase(c.id));
     c.photo = typeof e.photo === "string" ? e.photo : "";   /* foto panduan (URL Storage atau versi kecil) */
+    c.checked = e.checked === true;   /* bintang: sudah dicek kesesuaiannya */
+    c.harvests = normHarv(e.harvests);   /* rekap periode panen: qty gramasi tiap panen */
     c.name = (typeof e.name === "string" && e.name.trim()) ? e.name.trim() : (base.name || c.name);   /* nama hasil edit (ketuk 2x judul) */
     c.cat = validCat(e.cat) ? e.cat : (validCat(base.cat) ? base.cat : "");
     /* varian media tanam: bawaan dari VARIANTS, ditimpa hasil edit pengguna (e.media) */
@@ -1230,6 +1406,8 @@ function applyEdits(){
       });
       g.medias = Object.keys(g.variants).length ? ["tanah", ...Object.keys(g.variants)] : [];
       g.photo = typeof e.photo === "string" ? e.photo : "";
+      g.harvests = normHarv(e.harvests);
+      g.checked = e.checked === true;
       let at = -1; CATALOG.forEach((x, i) => { if (g.root && (x.id === g.root || x.root === g.root)) at = i; });
       if (at >= 0) CATALOG.splice(at + 1, 0, g); else CATALOG.push(g);
     });
@@ -1273,7 +1451,7 @@ const ICONS = {
 const icon = id => { const k = ICONS[id] ? id : (byId(id)?.iconKey || "custom"); return `<svg class="ic" viewBox="0 0 24 24" aria-hidden="true">${ICONS[k] || ICONS.custom}</svg>`; };
 
 /* ---------------- STATE & UTIL ---------------- */
-let user = null, projects = [], logs = {}, unsubs = [], tab = "home", openId = null, catFilter = "all", catQuery = "";
+let user = null, projects = [], logs = {}, unsubs = [], tab = "home", openId = null, catFilter = "all", catQuery = "", starFilter = "all";   /* starFilter: all | todo (belum dicek) | done (sudah dicek) */
 const $ = s => document.querySelector(s);
 const view = $("#view");
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
@@ -1519,6 +1697,54 @@ function togglePin(id){
   pins = on ? [...pins, id] : pins.filter(x => x !== id);
   setDoc(doc(db, "users", user.uid, "meta", "pins"), { ids: pins, updatedAt: serverTimestamp() }).catch(e => toast(errMsg(e)));
   toast(on ? "Dipin ke Dashboard." : "Pin dilepas.");
+  return on;
+}
+/* ---------------- LAYAR PENUH PANDUAN ----------------
+   Ikon "open full size" di kanan judul kartu. Menampilkan semua informasi panduan (foto, prediksi, periode panen,
+   bahan, alat, tahapan) dalam mode baca di layar penuh, tanpa tombol fitur lain. Tutup: tombol silang atau Esc. */
+function closeFull(){
+  const f = document.getElementById("fullview"); if (f) f.remove();
+  document.body.style.overflow = "";
+  document.removeEventListener("keydown", closeFull.key);
+}
+function openFull(id){
+  const c0 = byId(id); if (!c0) return;
+  const c = withMedia(c0), cat = allCats().find(k => k.id === c.cat), pr = c.pred;
+  const sec = (h, body) => `<div class="gtools"><div class="phead"><h4>${h}</h4></div>${body}</div>`;
+  const parts = [];
+  if (c.photo) parts.push(`<img class="fvphoto" src="${esc(c.photo)}" alt="Foto ${esc(c.name)}">`);
+  parts.push(`<div class="meta">${cat ? `<span>${esc(cat.name)}</span>` : ""}${c.level ? `<span>${esc(c.level)}</span>` : ""}<span>±${Math.max(1, Math.round(c.days / 30))} bulan</span><span>${c.stages.length} tahap</span>${c.mediaKey && c.mediaKey !== "tanah" && MEDIA[c.mediaKey] ? `<span>${esc(MEDIA[c.mediaKey])}</span>` : ""}${c.checked ? "<span>Sudah dicek</span>" : ""}</div>`);
+  if (c.desc) parts.push(`<p class="muted">${esc(c.desc)}</p>`);
+  if (pr && (pr.g > 0 || pr.p > 0)) parts.push(sec("Prediksi hasil panen", predView(c)));
+  if (c.harvests.length) parts.push(sec("Periode panen", `<div class="btable-wrap"><table class="btable"><thead><tr><th>Panen</th><th class="num">Qty</th></tr></thead>
+    <tbody>${c.harvests.map((h, i) => `<tr><td>Panen ke-${i + 1}${h.d ? ` · <span class="d">${esc(fmtDate(h.d))}</span>` : ""}</td><td class="num">${esc(fmtG(h.g))}</td></tr>`).join("")}</tbody>
+    <tfoot><tr><td>Total ${c.harvests.length} kali panen</td><td class="num">${esc(fmtG(harvTotal(c.harvests)))}</td></tr></tfoot></table></div>`));
+  if (c.bahan.length) parts.push(sec("Bahan yang dibutuhkan", `<div class="btable-wrap"><table class="btable"><thead><tr><th>Bahan</th><th class="num">Qty</th><th>Satuan</th><th class="num">Harga</th><th class="num">Total</th></tr></thead>
+    <tbody>${c.bahan.map(b => `<tr><td>${esc(b.n)}</td><td class="num">${b.q}</td><td>${esc(b.u) || "–"}</td><td class="num">${rp(b.h)}</td><td class="num">${rp(b.q * b.h)}</td></tr>`).join("")}</tbody>
+    <tfoot><tr><td colspan="4">Total harga bahan</td><td class="num">${rp(bahanTotal(c.bahan))}</td></tr></tfoot></table></div>`));
+  if (c.tools.length) parts.push(sec("Alat yang dibutuhkan", `<ul>${c.tools.map(t => `<li>${esc(t)}</li>`).join("")}</ul>`));
+  if (c.stages.length) parts.push(`<div class="gsteps"><div class="phead"><h4>Tahapan</h4></div>${c.stages.map((st, i) => `<div class="gstep"><div class="gnum${st.type === "harvest" ? " h" : ""}">${i + 1}</div>
+    <div class="gbody"><h4>${esc(st.n)}${st.type === "harvest" ? '<span class="chip done">Panen</span>' : st.type === "process" ? '<span class="chip">Olah</span>' : ""}</h4>
+      <div class="when">Hari ke-${st.day + 1}</div>${st.d ? `<p>${esc(st.d)}</p>` : ""}
+      <ul>${st.t.map(t => `<li>${esc(t)}</li>`).join("")}</ul></div></div>`).join("")}</div>`);
+  closeFull();
+  const f = document.createElement("div");
+  f.id = "fullview"; f.className = "fullview"; f.setAttribute("role", "dialog"); f.setAttribute("aria-modal", "true"); f.setAttribute("aria-label", c.name);
+  f.innerHTML = `<div class="fvbar"><h2><span class="ico sm">${icon(c.id)}</span><span>${esc(c.name)}</span></h2><button class="fvx" aria-label="Tutup layar penuh" title="Tutup">${IC_X}</button></div><div class="fvbody">${parts.join("")}</div>`;
+  document.body.appendChild(f);
+  document.body.style.overflow = "hidden";
+  f.querySelector(".fvx").onclick = closeFull;
+  closeFull.key = e => { if (e.key === "Escape") closeFull(); };
+  document.addEventListener("keydown", closeFull.key);
+  f.querySelector(".fvx").focus();
+}
+/* Bintang: penanda bahwa isi panduan (alat, bahan, tahapan, prediksi) sudah dicek kesesuaiannya. Disimpan di guides/{id}.checked. */
+function toggleStar(id){
+  const on = !(guideEdits[id] && guideEdits[id].checked === true);
+  guideEdits[id] = { ...(guideEdits[id] || {}), checked: on };
+  applyEdits();
+  setDoc(doc(db, "users", user.uid, "guides", id), { checked: on, updatedAt: serverTimestamp() }, { merge: true }).catch(e => toast(errMsg(e)));
+  toast(on ? "Ditandai sudah dicek kesesuaiannya." : "Tanda cek dibatalkan.");
   return on;
 }
 let pinOpen = {};
@@ -1843,19 +2069,19 @@ function guidePanels(c){ return `<div class="gtools gbahan hidden"><div class="p
       <div class="gtools gpred hidden"><div class="phead"><h4>Prediksi hasil panen</h4><button class="pedit" data-edit="pred" aria-label="Edit prediksi" title="Edit prediksi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></button></div>${predView(c)}</div>`; }
 /* Kartu panduan yang sama dipakai di tab Panduan dan di Dashboard (Rencana tanam berikutnya). */
 function guideCard(c0){
-  const c = withMedia(c0); return `<div class="cat" data-id="${c.id}" data-q="${esc([c.name, allCats().find(k => k.id === c.cat)?.name || "tanpa kategori", c.level, ...(c.medias || []).map(m => MEDIA[m]), ...c.tools, ...c.bahan.map(b => b.n)].join(" ").toLowerCase())}"><h3><button class="ctitle" aria-expanded="false"><span class="ico sm">${icon(c.id)}</span><span>${esc(c.name)}</span></button><button class="btn small alt icon pinbtn${pins.includes(c.id) ? " on" : ""}" data-pin aria-pressed="${pins.includes(c.id)}" aria-label="${pins.includes(c.id) ? "Lepas pin dari Dashboard" : "Pin ke Dashboard"}" title="${pins.includes(c.id) ? "Lepas pin dari Dashboard" : "Pin ke Dashboard"}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 17v5M9 3h6l-1 6 3 3H7l3-3-1-6z"/></svg></button><button class="btn small alt icon dupbtn" data-dup aria-label="Duplikat panduan" title="Duplikat panduan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg></button><button class="chevbtn" aria-label="Buka atau tutup panduan" title="Buka atau tutup"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button></h3>
+  const c = withMedia(c0); return `<div class="cat" data-id="${c.id}" data-q="${esc([c.name, allCats().find(k => k.id === c.cat)?.name || "tanpa kategori", c.level, ...(c.medias || []).map(m => MEDIA[m]), ...c.tools, ...c.bahan.map(b => b.n)].join(" ").toLowerCase())}"><h3><button class="ctitle" aria-expanded="false"><span class="ico sm">${icon(c.id)}</span><span>${esc(c.name)}</span></button><button class="fullbtn" data-full aria-label="Buka layar penuh" title="Buka layar penuh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button></h3><div class="cat-tools"><button class="btn small alt icon starbtn${c.checked ? " on" : ""}" data-star aria-pressed="${c.checked}" aria-label="${c.checked ? "Batalkan tanda sudah dicek" : "Tandai sudah dicek kesesuaiannya"}" title="${c.checked ? "Sudah dicek kesesuaiannya (ketuk untuk batalkan)" : "Tandai sudah dicek kesesuaiannya"}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.25 4.15 1 5.85L12 17l-5.25 2.7 1-5.85L3.5 9.7l5.9-.9z"/></svg></button><button class="btn small alt icon pinbtn${pins.includes(c.id) ? " on" : ""}" data-pin aria-pressed="${pins.includes(c.id)}" aria-label="${pins.includes(c.id) ? "Lepas pin dari Dashboard" : "Pin ke Dashboard"}" title="${pins.includes(c.id) ? "Lepas pin dari Dashboard" : "Pin ke Dashboard"}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 17v5M9 3h6l-1 6 3 3H7l3-3-1-6z"/></svg></button><button class="btn small alt icon dupbtn" data-dup aria-label="Duplikat panduan" title="Duplikat panduan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg></button><button class="btn small alt icon" data-tag aria-label="Pindah kategori" title="Pindah kategori"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><path d="M7 7h.01"/></svg></button><button class="btn small alt icon" data-photo-up aria-label="${c.photo ? "Ganti foto" : "Unggah foto"}" title="${c.photo ? "Ganti foto" : "Unggah foto"}"${c.photo ? ' style="color:var(--moss)"' : ""}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></button></div>
       ${c.medias && c.medias.length ? `<div class="media" role="group" aria-label="Media tanam">${c.medias.map(m => `<button data-media="${m}" class="${c.mediaKey === m ? "on" : ""}" aria-pressed="${c.mediaKey === m}">${MEDIA[m]}</button>`).join("")}</div>` : ""}
-      <div class="meta"><button class="catchip" data-tag aria-label="Ubah kategori" title="Ketuk untuk ubah kategori">${esc(allCats().find(k => k.id === c.cat)?.name || "Tanpa kategori")}</button><span>${c.level}</span><span>±${Math.max(1, Math.round(c.days / 30))} bulan</span><span>${c.stages.length} tahap</span>${POT_PLAN[c.root || c.id] ? `<span>${POT_PLAN[c.root || c.id].pots} pot · 1 biji/pot</span>` : ""}${c.custom ? "<span>Salinan</span>" : ""}</div>
+      <div class="meta"><button class="catchip" data-tag aria-label="Ubah kategori" title="Ketuk untuk ubah kategori">${esc(allCats().find(k => k.id === c.cat)?.name || "Tanpa kategori")}</button><span>${c.level}</span><span>±${Math.max(1, Math.round(c.days / 30))} bulan</span><span>${c.stages.length} tahap</span></div>
       <div class="cat-actions"><button class="btn small icon" data-start="${c.id}" aria-label="Mulai proyek ini" title="Mulai proyek ini"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg></button>
         ${`<button class="btn small alt icon" data-panel-btn="gbahan" data-label="bahan" aria-expanded="false" aria-label="Bahan" title="Bahan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6l-1 3h-4z"/><path d="M10 6C6 8 5 12 5 15.5 5 19 7.5 21 12 21s7-2 7-5.5C19 12 18 8 14 6"/><path d="M12 11v6M9.5 13.5h5"/></svg></button>`}
         ${`<button class="btn small alt icon" data-panel-btn="gtools" data-label="alat" aria-expanded="false" aria-label="Alat" title="Alat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></button>`}
-        <button class="btn small alt icon" data-steps-btn aria-expanded="false" aria-label="Step by Step" title="Step by Step"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/></svg></button><button class="btn small alt icon" data-panel-btn="gpred" data-label="prediksi" aria-expanded="false" aria-label="Prediksi hasil" title="Prediksi hasil"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg></button><button class="btn small alt icon" data-tag aria-label="Pindah kategori" title="Pindah kategori"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><path d="M7 7h.01"/></svg></button><button class="btn small alt icon" data-photo-up aria-label="${c.photo ? "Ganti foto" : "Unggah foto"}" title="${c.photo ? "Ganti foto" : "Unggah foto"}"${c.photo ? ' style="color:var(--moss)"' : ""}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></button>${`<button class="btn small alt icon" data-delguide aria-label="Hapus panduan" title="Hapus panduan" style="margin-left:auto;color:var(--danger)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg></button>`}</div>
-      ${photoPanel(c)}${guidePanels(c)}</div>`;
+        <button class="btn small alt icon" data-steps-btn aria-expanded="false" aria-label="Step by Step" title="Step by Step"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/></svg></button><button class="btn small alt icon" data-panel-btn="gpred" data-label="prediksi" aria-expanded="false" aria-label="Prediksi hasil" title="Prediksi hasil"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg></button><button class="btn small alt icon" data-panel-btn="gharvest" data-label="periode panen" aria-expanded="false" aria-label="Periode panen" title="Periode panen"${c.harvests.length ? ' style="color:var(--moss)"' : ""}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h16l-1.5 11a1 1 0 0 1-1 .9h-11a1 1 0 0 1-1-.9z"/><path d="M8 8a4 4 0 0 1 8 0"/><path d="M9.5 13h5"/></svg></button>${`<button class="btn small alt icon" data-delguide aria-label="Hapus panduan" title="Hapus panduan" style="margin-left:auto;color:var(--danger)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg></button>`}</div>
+      ${photoPanel(c)}${guidePanels(c)}${harvestPanel(c)}</div>`;
 }
 function wireGuideCards(root){
   root.querySelectorAll("[data-start]").forEach(b => b.onclick = () => startSheet(b.dataset.start));
   /* Ikon Step by Step / Alat / Bahan: satu panel per kartu. Panah di judul: buka semuanya, ketuk lagi untuk menutup semuanya. */
-  const PANELS = { photo:".gphoto", steps:".gsteps", gtools:".gtoolsbox", gbahan:".gbahan", gpred:".gpred" }, PNAMES = Object.keys(PANELS);
+  const PANELS = { photo:".gphoto", gharvest:".gharvest", steps:".gsteps", gtools:".gtoolsbox", gbahan:".gbahan", gpred:".gpred" }, PNAMES = Object.keys(PANELS);
   function setPanels(card, next){
     PNAMES.forEach(n => card.querySelector(PANELS[n]).classList.toggle("hidden", !next.includes(n)));
     const all = next.length === PNAMES.length;
@@ -1889,6 +2115,14 @@ function wireGuideCards(root){
   });
   root.querySelectorAll("[data-tag]").forEach(b => b.onclick = () => categorySheet(b.closest(".cat").dataset.id));
   root.querySelectorAll("[data-dup]").forEach(b => b.onclick = () => duplicateSheet(b.closest(".cat").dataset.id));
+  root.querySelectorAll("[data-full]").forEach(b => b.onclick = () => openFull(b.closest(".cat").dataset.id));
+  root.querySelectorAll("[data-star]").forEach(b => b.onclick = () => {
+    const on = toggleStar(b.closest(".cat").dataset.id);
+    b.classList.toggle("on", on); b.setAttribute("aria-pressed", on);
+    b.title = on ? "Sudah dicek kesesuaiannya (ketuk untuk batalkan)" : "Tandai sudah dicek kesesuaiannya";
+    b.setAttribute("aria-label", on ? "Batalkan tanda sudah dicek" : "Tandai sudah dicek kesesuaiannya");
+    if (starFilter !== "all" && view.querySelector("[data-sf]")) rerenderKeep();   /* panduan yang tak lagi cocok dengan filter keluar dari daftar */
+  });
   root.querySelectorAll("[data-pin]").forEach(b => b.onclick = () => {
     const id = b.closest(".cat").dataset.id, on = togglePin(id);
     b.classList.toggle("on", on); b.setAttribute("aria-pressed", on);
@@ -1897,6 +2131,9 @@ function wireGuideCards(root){
   root.querySelectorAll("[data-delguide]").forEach(b => b.onclick = () => deleteGuide(b.closest(".cat").dataset.id));
   root.querySelectorAll("[data-photo-up]").forEach(b => b.onclick = () => pickGuidePhoto(b.closest(".cat").dataset.id));
   root.querySelectorAll("[data-photo-del]").forEach(b => b.onclick = () => deleteGuidePhoto(b.closest(".cat").dataset.id));
+  root.querySelectorAll("[data-hv-add]").forEach(b => b.onclick = () => addHarvest(b.closest(".cat")));
+  root.querySelectorAll(".gharvest .hvadd input").forEach(i => i.onkeydown = e => { if (e.key === "Enter") { e.preventDefault(); addHarvest(i.closest(".cat")); } });
+  root.querySelectorAll("[data-hv-del]").forEach(b => b.onclick = () => deleteHarvest(b.closest(".cat").dataset.id, Number(b.dataset.hvDel)));
   root.querySelectorAll("[data-steps-btn]").forEach(b => b.onclick = () => showPanel(b.closest(".cat"), "steps"));
   root.querySelectorAll("[data-panel-btn]").forEach(b => b.onclick = () => showPanel(b.closest(".cat"), b.dataset.panelBtn));
   root.querySelectorAll("[data-edit]").forEach(b => b.onclick = () => editGuide(b.closest(".cat").dataset.id, b.dataset.edit));
@@ -1904,19 +2141,24 @@ function wireGuideCards(root){
 }
 function renderCatalog(){
   editing = null;
-  const list = CATALOG.filter(c => !c.hidden && (catFilter === "all" || (catFilter === "none" ? !c.cat : c.cat === catFilter)));
+  const inCat = CATALOG.filter(c => !c.hidden && (catFilter === "all" || (catFilter === "none" ? !c.cat : c.cat === catFilter)));
+  const list = inCat.filter(c => starFilter === "all" || (starFilter === "done" ? c.checked : !c.checked));
+  const sTxt = { todo: "Belum dicek", done: "Sudah dicek" }, sLbl = starFilter === "all" ? "Filter bintang: semua panduan (ketuk untuk tampilkan yang belum dicek)" : starFilter === "todo" ? "Filter bintang: belum dicek (ketuk untuk tampilkan yang sudah dicek)" : "Filter bintang: sudah dicek (ketuk untuk matikan filter)";
+  const starBtn = `<button class="starf${starFilter === "all" ? "" : " on"}${starFilter === "done" ? " done" : ""}" data-sf aria-label="${sLbl}" title="${sLbl}" aria-pressed="${starFilter !== "all"}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.25 4.15 1 5.85L12 17l-5.25 2.7 1-5.85L3.5 9.7l5.9-.9z"/></svg></button>`;
   view.innerHTML = `
     <div class="catbar">
-    <div class="filterbar"><div class="fixgrp"><button data-f="all" class="${catFilter === "all" ? "on" : ""}" aria-label="${esc(CATS.all)}" title="${esc(CATS.all)} (ketuk 2x untuk tambah kategori)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/></svg></button></div><div class="filters">${[...allCats().map(k => [k.id, k.name]), ...(CATALOG.some(c => !c.hidden && !c.cat) ? [["none", "Tanpa kategori"]] : [])].map(([k, v]) => `<button data-f="${k}" class="${catFilter === k ? "on" : ""}">${esc(v)}</button>`).join("")}</div></div>
+    <div class="filterbar"><div class="fixgrp"><button data-f="all" class="${catFilter === "all" ? "on" : ""}" aria-label="${esc(CATS.all)}" title="${esc(CATS.all)} (ketuk 2x untuk tambah kategori)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/></svg></button>${starBtn}</div><div class="filters">${[...allCats().map(k => [k.id, k.name]), ...(CATALOG.some(c => !c.hidden && !c.cat) ? [["none", "Tanpa kategori"]] : [])].map(([k, v]) => `<button data-f="${k}" class="${catFilter === k ? "on" : ""}">${esc(v)}</button>`).join("")}</div></div>
     <div class="searchbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><input id="catSearch" type="search" enterkeyhint="search" autocomplete="off" placeholder="Cari panduan, bahan, atau alat" aria-label="Cari panduan" value="${esc(catQuery)}"><button class="sclear hidden" id="catClear" aria-label="Hapus pencarian" title="Hapus pencarian">${IC_X}</button></div>
+    ${starFilter === "all" ? "" : `<div class="starinfo">${sTxt[starFilter]}: ${list.length} dari ${inCat.length} panduan${catFilter === "all" ? "" : " di kategori ini"}</div>`}
     </div>
     ${list.map(guideCard).join("")}
-    ${list.length ? "" : `<div class="empty">Belum ada panduan di kategori ini. Pindahkan panduan lewat ikon tag, atau duplikat panduan lalu ubah kategorinya.</div>`}
+    ${list.length ? "" : starFilter === "todo" && inCat.length ? `<div class="empty">Semua panduan di kategori ini sudah dicek. Finalisasi selesai.</div>` : starFilter === "done" && inCat.length ? `<div class="empty">Belum ada panduan yang diberi bintang.</div>` : `<div class="empty">Belum ada panduan di kategori ini. Pindahkan panduan lewat ikon tag, atau duplikat panduan lalu ubah kategorinya.</div>`}
     <div class="empty hidden" id="catNone">Tidak ada panduan yang cocok.</div>
     ${CATALOG.some(c => c.hidden) ? `<button class="btn alt small" id="catRestore" style="margin-top:.6rem">Panduan yang dihapus (${CATALOG.filter(c => c.hidden).length})</button>` : ""}`;
   /* Ketuk dua kali pada chip kategori: lepas tanpa geser = ganti nama langsung di chip;
      tahan pada ketukan kedua lalu geser kiri/kanan = pindah urutan. */
   const fbar = view.querySelector(".filters");
+  view.querySelector("[data-sf]").onclick = () => { starFilter = starFilter === "all" ? "todo" : starFilter === "todo" ? "done" : "all"; rerenderKeep(); };
   view.querySelectorAll("[data-f]").forEach(b => {
     const k = b.dataset.f;
     b.onclick = () => {
@@ -2331,6 +2573,34 @@ function deleteGuidePhoto(id){
   if (!confirm("Hapus foto panduan ini?")) return;
   const pp = guideEdits[id]?.photoPath; if (pp) deleteObject(sRef(storage, pp)).catch(() => {});
   saveGuide(id, { photo: null, photoPath: null });
+}
+/* ---------------- PERIODE PANEN ----------------
+   Ikon keranjang di sebelah kanan ikon foto. Isinya rekap qty gramasi panen pertama, kedua, dst, lalu dijumlahkan.
+   Disimpan di dokumen guides/{id} pada field harvests: [{ g (gram), d (tanggal) }]. */
+function normHarv(a){ return (Array.isArray(a) ? a : []).map(x => ({ g: Math.max(0, Number(x && x.g) || 0), d: /^\d{4}-\d{2}-\d{2}$/.test(x && x.d) ? x.d : "" })).filter(x => x.g > 0); }
+const harvSort = a => a.map((x, i) => ({ x, i })).sort((p, q) => (p.x.d || "9999").localeCompare(q.x.d || "9999") || p.i - q.i).map(o => o.x);
+const harvTotal = a => a.reduce((t, x) => t + x.g, 0);
+const harvestPanel = c => `<div class="gharvest hidden"><div class="phead"><h4>Periode panen</h4></div>
+  ${c.harvests.length ? `<div class="btable-wrap"><table class="btable"><thead><tr><th>Panen</th><th class="num">Qty</th><th></th></tr></thead>
+    <tbody>${c.harvests.map((h, i) => `<tr><td>Panen ke-${i + 1}${h.d ? `<br><span class="d">${esc(fmtDate(h.d))}</span>` : ""}</td><td class="num">${esc(fmtG(h.g))}</td>
+      <td class="num"><button class="pedit x" data-hv-del="${i}" aria-label="Hapus panen ke-${i + 1}" title="Hapus">${IC_X}</button></td></tr>`).join("")}</tbody>
+    <tfoot><tr><td>Total ${c.harvests.length} kali panen</td><td class="num" colspan="2">${esc(fmtG(harvTotal(c.harvests)))}</td></tr></tfoot></table></div>`
+  : `<p class="empty">Belum ada catatan panen. Isi qty gramasi di bawah untuk panen pertama.</p>`}
+  <div class="hvadd"><div><label>Panen ke-${c.harvests.length + 1} (gram)</label><input class="hv-g" type="number" inputmode="decimal" min="0" step="any" placeholder="mis. 250"></div>
+    <div><label>Tanggal</label><input class="hv-d" type="date" value="${today()}"></div>
+    <button class="btn small" data-hv-add>Tambah</button></div></div>`;
+function addHarvest(card){
+  const id = card.dataset.id, g = Number(String(card.querySelector(".hv-g").value).replace(",", "."));
+  if (!(g > 0)) { toast("Isi qty panen dalam gram."); return; }
+  const d = card.querySelector(".hv-d").value || "";
+  catOpen[id] = ["gharvest"];
+  saveGuide(id, { harvests: harvSort([...(byId(id)?.harvests || []), { g, d }]) });
+}
+function deleteHarvest(id, i){
+  const cur = byId(id)?.harvests || []; if (!cur[i]) return;
+  if (!confirm("Hapus catatan panen ke-" + (i + 1) + "?")) return;
+  catOpen[id] = ["gharvest"];
+  saveGuide(id, { harvests: cur.filter((_, k) => k !== i) });
 }
 function saveHidden(){ setDoc(doc(db, "users", user.uid, "meta", "hiddenGuides"), { ids: hiddenGuides, updatedAt: serverTimestamp() }).catch(e => toast(errMsg(e))); }
 function deleteGuide(id){
